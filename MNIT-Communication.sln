@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNIT-Communication", "MNIT-Communication\MNIT-Communication.csproj", "{BF7233B0-B97D-4E74-A404-0C6D1202F5A3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNIT-Communication.Tests", "..\..\Users\Jon\Documents\Visual Studio 2013\Projects\MNIT-Communication\MNIT-Communication.Tests\MNIT-Communication.Tests.csproj", "{1DAB1F36-345F-4D4C-AC8B-740C9A3E2B32}"
+EndProject
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "ProcessRegistrationsWorkerRole", "ProcessRegistrationsWorkerRole\ProcessRegistrationsWorkerRole.ccproj", "{42CE1B50-7912-4923-A626-ABC0D4347D93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessRegistrationQueueWorkerRole", "ProcessRegistrationQueueWorkerRole\ProcessRegistrationQueueWorkerRole.csproj", "{1D6D2168-6BD9-4064-A593-2D3FF50C9119}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF7233B0-B97D-4E74-A404-0C6D1202F5A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF7233B0-B97D-4E74-A404-0C6D1202F5A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF7233B0-B97D-4E74-A404-0C6D1202F5A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF7233B0-B97D-4E74-A404-0C6D1202F5A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DAB1F36-345F-4D4C-AC8B-740C9A3E2B32}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DAB1F36-345F-4D4C-AC8B-740C9A3E2B32}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DAB1F36-345F-4D4C-AC8B-740C9A3E2B32}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DAB1F36-345F-4D4C-AC8B-740C9A3E2B32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42CE1B50-7912-4923-A626-ABC0D4347D93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42CE1B50-7912-4923-A626-ABC0D4347D93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42CE1B50-7912-4923-A626-ABC0D4347D93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42CE1B50-7912-4923-A626-ABC0D4347D93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D6D2168-6BD9-4064-A593-2D3FF50C9119}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D6D2168-6BD9-4064-A593-2D3FF50C9119}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D6D2168-6BD9-4064-A593-2D3FF50C9119}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D6D2168-6BD9-4064-A593-2D3FF50C9119}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
