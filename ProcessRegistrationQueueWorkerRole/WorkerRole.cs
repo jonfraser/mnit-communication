@@ -8,6 +8,8 @@ using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
+using SendGrid;
+using System.Net.Mail;
 
 namespace ProcessRegistrationQueueWorkerRole
 {
@@ -35,7 +37,7 @@ namespace ProcessRegistrationQueueWorkerRole
                         Trace.WriteLine("Processing Service Bus message: " + receivedMessage.SequenceNumber.ToString());
 
                         //TODO: Send email
-                        
+                        SendEmail();
                     }
                     catch
                     {
@@ -44,6 +46,38 @@ namespace ProcessRegistrationQueueWorkerRole
                 });
 
             CompletedEvent.WaitOne();
+        }
+
+        private void SendEmail()
+        {
+            // Create the email object first, then add the properties.
+            var myMessage = new SendGridMessage();
+
+            // Add the message properties.
+            myMessage.From = new MailAddress("mnit-communication@health.qld.gov.au");
+
+            // Add multiple addresses to the To field.
+            List<String> recipients = new List<String>
+{
+    @"fraser.jc@gmail.com"
+};
+
+            myMessage.AddTo(recipients);
+
+            myMessage.Subject = "You requested access?";
+
+            //Add the HTML and Text bodies
+            myMessage.Text = "Here's some random token or link for you to click?";
+
+            // Create credentials, specifying your user name and password.
+            var credentials = new NetworkCredential("azure_853e23752ff2b9ce7c30020b435ea889@azure.com",
+                CloudConfigurationManager.GetSetting("SendGridPassword"));
+
+            // Create an Web transport for sending email.
+            var transportWeb = new Web(credentials);
+
+            // Send the email.
+            transportWeb.Deliver(myMessage);
         }
 
         public override bool OnStart()
