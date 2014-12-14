@@ -36,11 +36,11 @@ namespace ProcessRegistrationQueueWorkerRole
                         // Process the message
                         Trace.WriteLine("Processing Service Bus message: " + receivedMessage.SequenceNumber.ToString());
 
-                        //TODO: Send email
                         SendEmail();
                     }
                     catch
                     {
+                        throw;
                         // Handle any message processing specific exceptions here
                     }
                 });
