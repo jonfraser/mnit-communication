@@ -3,6 +3,8 @@
   <WorkerRole name="ProcessRegistrationQueueWorkerRole" vmsize="Small">
     <ConfigurationSettings>
       <Setting name="Microsoft.ServiceBus.ConnectionString" />
+      <Setting name="SendGridPassword" />
+      <Setting name="RedisConnection" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>

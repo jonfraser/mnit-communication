@@ -4,6 +4,8 @@
     <Instances count="1" />
     <ConfigurationSettings>
       <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://mnit-communication-ns.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=" />
+      <Setting name="SendGridPassword" value="" />
+      <Setting name="RedisConnection" value="mnitcommunication.redis.cache.windows.net,ssl=true"/>
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>

@@ -52,7 +52,7 @@ namespace ProcessRegistrationQueueWorkerRole
 
         private void StoreToken(string username, string accessToken)
         {
-            ConnectionMultiplexer connection = ConnectionMultiplexer.Connect("mnitcommunication.redis.cache.windows.net,ssl=true,password=00c4knL71zbDIkMu/HpxUogutvMh8hSa1FWZl5bsG1k=");
+            ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(CloudConfigurationManager.GetSetting("RedisConnection"));
             
             IDatabase cache = connection.GetDatabase();
 
