@@ -10,6 +10,7 @@ using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
 using SendGrid;
 using System.Net.Mail;
+using StackExchange.Redis;
 
 namespace ProcessRegistrationQueueWorkerRole
 {
@@ -35,8 +36,9 @@ namespace ProcessRegistrationQueueWorkerRole
                     {
                         // Process the message
                         Trace.WriteLine("Processing Service Bus message: " + receivedMessage.SequenceNumber.ToString());
-
-                        SendEmail();
+                        var accessToken = Guid.NewGuid().ToString();
+                        StoreToken("frasejon", accessToken);
+                        SendEmail("fraser.jc@gmail.com", accessToken);
                     }
                     catch
                     {
@@ -48,7 +50,18 @@ namespace ProcessRegistrationQueueWorkerRole
             CompletedEvent.WaitOne();
         }
 
-        private void SendEmail()
+        private void StoreToken(string username, string accessToken)
+        {
+            ConnectionMultiplexer connection = ConnectionMultiplexer.Connect("mnitcommunication.redis.cache.windows.net,ssl=true,password=00c4knL71zbDIkMu/HpxUogutvMh8hSa1FWZl5bsG1k=");
+            
+            IDatabase cache = connection.GetDatabase();
+
+            cache.StringSet(username, accessToken, expiry: new TimeSpan(72, 0, 0));
+
+        
+        }
+
+        private void SendEmail(string email, string accessToken)
         {
             // Create the email object first, then add the properties.
             var myMessage = new SendGridMessage();
@@ -57,17 +70,14 @@ namespace ProcessRegistrationQueueWorkerRole
             myMessage.From = new MailAddress("mnit-communication@health.qld.gov.au");
 
             // Add multiple addresses to the To field.
-            List<String> recipients = new List<String>
-{
-    @"fraser.jc@gmail.com"
-};
+            List<String> recipients = new List<String> { email };
 
             myMessage.AddTo(recipients);
 
             myMessage.Subject = "You requested access?";
 
             //Add the HTML and Text bodies
-            myMessage.Text = "Here's some random token or link for you to click?";
+            myMessage.Text = "You've got 72 hours to confirm your account via this link: http://mnit-communication.azuresites.net/ConfirmAccount/" + accessToken.ToString();
 
             // Create credentials, specifying your user name and password.
             var credentials = new NetworkCredential("azure_853e23752ff2b9ce7c30020b435ea889@azure.com",
