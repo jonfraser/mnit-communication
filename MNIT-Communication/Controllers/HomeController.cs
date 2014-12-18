@@ -13,26 +13,21 @@ namespace MNIT_Communication.Controllers
     public class HomeController : Controller
     {
         public ActionResult Index()
-
         {
+            return View();
+        }
 
+        [HttpPost]
+        public ActionResult Index(string emailAddress)
+        {
+            if(!emailAddress.ToLower().EndsWith("@health.qld.gov.au"))
+            {
+                throw new NotSupportedException();
+            }
             var svc = new RegistrationService();
-            svc.SendRegistrationRequest("frasejon", "jon.fraser@health.qld.gov.au");
-            return View();
-        }
+            svc.SendRegistrationRequest(emailAddress);
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return RedirectToAction("Index");
         }
     }
 }

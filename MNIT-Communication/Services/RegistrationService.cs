@@ -12,7 +12,7 @@ namespace MNIT_Communication.Services
     public class RegistrationService
     {
         private readonly string RegistrationQueue = "RegistrationQueue";
-        public void SendRegistrationRequest(string username, string email)
+        public void SendRegistrationRequest(string email)
         {
             var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
             var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
@@ -23,7 +23,7 @@ namespace MNIT_Communication.Services
             }
 
             var client = QueueClient.CreateFromConnectionString(connectionString, RegistrationQueue);
-            client.Send(new BrokeredMessage(username));
+            client.Send(new BrokeredMessage(email));
 
         }
     }

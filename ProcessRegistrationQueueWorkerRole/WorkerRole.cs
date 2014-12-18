@@ -77,7 +77,7 @@ namespace ProcessRegistrationQueueWorkerRole
             myMessage.Subject = "You requested access?";
 
             //Add the HTML and Text bodies
-            myMessage.Text = "You've got 72 hours to confirm your account via this link: http://mnit-communication.azuresites.net/ConfirmAccount/" + accessToken.ToString();
+            myMessage.Text = "You've got 72 hours to confirm your account via this link: http://mnit-communication.azurewebsites.net/ConfirmAccount/" + accessToken.ToString();
 
             // Create credentials, specifying your user name and password.
             var credentials = new NetworkCredential("azure_853e23752ff2b9ce7c30020b435ea889@azure.com",
