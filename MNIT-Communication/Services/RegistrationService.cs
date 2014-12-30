@@ -12,18 +12,19 @@ namespace MNIT_Communication.Services
     public class RegistrationService
     {
         private readonly string RegistrationQueue = "RegistrationQueue";
-        public void SendRegistrationRequest(string email)
+        public async Task SendRegistrationRequest(string email)
         {
             var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
             var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
             var queueExists = namespaceManager.QueueExists(RegistrationQueue);
             if(!queueExists)
             {
-                namespaceManager.CreateQueue(RegistrationQueue);
+                await namespaceManager.CreateQueueAsync(RegistrationQueue);
             }
 
             var client = QueueClient.CreateFromConnectionString(connectionString, RegistrationQueue);
-            client.Send(new BrokeredMessage(email));
+            
+            await client.SendAsync(new BrokeredMessage(email));
 
         }
     }

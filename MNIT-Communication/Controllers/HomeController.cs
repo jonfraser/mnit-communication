@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -18,14 +19,14 @@ namespace MNIT_Communication.Controllers
         }
 
         [HttpPost]
-        public ActionResult Index(string emailAddress)
+        public async Task<ActionResult> Index(string emailAddress)
         {
             if(!emailAddress.ToLower().EndsWith("@health.qld.gov.au"))
             {
                 throw new NotSupportedException();
             }
             var svc = new RegistrationService();
-            svc.SendRegistrationRequest(emailAddress);
+            await svc.SendRegistrationRequest(emailAddress);
 
             //TODO: Somehow (maybe in the above service) we need to partially register this user before sending them to the next step
 
