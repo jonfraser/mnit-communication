@@ -27,7 +27,9 @@ namespace MNIT_Communication.Controllers
             var svc = new RegistrationService();
             svc.SendRegistrationRequest(emailAddress);
 
-            return RedirectToAction("Index");
+            //TODO: Somehow (maybe in the above service) we need to partially register this user before sending them to the next step
+
+            return RedirectToAction("Index", "Alerts");
         }
     }
 }

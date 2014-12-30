@@ -1,7 +1,11 @@
 ﻿@{
     ViewBag.Title = "Index";
 }
-<h1>Alertables</h1>
+<h1>Welcome!</h1>
+<p class="lead">
+    We've sent you an email to confirm your account creation, but before you go and do that spend a moment to select the
+    applications that you would like to be alerted on outages.
+</p>
 <div class="container-fluid" ng-controller="AlertsController">
     <div class="row">
         <div class="col-md-12">
@@ -13,6 +17,11 @@
                     </label>
                 </li>
             </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <button type="submit" class="btn btn-primary btn-lg">Ok, got it; these are the alerts I want &raquo;</button>
         </div>
     </div>
 </div>
