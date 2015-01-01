@@ -171,6 +171,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\api\apiAreaRegistration.cs" />
     <Compile Include="Areas\api\v1\Alertables\Get.cs" />
     <Compile Include="Areas\api\v1\Version\Get.cs" />

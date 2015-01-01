@@ -31,7 +31,7 @@
         angular.module('communicationApp', [])
           .controller('AlertsController', ['$scope', '$http', function ($scope, $http) {
 
-              $http.get('@Url.Action("Get", "Alertables", new { area="api" })').
+              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables"})').
                     success(function (data) { $scope.alertables = data; }).
                     error(function () { $scope.alertables = ['No alertables were retrieved from the server']});
 

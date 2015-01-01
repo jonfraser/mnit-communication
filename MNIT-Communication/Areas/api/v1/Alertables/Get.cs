@@ -8,19 +8,18 @@ using System.Web.Http;
 
 namespace MNIT_Communication.Areas.api
 {
-    public partial class AlertablesController : System.Web.Mvc.Controller
+    public partial class AlertablesController : ApiController
     {
-        public System.Web.Mvc.ActionResult Get()
+        public IEnumerable<Alertable> Get()
         {
-            return Json(new Alertable[] { 
+            return (new Alertable[] { 
                 new Alertable{ID=Guid.NewGuid(), Name="WardView" }
                 ,
                 new Alertable{ID = Guid.NewGuid(), Name="refer"}
                 ,
                 new Alertable{ID = Guid.NewGuid(), Name="FOCUS"}
-            }, System.Web.Mvc.JsonRequestBehavior.AllowGet);
+            });
         }
-
 
     }
 }
