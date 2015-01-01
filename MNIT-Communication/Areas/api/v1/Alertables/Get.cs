@@ -6,7 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace MNIT_Communication.Areas.api
+namespace MNIT_Communication.Areas.api.v1
 {
     public partial class AlertablesController : ApiController
     {

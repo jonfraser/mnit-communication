@@ -1,14 +1,36 @@
-﻿@using(var form = Html.BeginForm())
-{ 
-<div class="jumbotron form-group form-inline">
-    <h1>Get Started!</h1>
-    <p class="lead">Enter your @@health email address and we'll get the process started.</p>
+﻿<form ng-controller="RegisterUserController" ng-submit="registerUser()">
+    <div class="jumbotron form-group form-inline">
+        <h1>Get Started!</h1>
+        <p class="lead">Enter your @@health email address and we'll get the process started.</p>
 
-    <div class="row">
-        <div class="col-md-10">
-            <input class="form-control input-lg" placeholder="firstname.lastname@health.qld.gov.au" type="text" name="emailAddress" maxlength="100" />
-            <button type="submit" class="btn btn-primary btn-lg">Let's go &raquo;</button>
+        <div class="row">
+            <div class="col-md-10">
+                <input class="form-control input-lg"
+                       placeholder="firstname.lastname@health.qld.gov.au"
+                       type="text"
+                       ng-model="emailAddress"
+                       maxlength="100" />
+                <button type="submit" class="btn btn-primary btn-lg">Let's go &raquo;</button>
+            </div>
         </div>
     </div>
-</div>
+</form>
+
+@section scripts {
+    <script type="text/javascript">
+        angular.module('communicationApp', [])
+          .controller('RegisterUserController', ['$scope', '$http', function ($scope, $http) {
+
+              $scope.registerUser = function () {
+                  var data = {"emailAddress": $scope.emailAddress};
+                  $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Register", controller = "User"})', 
+                      JSON.stringify($scope.emailAddress)).
+                    success(function (data) { $scope.emailAddress = ''; window.location = "/alerts"; }).
+                    error(function (data) { alert(data); });
+                  
+              };
+
+          }]);
+
+    </script>
 }
