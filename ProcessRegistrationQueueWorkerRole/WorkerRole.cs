@@ -11,6 +11,7 @@ using Microsoft.WindowsAzure.ServiceRuntime;
 using SendGrid;
 using System.Net.Mail;
 using StackExchange.Redis;
+using MNIT_Communication.Domain;
 
 namespace ProcessRegistrationQueueWorkerRole
 {
@@ -36,8 +37,10 @@ namespace ProcessRegistrationQueueWorkerRole
                     {
                         // Process the message
                         Trace.WriteLine("Processing Service Bus message: " + receivedMessage.SequenceNumber.ToString());
-                        var accessToken = Guid.NewGuid().ToString();
-                        StoreToken("frasejon", accessToken);
+                        var message = receivedMessage.GetBody<NewUserRegistrationBrokeredMessage>();
+
+                        var accessToken = message.CorrelationId.ToString();
+                        StoreToken(message.EmailAddress, accessToken);
                         SendEmail("fraser.jc@gmail.com", accessToken);
                     }
                     catch
@@ -50,13 +53,13 @@ namespace ProcessRegistrationQueueWorkerRole
             CompletedEvent.WaitOne();
         }
 
-        private void StoreToken(string username, string accessToken)
+        private void StoreToken(string emailAddress, string accessToken)
         {
             ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(CloudConfigurationManager.GetSetting("RedisConnection"));
             
             IDatabase cache = connection.GetDatabase();
 
-            cache.StringSet(username, accessToken, expiry: new TimeSpan(72, 0, 0));
+            cache.StringSet(emailAddress, accessToken, expiry: new TimeSpan(72, 0, 0));
 
         
         }
