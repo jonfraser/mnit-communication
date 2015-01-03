@@ -9,10 +9,11 @@
 <div class="container-fluid" ng-controller="AlertsController">
     <div class="row">
         <div class="col-md-12">
-            <ul class="list-unstyled">
-                <li ng-repeat="alertable in alertables">
+            <ul class="list-unstyled list-inline">
+                <li ng-repeat="alertable in alertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
+                    *@
                     <label class="checkbox-inline">
-                        <input type="checkbox" data-toggle="toggle" />
+                        <input type="checkbox" />
                         {{alertable.Name}}
                     </label>
                 </li>
@@ -29,13 +30,30 @@
 @section scripts {
     <script type="text/javascript">
         angular.module('communicationApp', [])
+            .directive('onFinishRender', function ($timeout) {
+                return {
+                    restrict: 'A',
+                    link: function (scope, element, attr) {
+                        if (scope.$last === true) {
+                            scope.$evalAsync(attr.onFinishRender);
+                        }
+                    }
+                }
+            })
           .controller('AlertsController', ['$scope', '$http', function ($scope, $http) {
 
-              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables"})').
-                    success(function (data) { $scope.alertables = data; }).
-                    error(function () { $scope.alertables = ['No alertables were retrieved from the server']});
+              $scope.toggelize = function () {
+                  $('li label input').bootstrapToggle({
+                      on: 'Yes',
+                      off: 'No'
+                  });
+              };
 
-              //$scope.alertables = ['one', 'two', 'three'];
+              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables"})').
+                    success(function (data) {
+                        $scope.alertables = data;
+                    }).
+                    error(function () { $scope.alertables = ['No alertables were retrieved from the server']});
 
           }]);
 
