@@ -173,6 +173,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\api\apiAreaRegistration.cs" />
+    <Compile Include="Areas\api\v1\Alerts\Get.cs" />
     <Compile Include="Areas\api\v1\Alertables\Get.cs" />
     <Compile Include="Areas\api\v1\User\Register.cs" />
     <Compile Include="Areas\api\v1\Version\Get.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\AlertsService.cs" />
     <Compile Include="Services\RegistrationService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

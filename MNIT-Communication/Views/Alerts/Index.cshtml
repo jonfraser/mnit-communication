@@ -1,17 +1,22 @@
-﻿@{
-    ViewBag.Title = "Index";
+﻿@model Guid?
+@{
+    ViewBag.Title = "Select your alerts";
+    var newUserRegistrationId = "null";
+    if(Model.HasValue)
+    {
+        newUserRegistrationId = string.Format("'{0}'", Model.Value.ToString());
+    }
 }
 <h1>Welcome!</h1>
 <p class="lead">
     We've sent you an email to confirm your account creation, but before you go and do that spend a moment to select the
     applications that you would like to be alerted on outages.
 </p>
-<div class="container-fluid" ng-controller="AlertsController">
+<form class="container-fluid" ng-controller="AlertsController" ng-submit="registerAlerts(@newUserRegistrationId)">
     <div class="row">
         <div class="col-md-12">
             <ul class="list-unstyled list-inline">
                 <li ng-repeat="alertable in alertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
-                    *@
                     <label class="checkbox-inline">
                         <input type="checkbox" />
                         {{alertable.Name}}
@@ -25,7 +30,7 @@
             <button type="submit" class="btn btn-primary btn-lg">Ok, got it; these are the alerts I want &raquo;</button>
         </div>
     </div>
-</div>
+</form>
 
 @section scripts {
     <script type="text/javascript">
@@ -47,6 +52,20 @@
                       on: 'Yes',
                       off: 'No'
                   });
+              };
+
+              $scope.registerAlerts = function (newUserRegistrationId) {
+                  var data = {
+                      "newUserRegistrationId": newUserRegistrationId
+                  };
+                  $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Register", controller = "User"})',
+                      JSON.stringify($scope.emailAddress)).
+                    success(function (data) {
+                        $scope.emailAddress = '';
+                        window.location = "/alerts/" + data;
+                    }).
+                    error(function (data) { alert(data); });
+
               };
 
               $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables"})').

@@ -27,7 +27,10 @@
                   var data = {"emailAddress": $scope.emailAddress};
                   $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Register", controller = "User"})', 
                       JSON.stringify($scope.emailAddress)).
-                    success(function (data) { $scope.emailAddress = ''; window.location = "/alerts"; }).
+                    success(function (data) {
+                        $scope.emailAddress = '';
+                        window.location = "/alerts/" + data;
+                    }).
                     error(function (data) { alert(data); });
                   
               };
