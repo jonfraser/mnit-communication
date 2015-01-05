@@ -183,4 +183,6 @@ UpgradeLog*.htm
 FakesAssemblies/
 
 *.Release.config
+*.Debug.config
 *.Cloud.cscfg
+*.Local.cscfg
