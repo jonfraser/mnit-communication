@@ -29,7 +29,7 @@
                       JSON.stringify($scope.emailAddress)).
                     success(function (data) {
                         $scope.emailAddress = '';
-                        window.location = "/alerts/" + data;
+                        window.location = "/alerts/newuser/" + data;
                     }).
                     error(function (data) { alert(data); });
                   
