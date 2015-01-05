@@ -8,10 +8,10 @@ using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
 using Microsoft.WindowsAzure.ServiceRuntime;
-using SendGrid;
 using System.Net.Mail;
-using StackExchange.Redis;
 using MNIT_Communication.Domain;
+using System.Collections.Specialized;
+using System.Text;
 
 namespace ProcessRegistrationQueueWorkerRole
 {
@@ -39,9 +39,15 @@ namespace ProcessRegistrationQueueWorkerRole
                         Trace.WriteLine("Processing Service Bus message: " + receivedMessage.SequenceNumber.ToString());
                         var message = receivedMessage.GetBody<NewUserRegistrationBrokeredMessage>();
 
-                        var accessToken = message.CorrelationId.ToString();
-                        StoreToken(message.EmailAddress, accessToken);
-                        SendEmail("fraser.jc@gmail.com", accessToken);
+                        using(var client = new WebClient())
+                        {
+                            var url = new Uri(CloudConfigurationManager.GetSetting("BaseWebUrl") + "/api/User/ProcessRegistration");
+                            var requestParams = new NameValueCollection();
+                            requestParams.Add("newUserRegistrationBrokeredMessage", Newtonsoft.Json.JsonConvert.SerializeObject(message));
+                            byte[] responsebytes = client.UploadValues(url, "GET", requestParams);
+                            string responsebody = Encoding.UTF8.GetString(responsebytes);
+
+                        }
                     }
                     catch
                     {
@@ -51,46 +57,6 @@ namespace ProcessRegistrationQueueWorkerRole
                 });
 
             CompletedEvent.WaitOne();
-        }
-
-        private void StoreToken(string emailAddress, string accessToken)
-        {
-            ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(CloudConfigurationManager.GetSetting("RedisConnection"));
-            
-            IDatabase cache = connection.GetDatabase();
-
-            cache.StringSet(emailAddress, accessToken, expiry: new TimeSpan(72, 0, 0));
-
-        
-        }
-
-        private void SendEmail(string email, string accessToken)
-        {
-            // Create the email object first, then add the properties.
-            var myMessage = new SendGridMessage();
-
-            // Add the message properties.
-            myMessage.From = new MailAddress("mnit-communication@health.qld.gov.au");
-
-            // Add multiple addresses to the To field.
-            List<String> recipients = new List<String> { email };
-
-            myMessage.AddTo(recipients);
-
-            myMessage.Subject = "You requested access?";
-
-            //Add the HTML and Text bodies
-            myMessage.Text = "You've got 72 hours to confirm your account via this link: http://mnit-communication.azurewebsites.net/ConfirmAccount/" + accessToken.ToString();
-
-            // Create credentials, specifying your user name and password.
-            var credentials = new NetworkCredential("azure_853e23752ff2b9ce7c30020b435ea889@azure.com",
-                CloudConfigurationManager.GetSetting("SendGridPassword"));
-
-            // Create an Web transport for sending email.
-            var transportWeb = new Web(credentials);
-
-            // Send the email.
-            transportWeb.Deliver(myMessage);
         }
 
         public override bool OnStart()

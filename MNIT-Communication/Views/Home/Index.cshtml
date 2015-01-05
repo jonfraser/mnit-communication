@@ -3,18 +3,20 @@
         <h1>Get Started!</h1>
         <p class="lead">Enter your @@health email address and we'll get the process started.</p>
 
-        <div class="row">
-            <div class="col-md-6 input-group">
-                <input class="form-control input-lg"
-                       placeholder="firstname.lastname@health.qld.gov.au"
-                       type="text"
-                       ng-model="emailAddress"
-                       maxlength="100" />
+        <fieldset ng-disabled="isSubmitting">
+            <div class="row">
+                <div class="col-md-6 input-group">
+                    <input class="form-control input-lg"
+                           placeholder="firstname.lastname@health.qld.gov.au"
+                           type="text"
+                           ng-model="emailAddress"
+                           maxlength="100" />
+                </div>
+                <div class="col-md-2 input-group">
+                    <button type="submit" class="btn btn-primary btn-lg">Let's go &raquo;</button>
+                </div>
             </div>
-            <div class="col-md-2 input-group">
-                <button type="submit" class="btn btn-primary btn-lg">Let's go &raquo;</button>
-            </div>
-        </div>
+        </fieldset>
     </div>
 </form>
 
@@ -23,7 +25,10 @@
         angular.module('communicationApp', [])
           .controller('RegisterUserController', ['$scope', '$http', function ($scope, $http) {
 
+              $scope.isSubmitting = false;
+
               $scope.registerUser = function () {
+                  $scope.isSubmitting = true;
                   var data = {"emailAddress": $scope.emailAddress};
                   $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Register", controller = "User"})', 
                       JSON.stringify($scope.emailAddress)).
@@ -31,7 +36,7 @@
                         $scope.emailAddress = '';
                         window.location = "/alerts/newuser/" + data;
                     }).
-                    error(function (data) { alert(data); });
+                    error(function (data) { alert(data); $scope.isSubmitting = false; });
                   
               };
 

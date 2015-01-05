@@ -5,6 +5,7 @@
       <Setting name="Microsoft.ServiceBus.ConnectionString" />
       <Setting name="SendGridPassword" />
       <Setting name="RedisConnection" />
+      <Setting name="BaseWebUrl" />
     </ConfigurationSettings>
   </WorkerRole>
 </ServiceDefinition>

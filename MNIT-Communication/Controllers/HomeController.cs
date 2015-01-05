@@ -18,6 +18,11 @@ namespace MNIT_Communication.Controllers
             return View();
         }
 
+        public ActionResult Confirmed()
+        {
+            return View();
+        }
+
         //[HttpPost]
         //public async Task<ActionResult> Index(string emailAddress)
         //{

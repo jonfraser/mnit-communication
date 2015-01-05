@@ -6,6 +6,7 @@
       <Setting name="Microsoft.ServiceBus.ConnectionString" value="Endpoint=sb://mnit-communication-ns.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=" />
       <Setting name="SendGridPassword" value="" />
       <Setting name="RedisConnection" value="mnitcommunication.redis.cache.windows.net,ssl=true"/>
+      <Setting name="BaseWebUrl" value="http://localhost:13821"/>
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>
