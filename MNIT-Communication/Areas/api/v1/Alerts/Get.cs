@@ -15,9 +15,7 @@ namespace MNIT_Communication.Areas.api.v1
         [HttpPost]
         public async Task<Guid> Register([FromBody]Guid newUserRegistrationId, [FromBody]IEnumerable<Guid> alertables)
         {
-            var svc = new AlertsService();
-            return await svc.RegisterNewUserForInitialAlerts(newUserRegistrationId, "email", alertables);
-            
+            return await alertsService.RegisterNewUserForInitialAlerts(newUserRegistrationId, "email", alertables);
         }
     }
 }

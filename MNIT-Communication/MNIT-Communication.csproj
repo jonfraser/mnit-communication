@@ -39,6 +39,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.0\lib\net40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.Mvc">
+      <HintPath>..\packages\Autofac.Mvc5.3.3.3\lib\net45\Autofac.Integration.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Autofac.Integration.WebApi">
+      <HintPath>..\packages\Autofac.WebApi2.3.4.0\lib\net45\Autofac.Integration.WebApi.dll</HintPath>
+    </Reference>
     <Reference Include="Dapper">
       <HintPath>..\packages\Dapper.1.38\lib\net45\Dapper.dll</HintPath>
     </Reference>
@@ -177,13 +186,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\DependencyConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\api\apiAreaRegistration.cs" />
+    <Compile Include="Areas\api\v1\Alerts\Base.cs" />
     <Compile Include="Areas\api\v1\Alerts\Get.cs" />
     <Compile Include="Areas\api\v1\Alertables\Get.cs" />
+    <Compile Include="Areas\api\v1\User\Base.cs" />
     <Compile Include="Areas\api\v1\User\Confirm.cs" />
     <Compile Include="Areas\api\v1\User\ProcessRegistration.cs" />
     <Compile Include="Areas\api\v1\User\Register.cs" />
@@ -197,6 +209,10 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AlertsService.cs" />
+    <Compile Include="Services\FakeAlertsService.cs" />
+    <Compile Include="Services\FakeRegistrationService.cs" />
+    <Compile Include="Services\IAlertsService.cs" />
+    <Compile Include="Services\IRegistrationService.cs" />
     <Compile Include="Services\RegistrationService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

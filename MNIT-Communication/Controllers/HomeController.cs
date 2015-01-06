@@ -22,20 +22,6 @@ namespace MNIT_Communication.Controllers
         {
             return View();
         }
-
-        //[HttpPost]
-        //public async Task<ActionResult> Index(string emailAddress)
-        //{
-        //    //if(!emailAddress.ToLower().EndsWith("@health.qld.gov.au"))
-        //    //{
-        //    //    throw new NotSupportedException();
-        //    //}
-        //    //var svc = new RegistrationService();
-        //    //await svc.SendRegistrationRequest(emailAddress);
-
-        //    ////TODO: Somehow (maybe in the above service) we need to partially register this user before sending them to the next step
-
-        //    return RedirectToAction("Index", "Alerts");
-        //}
+		        
     }
 }

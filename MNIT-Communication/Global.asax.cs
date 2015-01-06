@@ -14,6 +14,7 @@ namespace MNIT_Communication
     {
         protected void Application_Start()
         {
+			DependencyConfig.BuildUpContainer();
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);

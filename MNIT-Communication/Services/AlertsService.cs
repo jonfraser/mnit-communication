@@ -10,7 +10,7 @@ using System.Web;
 
 namespace MNIT_Communication.Services
 {
-    public class AlertsService
+    public class AlertsService : IAlertsService
     {
         private readonly string AlertsQueue = "AlertsQueue";
 

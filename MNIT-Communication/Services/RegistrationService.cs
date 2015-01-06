@@ -1,18 +1,18 @@
-﻿using Microsoft.ServiceBus;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Mail;
+using System.Threading.Tasks;
+using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
 using MNIT_Communication.Domain;
 using SendGrid;
 using StackExchange.Redis;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Mail;
-using System.Threading.Tasks;
 
 namespace MNIT_Communication.Services
 {
-    public class RegistrationService
+    public class RegistrationService : IRegistrationService
     {
         private readonly string RegistrationQueue = "RegistrationQueue";
         public async Task<Guid> SendRegistrationRequest(string email)
