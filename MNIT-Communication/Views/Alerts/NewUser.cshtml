@@ -56,9 +56,10 @@
 
               $scope.registerAlerts = function (newUserRegistrationId) {
                   var data = {
-                      "newUserRegistrationId": newUserRegistrationId
+                      "newUserRegistrationId": newUserRegistrationId,
+                      "alertables": ['440394b8-8b90-46dd-bf13-a420a4358cc2']
                   };
-                  $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Register", controller = "Alerts"})',
+                  $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "AssignNew", controller = "Alerts"})',
                       JSON.stringify(data)).
                     success(function (data) {
                         window.location = "/alerts/newuserdone/" + data;

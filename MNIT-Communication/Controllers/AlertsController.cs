@@ -14,5 +14,13 @@ namespace MNIT_Communication.Controllers
             //Do nothing, just return the view as we will ajax in the alerts via the rest api
             return View(newUserRegistrationId);
         }
+
+		[HttpGet]
+		public ActionResult NewUserDone(Guid newUserRegistrationId)
+		{
+			//Confirm the GUID is correct
+
+			return View();
+		}
     }
 }

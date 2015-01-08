@@ -192,6 +192,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\api\apiAreaRegistration.cs" />
+    <Compile Include="Areas\api\v1\Alerts\AssignNew.cs" />
     <Compile Include="Areas\api\v1\Alerts\Base.cs" />
     <Compile Include="Areas\api\v1\Alerts\Get.cs" />
     <Compile Include="Areas\api\v1\Alertables\Get.cs" />
@@ -1113,6 +1114,7 @@
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Alerts\NewUser.cshtml" />
     <Content Include="Views\Home\Confirmed.cshtml" />
+    <Content Include="Views\Alerts\NewUserDone.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
