@@ -1,0 +1,79 @@
+﻿@model Guid?
+@{
+    ViewBag.Title = "Select your alerts";
+    var newUserRegistrationId = "null";
+    if(Model.HasValue)
+    {
+        newUserRegistrationId = string.Format("'{0}'", Model.Value.ToString());
+    }
+}
+<h1>Welcome!</h1>
+<p class="lead">
+    We've sent you an email to confirm your account creation, but before you go and do that spend a moment to select the
+    applications that you would like to be alerted on outages.
+</p>
+<form class="container-fluid" ng-controller="AlertsController" ng-submit="registerAlerts(@newUserRegistrationId)">
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="list-unstyled list-inline">
+                <li ng-repeat="alertable in alertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" />
+                        {{alertable.Name}}
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <button type="submit" class="btn btn-primary btn-lg">Ok, got it; these are the alerts I want &raquo;</button>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <script type="text/javascript">
+        angular.module('communicationApp', [])
+            .directive('onFinishRender', function ($timeout) {
+                return {
+                    restrict: 'A',
+                    link: function (scope, element, attr) {
+                        if (scope.$last === true) {
+                            scope.$evalAsync(attr.onFinishRender);
+                        }
+                    }
+                }
+            })
+          .controller('AlertsController', ['$scope', '$http', function ($scope, $http) {
+
+              $scope.toggelize = function () {
+                  $('li label input').bootstrapToggle({
+                      on: 'Yes',
+                      off: 'No'
+                  });
+              };
+
+              $scope.registerAlerts = function (newUserRegistrationId) {
+                  var data = {
+                      "newUserRegistrationId": newUserRegistrationId
+                  };
+                  $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Register", controller = "Alerts"})',
+                      JSON.stringify(data)).
+                    success(function (data) {
+                        window.location = "/alerts/newuserdone/" + data;
+                    }).
+                    error(function (data) { alert(data); });
+
+              };
+
+              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables"})').
+                    success(function (data) {
+                        $scope.alertables = data;
+                    }).
+                    error(function () { $scope.alertables = ['No alertables were retrieved from the server']});
+
+          }]);
+
+    </script>
+}

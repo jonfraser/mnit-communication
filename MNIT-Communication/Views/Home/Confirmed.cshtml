@@ -1,0 +1,26 @@
+﻿<form ng-controller="ConfirmedUserController" ng-submit="closeWindow()">
+    <div class="jumbotron form-group form-inline">
+        <h1>All done!</h1>
+        <p class="lead">Your account has been confirmed. If you have already set up your alerts then you're all done and can close this window.</p>
+
+        <div class="row">
+            <div class="col-md-2 input-group">
+                <button type="submit" class="btn btn-primary btn-lg">Close window &raquo;</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <script type="text/javascript">
+        angular.module('communicationApp', [])
+          .controller('ConfirmedUserController', ['$scope', '$http', function ($scope, $http) {
+
+              $scope.closeWindow = function () {
+                  window.close();
+              };
+
+          }]);
+
+    </script>
+}
