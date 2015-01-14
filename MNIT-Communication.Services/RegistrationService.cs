@@ -53,7 +53,7 @@ namespace MNIT_Communication.Services
 				var url = new Uri(baseWebUrl + "/api/User/ProcessRegistration");
 				var requestParams = new NameValueCollection();
 				requestParams.Add("newUserRegistrationBrokeredMessage", Newtonsoft.Json.JsonConvert.SerializeObject(message));
-				byte[] responsebytes = client.UploadValues(url, "GET", requestParams);
+				byte[] responsebytes = client.UploadValues(url, "POST", requestParams);
 				string responsebody = Encoding.UTF8.GetString(responsebytes);
 
 			}

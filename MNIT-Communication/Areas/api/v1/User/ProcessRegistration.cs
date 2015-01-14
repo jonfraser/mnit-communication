@@ -7,7 +7,8 @@ namespace MNIT_Communication.Areas.api.v1
 {
 	public partial class UserController : ApiController
 	{
-		public async Task ProcessRegistration([FromBody]NewUserRegistrationBrokeredMessage newUserRegistrationBrokeredMessage)
+		[HttpPost]
+		public async Task ProcessRegistration(NewUserRegistrationBrokeredMessage newUserRegistrationBrokeredMessage)
 		{
 			await registrationService.ProcessRegistrationRequest(newUserRegistrationBrokeredMessage.CorrelationId, newUserRegistrationBrokeredMessage.EmailAddress);
 		}
