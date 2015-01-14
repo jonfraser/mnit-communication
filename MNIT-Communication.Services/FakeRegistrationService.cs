@@ -20,5 +20,12 @@ namespace MNIT_Communication.Services
 			Trace.Write("FakeRegistrationService.SendRegistrationRequest " + email);
 			return await Task.Run(() => Guid.NewGuid());
 		}
+
+
+		public async Task ProcessServiceBusRegistrationMessage(string baseWebUrl, Domain.NewUserRegistrationBrokeredMessage message)
+		{
+			Trace.Write("FakeRegistrationService.ProcessServiceBusRegistrationMessage " + message.CorrelationId);
+			return;
+		}
 	}
 }

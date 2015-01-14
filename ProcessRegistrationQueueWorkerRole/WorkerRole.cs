@@ -12,6 +12,7 @@ using System.Net.Mail;
 using MNIT_Communication.Domain;
 using System.Collections.Specialized;
 using System.Text;
+using MNIT_Communication.Services;
 
 namespace ProcessRegistrationQueueWorkerRole
 {
@@ -25,6 +26,7 @@ namespace ProcessRegistrationQueueWorkerRole
         QueueClient Client;
         ManualResetEvent CompletedEvent = new ManualResetEvent(false);
         string connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+		IRegistrationService registrationService = new RegistrationService();
 
         public override void Run()
         {
@@ -39,15 +41,9 @@ namespace ProcessRegistrationQueueWorkerRole
                         Trace.WriteLine("Processing Service Bus message: " + receivedMessage.SequenceNumber.ToString());
                         var message = receivedMessage.GetBody<NewUserRegistrationBrokeredMessage>();
 
-                        using(var client = new WebClient())
-                        {
-                            var url = new Uri(CloudConfigurationManager.GetSetting("BaseWebUrl") + "/api/User/ProcessRegistration");
-                            var requestParams = new NameValueCollection();
-                            requestParams.Add("newUserRegistrationBrokeredMessage", Newtonsoft.Json.JsonConvert.SerializeObject(message));
-                            byte[] responsebytes = client.UploadValues(url, "GET", requestParams);
-                            string responsebody = Encoding.UTF8.GetString(responsebytes);
-
-                        }
+						registrationService.ProcessServiceBusRegistrationMessage(
+							CloudConfigurationManager.GetSetting("BaseWebUrl"),
+							message);
                     }
                     catch
                     {

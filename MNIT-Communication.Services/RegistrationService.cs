@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
@@ -43,6 +45,19 @@ namespace MNIT_Communication.Services
             await StoreToken(emailAddress, accessToken);
             await SendEmail("fraser.jc@gmail.com", accessToken);
         }
+
+		public async Task ProcessServiceBusRegistrationMessage(string baseWebUrl, NewUserRegistrationBrokeredMessage message)
+		{
+			using (var client = new WebClient())
+			{
+				var url = new Uri(baseWebUrl + "/api/User/ProcessRegistration");
+				var requestParams = new NameValueCollection();
+				requestParams.Add("newUserRegistrationBrokeredMessage", Newtonsoft.Json.JsonConvert.SerializeObject(message));
+				byte[] responsebytes = client.UploadValues(url, "GET", requestParams);
+				string responsebody = Encoding.UTF8.GetString(responsebytes);
+
+			}
+		}
 
         private async Task StoreToken(string emailAddress, Guid accessToken)
         {
