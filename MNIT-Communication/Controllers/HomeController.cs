@@ -8,20 +8,54 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using MNIT_Communication.Helpers;
+using Microsoft.Owin.Security;
 
 namespace MNIT_Communication.Controllers
 {
-    public class HomeController : Controller
-    {
-        public ActionResult Index()
-        {
-            return View();
-        }
+	public class HomeController : Controller
+	{
 
-        public ActionResult Confirmed()
-        {
-            return View();
-        }
-		        
-    }
+		public ActionResult Index()
+		{
+			return View();
+		}
+
+		public ActionResult LinkExternalAccount(Guid id)
+		{
+			return View(id);
+		}
+
+		[HttpPost]
+		[AllowAnonymous]
+		[ValidateAntiForgeryToken]
+		public ActionResult ExternalLogin(string provider, string returnUrl)
+		{
+			// Request a redirect to the external login provider
+			return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Home", new { ReturnUrl = returnUrl }));
+		}
+
+		[AllowAnonymous]
+		public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
+		{
+			var loginInfo = await HttpContext.GetOwinContext().Authentication.GetExternalLoginInfoAsync();
+			if (loginInfo == null)
+			{
+				return new HttpUnauthorizedResult();
+			}
+
+			var provider = loginInfo.Login.LoginProvider;
+			var email = loginInfo.Email;
+			//TODO: create an api endpoint to call that will allow setting of an external provider on a user
+
+			return Redirect(returnUrl);
+
+		}
+
+		public ActionResult Confirmed()
+		{
+			return View();
+		}
+
+	}
 }

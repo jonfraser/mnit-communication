@@ -17,5 +17,6 @@ namespace MNIT_Communication.Tests
 					EmailAddress = "jon.fraser@health.qld.gov.au"
 				});
 		}
+
 	}
 }

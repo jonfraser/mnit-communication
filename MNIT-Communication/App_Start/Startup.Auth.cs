@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using MNIT_Communication.Models;
+using Microsoft.WindowsAzure;
 
 namespace MNIT_Communication
 {
@@ -58,11 +59,12 @@ namespace MNIT_Communication
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+			app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+			{
+				ClientId = CloudConfigurationManager.GetSetting("GoogleAuthClientID"),
+				ClientSecret = CloudConfigurationManager.GetSetting("GoogleAuthClientSecret")
+			});
+
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Http;
+using MNIT_Communication.Areas.api;
 
 namespace MNIT_Communication.App_Start
 {
@@ -11,6 +12,7 @@ namespace MNIT_Communication.App_Start
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+			config.Filters.Add(new BaseExceptionFilterAttribute());
 
             // Web API routes
             config.MapHttpAttributeRoutes();

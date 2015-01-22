@@ -34,7 +34,7 @@
                       JSON.stringify($scope.emailAddress)).
                     success(function (data) {
                         $scope.emailAddress = '';
-                        window.location = "/alerts/newuser/" + data;
+                        window.location = "/Home/LinkExternalAccount/" + data;
                     }).
                     error(function (data) { alert(data); $scope.isSubmitting = false; });
                   

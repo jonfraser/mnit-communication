@@ -186,3 +186,4 @@ FakesAssemblies/
 *.Debug.config
 *.Cloud.cscfg
 *.Local.cscfg
+*.config
