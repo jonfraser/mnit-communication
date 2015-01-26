@@ -12,6 +12,7 @@ namespace MNIT_Communication
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+			//routes.Ignore("signin-google");
 
             routes.MapRoute(
                 name: "Default",
