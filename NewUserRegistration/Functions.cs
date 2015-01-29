@@ -13,7 +13,7 @@ namespace NewUserRegistration
 {
 	public class Functions
 	{
-		public static void ProcessQueueMessage([QueueTrigger("RegistrationQueue")] NewUserRegistrationBrokeredMessage message, TextWriter log)
+		public static void ProcessQueueMessage([ServiceBusTrigger("RegistrationQueue")] NewUserRegistrationBrokeredMessage message, TextWriter log)
 		{
 			log.WriteLine("Received message from queue");
 			new RegistrationService().ProcessServiceBusRegistrationMessage(
