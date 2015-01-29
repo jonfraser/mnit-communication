@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNIT-Communication.Services
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNIT-Communication.Tests", "MNIT-Communication.Tests\MNIT-Communication.Tests.csproj", "{89DEAB0A-2CA4-4396-9722-5EF200EDF9D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNIT-Communication.Jobs.NewUserRegistration", "MNIT-Communication.Jobs.NewUserRegistration\MNIT-Communication.Jobs.NewUserRegistration.csproj", "{6731EFAF-9473-4EF7-A818-681DD4EF9E8E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewUserRegistration", "NewUserRegistration\NewUserRegistration.csproj", "{DFD4D50C-7F13-43FD-8788-DD89D0DE5CFB}"
 EndProject
 Global
@@ -49,10 +47,6 @@ Global
 		{89DEAB0A-2CA4-4396-9722-5EF200EDF9D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89DEAB0A-2CA4-4396-9722-5EF200EDF9D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89DEAB0A-2CA4-4396-9722-5EF200EDF9D0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6731EFAF-9473-4EF7-A818-681DD4EF9E8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6731EFAF-9473-4EF7-A818-681DD4EF9E8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6731EFAF-9473-4EF7-A818-681DD4EF9E8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6731EFAF-9473-4EF7-A818-681DD4EF9E8E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DFD4D50C-7F13-43FD-8788-DD89D0DE5CFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DFD4D50C-7F13-43FD-8788-DD89D0DE5CFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFD4D50C-7F13-43FD-8788-DD89D0DE5CFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
