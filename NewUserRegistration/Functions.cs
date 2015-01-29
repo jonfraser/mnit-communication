@@ -18,7 +18,7 @@ namespace NewUserRegistration
 			log.WriteLine("Received message from queue");
 			new RegistrationService().ProcessServiceBusRegistrationMessage(
 							CloudConfigurationManager.GetSetting("BaseWebUrl"),
-							message).RunSynchronously();
+							message);
 		}
 	}
 }
