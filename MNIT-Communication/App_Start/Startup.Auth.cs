@@ -63,6 +63,7 @@ namespace MNIT_Communication
 			{
 				ClientId = CloudConfigurationManager.GetSetting("GoogleAuthClientID"),
 				ClientSecret = CloudConfigurationManager.GetSetting("GoogleAuthClientSecret")
+				//Scope = new { "openid", "profile", "email" }
 			});
 
         }
