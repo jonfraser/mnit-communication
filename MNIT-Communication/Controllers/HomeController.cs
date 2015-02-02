@@ -21,6 +21,11 @@ namespace MNIT_Communication.Controllers
 			return View();
 		}
 
+		public ActionResult SetUserProfile(Guid id)
+		{
+			return View(id);
+		}
+
 		public ActionResult LinkExternalAccount(Guid id)
 		{
 			return View(id);
@@ -31,7 +36,6 @@ namespace MNIT_Communication.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult ExternalLogin(string provider, string returnUrl)
 		{
-			//Session["dummy"] = "dummy";
 
 			// Request a redirect to the external login provider
 			return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Home", new { ReturnUrl = returnUrl }));

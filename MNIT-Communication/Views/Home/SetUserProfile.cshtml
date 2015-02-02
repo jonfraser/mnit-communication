@@ -1,0 +1,64 @@
+﻿@model Guid
+@{
+    ViewBag.Title = "Set User Profile";
+}
+<h1>How will we reach you?</h1>
+<p class="lead">
+    We've got enough information to contact you on your work email, but for those times when you're not at your desk it would help
+    if we had some more information. Confirm/update the details below.
+</p>
+<form class="container-fluid" ng-controller="UserProfileController" ng-submit="setUserProfile(@Model)">
+    <div class="row">
+        <div class="col-md-2">
+            <label for="email">Email:</label>
+        </div>
+        <div class="col-md-8">
+            <input type="email" id="email" ng-model="email" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label for="mobile">Mobile Phone:</label>
+        </div>
+        <div class="col-md-8">
+            <input type="text" id="mobile" ng-model="mobile" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <button type="submit" class="btn btn-primary btn-lg">Yep, that's me &raquo;</button>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <script type="text/javascript">
+        angular.module('communicationApp', [])
+            .controller('UserProfileController', ['$scope', '$http', function ($scope, $http) {
+
+              $scope.setUserProfile = function (newUserRegistrationId) {
+                  var data = {
+                      "newUserRegistrationId": newUserRegistrationId,
+                      "email": $scope.email,
+                      "mobile": $scope.mobile
+                  };
+                  window.location = "/alerts/newuser/@Model";
+                  @*$http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "AssignNew", controller = "Alerts"})',
+                      JSON.stringify(data)).
+                    success(function (data) {
+                        window.location = "/alerts/newuserdone/" + data;
+                    }).
+                    error(function (data) { alert(data); });*@
+
+              };
+
+              @*$http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables"})').
+                    success(function (data) {
+                        $scope.alertables = data;
+                    }).
+                    error(function () { $scope.alertables = ['No alertables were retrieved from the server'] });*@
+
+          }]);
+
+    </script>
+}

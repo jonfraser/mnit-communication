@@ -12,7 +12,7 @@
     address to link your account up to. Please login with one of the following providers (hint, you'll use this account next time you want to log in here).
 </p>
 
-@using (Html.BeginForm("ExternalLogin", "Home", new { ReturnUrl = Url.Action("NewUser", "Alerts", new { id = Model }) }))
+@using (Html.BeginForm("ExternalLogin", "Home", new { ReturnUrl = Url.Action("SetUserProfile", "Home", new { id = Model }) }))
 {
     @Html.AntiForgeryToken()
     <div id="socialLoginList">

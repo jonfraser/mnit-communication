@@ -46,19 +46,9 @@ namespace MNIT_Communication
             // This is similar to the RememberMe option when you log in.
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
-            // Uncomment the following lines to enable logging in with third party login providers
 			app.UseMicrosoftAccountAuthentication(
 				clientId: CloudConfigurationManager.GetSetting("MicrosoftAuthClientID"),
 				clientSecret: CloudConfigurationManager.GetSetting("MicrosoftAuthClientSecret"));
-
-            //app.UseTwitterAuthentication(
-            //   consumerKey: "",
-            //   consumerSecret: "");
-
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
-
 			app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
 			{
 				ClientId = CloudConfigurationManager.GetSetting("GoogleAuthClientID"),
@@ -66,6 +56,7 @@ namespace MNIT_Communication
 				//Scope = new { "openid", "profile", "email" }
 			});
 
+            
         }
     }
 }

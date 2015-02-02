@@ -15,7 +15,7 @@ namespace NewUserRegistration
 	{
 		public async static Task ProcessQueueMessage([ServiceBusTrigger("RegistrationQueue")] NewUserRegistrationBrokeredMessage message, TextWriter log)
 		{
-			log.WriteLine("Received message from queue for " + message.EmailAddress);
+			log.WriteLine("Received message " + message.CorrelationId.ToString() + " from queue for " + message.EmailAddress);
 			var svc = new RegistrationService();
 			var endpoint = CloudConfigurationManager.GetSetting("BaseWebUrl");
 

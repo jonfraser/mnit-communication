@@ -11,12 +11,18 @@ namespace MNIT_Communication.Tests
 		public void ProcessServiceBusRegistrationMessageWithValidParamsShouldStoreTokenAndSendEmail()
 		{
 			IRegistrationService reg = new RegistrationService();
-			reg.ProcessServiceBusRegistrationMessage("http://localhost:13821", new Domain.NewUserRegistrationBrokeredMessage
+			reg.ProcessServiceBusRegistrationMessage("https://localhost:44300", new Domain.NewUserRegistrationBrokeredMessage
 				{
 					CorrelationId = Guid.NewGuid(),
 					EmailAddress = "jon.fraser@health.qld.gov.au"
 				});
 		}
 
+		[TestMethod]
+		public void ProcessRegistrationWithValidParamsShouldStoreTokenAndSendEmail()
+		{
+			IRegistrationService reg = new RegistrationService();
+			reg.ProcessRegistrationRequest(Guid.NewGuid(), "fraser.jc@gmail.com");
+		}
 	}
 }
