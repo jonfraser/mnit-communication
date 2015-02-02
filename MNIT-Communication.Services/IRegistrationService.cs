@@ -5,9 +5,8 @@ namespace MNIT_Communication.Services
 {
 	public interface IRegistrationService
 	{
-		Task ProcessRegistrationRequest(Guid accessToken, string emailAddress);
 		Task<Guid> SendRegistrationRequest(string email);
-		Task ProcessServiceBusRegistrationMessage(string baseWebUrl, NewUserRegistrationBrokeredMessage message);
+		Task ProcessServiceBusRegistrationMessage(NewUserRegistrationBrokeredMessage message);
 		
 	}
 

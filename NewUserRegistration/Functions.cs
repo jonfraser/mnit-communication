@@ -17,15 +17,14 @@ namespace NewUserRegistration
 		{
 			log.WriteLine("Received message " + message.CorrelationId.ToString() + " from queue for " + message.EmailAddress);
 			var svc = new RegistrationService();
-			var endpoint = CloudConfigurationManager.GetSetting("BaseWebUrl");
 
 			try
 			{
-				await svc.ProcessServiceBusRegistrationMessage(endpoint, message);
+				await svc.ProcessServiceBusRegistrationMessage(message);
 			}
 			catch (Exception ex)
 			{
-				log.WriteLine(string.Format("Error in ProcessMessageQueue sending to {0}: {1}", endpoint, ex.ToString()));
+				log.WriteLine(string.Format("Error in ProcessMessageQueue: {0}", ex.ToString()));
 				throw;
 			}
 		}

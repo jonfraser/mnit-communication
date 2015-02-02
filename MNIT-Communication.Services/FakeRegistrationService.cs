@@ -9,11 +9,7 @@ namespace MNIT_Communication.Services
 {
 	public class FakeRegistrationService : IRegistrationService
 	{
-		public async System.Threading.Tasks.Task ProcessRegistrationRequest(Guid accessToken, string emailAddress)
-		{
-			Trace.Write("FakeRegistrationService.ProcessRegistrationRequest " + emailAddress);
-			return;
-		}
+		
 
 		public async System.Threading.Tasks.Task<Guid> SendRegistrationRequest(string email)
 		{
@@ -22,7 +18,7 @@ namespace MNIT_Communication.Services
 		}
 
 
-		public async Task ProcessServiceBusRegistrationMessage(string baseWebUrl, Domain.NewUserRegistrationBrokeredMessage message)
+		public async Task ProcessServiceBusRegistrationMessage(Domain.NewUserRegistrationBrokeredMessage message)
 		{
 			Trace.Write("FakeRegistrationService.ProcessServiceBusRegistrationMessage " + message.CorrelationId);
 			return;

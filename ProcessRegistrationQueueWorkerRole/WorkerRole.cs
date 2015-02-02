@@ -42,7 +42,6 @@ namespace ProcessRegistrationQueueWorkerRole
                         var message = receivedMessage.GetBody<NewUserRegistrationBrokeredMessage>();
 
 						registrationService.ProcessServiceBusRegistrationMessage(
-							CloudConfigurationManager.GetSetting("BaseWebUrl"),
 							message);
                     }
                     catch

@@ -193,7 +193,6 @@
     <Compile Include="Areas\api\v1\Alertables\Get.cs" />
     <Compile Include="Areas\api\v1\User\Base.cs" />
     <Compile Include="Areas\api\v1\User\Confirm.cs" />
-    <Compile Include="Areas\api\v1\User\ProcessRegistration.cs" />
     <Compile Include="Areas\api\v1\User\Register.cs" />
     <Compile Include="Areas\api\v1\Version\Get.cs" />
     <Compile Include="Controllers\AlertsController.cs" />

@@ -39,24 +39,11 @@ namespace MNIT_Communication.Services
 
             return message.CorrelationId;
         }
-
-        public async Task ProcessRegistrationRequest(Guid accessToken, string emailAddress)
-        {
-            await StoreToken(emailAddress, accessToken);
-            await SendEmail("fraser.jc@gmail.com", accessToken);
-        }
-
-		public async Task ProcessServiceBusRegistrationMessage(string baseWebUrl, NewUserRegistrationBrokeredMessage message)
+		
+		public async Task ProcessServiceBusRegistrationMessage(NewUserRegistrationBrokeredMessage message)
 		{
-			using (var client = new WebClient())
-			{
-				var url = new Uri(baseWebUrl + "/api/User/ProcessRegistration");
-				var requestParams = new NameValueCollection();
-				requestParams.Add("newUserRegistrationBrokeredMessage", Newtonsoft.Json.JsonConvert.SerializeObject(message));
-				byte[] responsebytes = client.UploadValues(url, "POST", requestParams);
-				string responsebody = Encoding.UTF8.GetString(responsebytes);
-
-			}
+			await StoreToken(message.EmailAddress, message.CorrelationId);
+			await SendEmail("fraser.jc@gmail.com", message.CorrelationId);
 		}
 
         private async Task StoreToken(string emailAddress, Guid accessToken)
