@@ -72,7 +72,7 @@ namespace MNIT_Communication.Services
             myMessage.Subject = "You requested access?";
 
             //Add the HTML and Text bodies
-            myMessage.Text = "You've got 72 hours to confirm your account via this link: http://mnit-communication.azurewebsites.net/api/User/Confirm/" + accessToken.ToString();
+            myMessage.Text = "You've got 72 hours to confirm your account via this link: https://mnit-communication.azurewebsites.net/api/User/Confirm/" + accessToken.ToString();
             myMessage.Text += Environment.NewLine;
             myMessage.Text += "If you have already selected your alerts they will be automatically added to your account once it is confirmed.";
 

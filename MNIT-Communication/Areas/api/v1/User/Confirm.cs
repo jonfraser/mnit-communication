@@ -11,10 +11,11 @@ namespace MNIT_Communication.Areas.api.v1
     public partial class UserController : ApiController
     {
         // GET api/<controller>
-        public async Task<HttpResponseMessage> Confirm(Guid newUserRegistrationId)
+        [HttpGet]
+		public async Task<HttpResponseMessage> Confirm(Guid id)
         {
             var response = Request.CreateResponse(HttpStatusCode.Found);
-            response.Headers.Location = new Uri(Request.RequestUri.AbsolutePath + "/Home/Confirmed");
+            response.Headers.Location = new Uri(string.Format("{0}://{1}/Home/Confirmed", Request.RequestUri.Scheme, Request.RequestUri.Authority));
             return response;
 
         }
