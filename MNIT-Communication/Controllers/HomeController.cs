@@ -23,6 +23,7 @@ namespace MNIT_Communication.Controllers
 
 		public ActionResult SetUserProfile(Guid id)
 		{
+			//TODO: We should be able to get the oauth token from the id (that'll be in redis i guess?)
 			return View(id);
 		}
 
@@ -53,7 +54,7 @@ namespace MNIT_Communication.Controllers
 			var provider = loginInfo.Login.LoginProvider;
 			var email = loginInfo.Email;
 			//TODO: create an api endpoint to call that will allow setting of an external provider on a user
-
+			//TODO: Store this info
 			return Redirect(returnUrl);
 
 		}

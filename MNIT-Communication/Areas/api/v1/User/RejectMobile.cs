@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
+
+namespace MNIT_Communication.Areas.api.v1
+{
+    public partial class UserController : ApiController
+    {
+        // GET api/<controller>
+        [HttpGet]
+		public async Task<HttpResponseMessage> RejectMobile(Guid id)
+        {
+			//TODO: For the new user registration id passed in, remove the mobile number on the account
+            var response = Request.CreateResponse(HttpStatusCode.Found);
+            response.Headers.Location = new Uri("http://google.com?q=The number has been removed from your account");
+            return response;
+
+        }
+
+    }
+}

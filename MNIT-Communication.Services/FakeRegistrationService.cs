@@ -23,5 +23,11 @@ namespace MNIT_Communication.Services
 			Trace.Write("FakeRegistrationService.ProcessServiceBusRegistrationMessage " + message.CorrelationId);
 			return;
 		}
+
+		public async Task VerifyMobileNumber(string mobileNumber, Guid accessToken)
+		{
+			Trace.Write("FakeRegistrationService.VerifyMobileNumber " + mobileNumber);
+			return;
+		}
 	}
 }

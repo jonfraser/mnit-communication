@@ -192,6 +192,7 @@
     <Compile Include="Areas\api\v1\Alerts\Get.cs" />
     <Compile Include="Areas\api\v1\Alertables\Get.cs" />
     <Compile Include="Areas\api\v1\User\Base.cs" />
+    <Compile Include="Areas\api\v1\User\RejectMobile.cs" />
     <Compile Include="Areas\api\v1\User\Confirm.cs" />
     <Compile Include="Areas\api\v1\User\Register.cs" />
     <Compile Include="Areas\api\v1\Version\Get.cs" />
@@ -1108,6 +1109,7 @@
     </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>

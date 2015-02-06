@@ -10,5 +10,7 @@ namespace MNIT_Communication.Domain
     {
         public Guid ID { get; set; }
         public string Name { get; set; }
+
+		public string Group { get; set; }
     }
 }

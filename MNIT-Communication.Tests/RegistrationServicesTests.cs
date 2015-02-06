@@ -18,5 +18,11 @@ namespace MNIT_Communication.Tests
 				});
 		}
 
+		[TestMethod]
+		public void VerifyMobileNumberWithValidNumberShouldSendSms()
+		{
+			IRegistrationService reg = new RegistrationService();
+			reg.VerifyMobileNumber("+61416272575", Guid.NewGuid());
+		}
 	}
 }
