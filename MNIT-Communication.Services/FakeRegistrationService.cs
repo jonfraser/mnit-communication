@@ -29,5 +29,11 @@ namespace MNIT_Communication.Services
 			Trace.Write("FakeRegistrationService.VerifyMobileNumber " + mobileNumber);
 			return;
 		}
+
+		public async Task RequestVerificationOfMobileNumber(string mobileNumber, Guid accessToken)
+		{
+			Trace.Write("FakeRegistrationService.RequestVerificationOfMobileNumber " + mobileNumber);
+			return;
+		}
 	}
 }

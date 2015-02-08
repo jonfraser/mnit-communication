@@ -91,9 +91,31 @@ namespace MNIT_Communication.Services
 			// Send the email.
 			await transportWeb.DeliverAsync(myMessage);
 		}
+
+		public async Task RequestVerificationOfMobileNumber(string mobileNumber, Guid accessToken)
+		{
+			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+			var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
+			var queueExists = namespaceManager.QueueExists(Queues.MobileNumberVerify);
+			if (!queueExists)
+			{
+				await namespaceManager.CreateQueueAsync(Queues.MobileNumberVerify);
+			}
+
+			var client = QueueClient.CreateFromConnectionString(connectionString, Queues.MobileNumberVerify);
+
+			var message = new VerifyMobileNumberBrokeredMessage
+			{
+				CorrelationId = Guid.NewGuid(),
+				MobileNumber = mobileNumber,
+				NewUserRegistrationId = accessToken
+			};
+
+			await client.SendAsync(new BrokeredMessage(message));
+		}
+
 		public async Task VerifyMobileNumber(string mobileNumber, Guid accessToken)
 		{
-			//TODO: Do this in a few parts, push message onto queue and process it separately
 			var cancellationEndpoint = string.Format("https://mnit-communication.azurewebsites.net/api/User/RejectMobile/{0}", accessToken.ToString());
 			using (var shortener = new Google.Apis.Urlshortener.v1.UrlshortenerService(new Google.Apis.Services.BaseClientService.Initializer
 				{

@@ -8,6 +8,8 @@ namespace MNIT_Communication.Services
 		Task<Guid> SendRegistrationRequest(string email);
 		Task ProcessServiceBusRegistrationMessage(NewUserRegistrationBrokeredMessage message);
 
+		Task RequestVerificationOfMobileNumber(string mobileNumber, Guid accessToken);
+
 		Task VerifyMobileNumber(string mobileNumber, Guid accessToken);
 	}
 

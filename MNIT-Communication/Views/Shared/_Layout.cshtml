@@ -35,7 +35,9 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Metro North I.T.</p>
+            <p>
+                &copy; @DateTime.Now.Year - Metro North I.T. [Build - @System.Reflection.Assembly.GetExecutingAssembly().ImageRuntimeVersion]
+            </p>
         </footer>
     </div>
 

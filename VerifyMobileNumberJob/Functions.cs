@@ -19,7 +19,7 @@ namespace VerifyMobileNumberJob
 
 			try
 			{
-				//await svc.ProcessServiceBusRegistrationMessage(message);
+				await svc.VerifyMobileNumber(message.MobileNumber, message.NewUserRegistrationId);
 			}
 			catch (Exception ex)
 			{

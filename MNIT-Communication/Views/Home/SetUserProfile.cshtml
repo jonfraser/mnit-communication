@@ -36,29 +36,23 @@
         angular.module('communicationApp', [])
             .controller('UserProfileController', ['$scope', '$http', function ($scope, $http) {
 
-              $scope.setUserProfile = function (newUserRegistrationId) {
-                  var data = {
-                      "newUserRegistrationId": newUserRegistrationId,
-                      "email": $scope.email,
-                      "mobile": $scope.mobile
-                  };
-                  window.location = "/alerts/newuser/" + newUserRegistrationId;
-                  @*$http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "AssignNew", controller = "Alerts"})',
-                      JSON.stringify(data)).
-                    success(function (data) {
-                        window.location = "/alerts/newuserdone/" + data;
-                    }).
-                    error(function (data) { alert(data); });*@
+                $scope.setUserProfile = function (newUserRegistrationId) {
+                    var data = {
+                        "newUserRegistrationId": newUserRegistrationId,
+                        "email": $scope.email,
+                        "mobile": $scope.mobile
+                    };
 
-              };
+                    $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "UpdateProfile", controller = "User"})',
+                        JSON.stringify(data)).
+                      success(function (data) {
+                          window.location = "/alerts/newuser/" + newUserRegistrationId;
+                      }).
+                      error(function (data) { alert(data); });
 
-              @*$http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables"})').
-                    success(function (data) {
-                        $scope.alertables = data;
-                    }).
-                    error(function () { $scope.alertables = ['No alertables were retrieved from the server'] });*@
+                };
 
-          }]);
+            }]);
 
     </script>
 }
