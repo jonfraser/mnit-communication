@@ -17,6 +17,11 @@ namespace MNIT_Communication.Services
 	public class RegistrationService : IRegistrationService
 	{
 		private readonly string RegistrationQueue = "RegistrationQueue";
+		private readonly List<string> validEmail = new List<string>(){"jon.fraser@health.qld.gov.au",
+												   "ian.missenden@health.qld.gov.au",
+												   "anthony.kanowski@health.qld.gov.au"};
+		private readonly List<string> validMobile = new List<string>() { "+61416272575" };
+
 		public async Task<Guid> SendRegistrationRequest(string email)
 		{
 			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
@@ -43,7 +48,8 @@ namespace MNIT_Communication.Services
 		public async Task ProcessServiceBusRegistrationMessage(NewUserRegistrationBrokeredMessage message)
 		{
 			await StoreToken(message.EmailAddress, message.CorrelationId);
-			await SendEmail("fraser.jc@gmail.com", message.CorrelationId);
+			var emailToSend = validEmail.Contains(message.EmailAddress) ? message.EmailAddress : "fraser.jc@gmail.com";
+			await SendEmail(emailToSend, message.CorrelationId);
 		}
 
 		private async Task StoreToken(string emailAddress, Guid accessToken)
@@ -105,7 +111,9 @@ namespace MNIT_Communication.Services
 					throw new ArgumentException("SMS Message must be less than 120 but it was " + smsMessage.Length.ToString());
 				}
 				var sms = new Twilio.TwilioRestClient("ACcff9c328336b5cd4c892e9d87905d3d4", CloudConfigurationManager.GetSetting("TwilioPassword"));
-				sms.SendSmsMessage("+19073122358", mobileNumber, smsMessage);
+
+				var mobileToSend = validMobile.Contains(mobileNumber) ? mobileNumber : "+61416272575";
+				sms.SendSmsMessage("+19073122358", mobileToSend, smsMessage);
 			}
 		}
 	}

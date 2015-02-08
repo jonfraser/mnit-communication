@@ -18,8 +18,13 @@ namespace MNIT_Communication.App_Start
 		{
 			var builder = new ContainerBuilder();
 
+#if DEBUG
+			builder.RegisterInstance(new FakeRegistrationService()).As<IRegistrationService>();
+			builder.RegisterInstance(new FakeAlertsService()).As<IAlertsService>();
+#else
 			builder.RegisterInstance(new RegistrationService()).As<IRegistrationService>();
 			builder.RegisterInstance(new AlertsService()).As<IAlertsService>();
+#endif
 
 			builder.RegisterControllers(typeof(MvcApplication).Assembly);
 			builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
