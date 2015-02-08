@@ -13,7 +13,7 @@ namespace NewUserRegistration
 {
 	public class Functions
 	{
-		public async static Task ProcessQueueMessage([ServiceBusTrigger("RegistrationQueue")] NewUserRegistrationBrokeredMessage message, TextWriter log)
+		public async static Task ProcessQueueMessage([ServiceBusTrigger(Queues.Registration)] NewUserRegistrationBrokeredMessage message, TextWriter log)
 		{
 			log.WriteLine("Received message " + message.CorrelationId.ToString() + " from queue for " + message.EmailAddress);
 			var svc = new RegistrationService();

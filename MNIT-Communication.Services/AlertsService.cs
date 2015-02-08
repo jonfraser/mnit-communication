@@ -12,19 +12,18 @@ namespace MNIT_Communication.Services
 {
     public class AlertsService : IAlertsService
     {
-        private readonly string AlertsQueue = "AlertsQueue";
 
         public async Task<Guid> RegisterNewUserForInitialAlerts(Guid newUserRegistrationId, string emailAddress, IEnumerable<Guid> alertables)
         {
             var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
             var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
-            var queueExists = namespaceManager.QueueExists(AlertsQueue);
+            var queueExists = namespaceManager.QueueExists(Queues.Alerts);
             if (!queueExists)
             {
-                await namespaceManager.CreateQueueAsync(AlertsQueue);
+                await namespaceManager.CreateQueueAsync(Queues.Alerts);
             }
 
-            var client = QueueClient.CreateFromConnectionString(connectionString, AlertsQueue);
+            var client = QueueClient.CreateFromConnectionString(connectionString, Queues.Alerts);
 
 
             foreach (var alertable in alertables)

@@ -16,7 +16,6 @@ namespace MNIT_Communication.Services
 {
 	public class RegistrationService : IRegistrationService
 	{
-		private readonly string RegistrationQueue = "RegistrationQueue";
 		private readonly List<string> validEmail = new List<string>(){"jon.fraser@health.qld.gov.au",
 												   "ian.missenden@health.qld.gov.au",
 												   "anthony.kanowski@health.qld.gov.au"};
@@ -26,13 +25,13 @@ namespace MNIT_Communication.Services
 		{
 			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
 			var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
-			var queueExists = namespaceManager.QueueExists(RegistrationQueue);
+			var queueExists = namespaceManager.QueueExists(Queues.Registration);
 			if (!queueExists)
 			{
-				await namespaceManager.CreateQueueAsync(RegistrationQueue);
+				await namespaceManager.CreateQueueAsync(Queues.Registration);
 			}
 
-			var client = QueueClient.CreateFromConnectionString(connectionString, RegistrationQueue);
+			var client = QueueClient.CreateFromConnectionString(connectionString, Queues.Registration);
 
 			var message = new NewUserRegistrationBrokeredMessage
 			{

@@ -42,6 +42,7 @@
     <Compile Include="Alertable.cs" />
     <Compile Include="NewUserRegistrationBrokeredMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Queues.cs" />
     <Compile Include="RegisterAlertBrokeredMessage.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
