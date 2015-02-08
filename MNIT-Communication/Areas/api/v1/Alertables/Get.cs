@@ -50,5 +50,9 @@ namespace MNIT_Communication.Areas.api.v1
             });
         }
 
+		public IEnumerable<Alertable> Get(string groupName)
+		{
+			return this.Get().Where(a => a.Group == groupName).ToList();
+		}
     }
 }

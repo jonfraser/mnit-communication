@@ -15,8 +15,35 @@
 <form class="container-fluid" ng-controller="AlertsController" ng-submit="registerAlerts(@newUserRegistrationId)">
     <div class="row">
         <div class="col-md-12">
+            <h4>Applications</h4>
             <ul class="list-unstyled list-inline">
-                <li ng-repeat="alertable in alertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
+                <li ng-repeat="alertable in appAlertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" />
+                        {{alertable.Name}}
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Interfaces</h4>
+            <ul class="list-unstyled list-inline">
+                <li ng-repeat="alertable in interfaceAlertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" />
+                        {{alertable.Name}}
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Servers</h4>
+            <ul class="list-unstyled list-inline">
+                <li ng-repeat="alertable in svrAlertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
                     <label class="checkbox-inline">
                         <input type="checkbox" />
                         {{alertable.Name}}
@@ -68,11 +95,23 @@
 
               };
 
-              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables"})').
+              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Applications"})').
                     success(function (data) {
-                        $scope.alertables = data;
+                        $scope.appAlertables = data;
                     }).
-                    error(function () { $scope.alertables = ['No alertables were retrieved from the server']});
+                    error(function () { $scope.appAlertables = ['No application alertables were retrieved from the server']});
+
+              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Interfaces"})').
+                                  success(function (data) {
+                                      $scope.interfaceAlertables = data;
+                                  }).
+                                  error(function () { $scope.interfaceAlertables = ['No interface alertables were retrieved from the server'] });
+
+              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Servers"})').
+                    success(function (data) {
+                        $scope.svrAlertables = data;
+                    }).
+                    error(function () { $scope.svrAlertables = ['No server alertables were retrieved from the server'] });
 
           }]);
 
