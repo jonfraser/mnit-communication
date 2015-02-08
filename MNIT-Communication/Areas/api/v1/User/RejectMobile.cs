@@ -16,8 +16,8 @@ namespace MNIT_Communication.Areas.api.v1
         {
 			//TODO: For the new user registration id passed in, remove the mobile number on the account
             var response = Request.CreateResponse(HttpStatusCode.Found);
-            response.Headers.Location = new Uri("http://google.com?q=The number has been removed from your account");
-            return response;
+			response.Headers.Location = new Uri(string.Format("{0}://{1}/Home/MobileNumberRemoved", Request.RequestUri.Scheme, Request.RequestUri.Authority));
+			return response;
 
         }
 

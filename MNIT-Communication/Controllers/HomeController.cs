@@ -64,5 +64,9 @@ namespace MNIT_Communication.Controllers
 			return View();
 		}
 
+		public ActionResult MobileNumberRemoved()
+		{
+			return View();
+		}
 	}
 }
