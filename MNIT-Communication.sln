@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNIT-Communication.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewUserRegistration", "NewUserRegistration\NewUserRegistration.csproj", "{DFD4D50C-7F13-43FD-8788-DD89D0DE5CFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VerifyMobileNumberJob", "VerifyMobileNumberJob\VerifyMobileNumberJob.csproj", "{3FD7C1FE-0851-46B9-8D30-2F8EA4B9E30A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{DFD4D50C-7F13-43FD-8788-DD89D0DE5CFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFD4D50C-7F13-43FD-8788-DD89D0DE5CFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFD4D50C-7F13-43FD-8788-DD89D0DE5CFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FD7C1FE-0851-46B9-8D30-2F8EA4B9E30A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FD7C1FE-0851-46B9-8D30-2F8EA4B9E30A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FD7C1FE-0851-46B9-8D30-2F8EA4B9E30A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FD7C1FE-0851-46B9-8D30-2F8EA4B9E30A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

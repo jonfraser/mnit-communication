@@ -3,6 +3,9 @@
   "WebJobs": [
     {
       "filePath": "../NewUserRegistration/NewUserRegistration.csproj"
+    },
+    {
+      "filePath": "../VerifyMobileNumberJob/VerifyMobileNumberJob.csproj"
     }
   ]
 }
