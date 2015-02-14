@@ -137,6 +137,13 @@ namespace MNIT_Communication.Services
 				sms.SendSmsMessage("+19073122358", mobileToSend, smsMessage);
 			}
 		}
+
+		public async Task<NewUserProfile> RetrieveNewUserProfile(Guid accessToken)
+		{
+			//TODO: get out of redis
+			return new NewUserProfile { NewUserRegistrationId = accessToken };
+			
+		}
 	}
 
 }

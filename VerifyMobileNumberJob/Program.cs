@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
+using Microsoft.WindowsAzure;
 
 namespace VerifyMobileNumberJob
 {
@@ -14,7 +15,10 @@ namespace VerifyMobileNumberJob
 		// AzureWebJobsDashboard and AzureWebJobsStorage
 		static void Main()
 		{
-			var host = new JobHost();
+			var host = new JobHost(new JobHostConfiguration
+			{
+				ServiceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString")
+			});
 			// The following code ensures that the WebJob will be running continuously
 			host.RunAndBlock();
 		}

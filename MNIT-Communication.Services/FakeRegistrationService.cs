@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using MNIT_Communication.Domain;
 
 namespace MNIT_Communication.Services
 {
@@ -34,6 +35,18 @@ namespace MNIT_Communication.Services
 		{
 			Trace.Write("FakeRegistrationService.RequestVerificationOfMobileNumber " + mobileNumber);
 			return;
+		}
+		
+		public async Task<NewUserProfile> RetrieveNewUserProfile(Guid accessToken)
+		{
+			Trace.Write("FakeRegistrationService.RetrieveNewUserProfile");
+			return new NewUserProfile
+			{
+				NewUserRegistrationId = accessToken,
+				EmailAddressExternalProvider = "fraser.jc@gmail.com",
+				EmailAdressInternal = "jon.fraser@health.qld.gov.au",
+				MobilePhoneNumber = "+61416272575"
+			};
 		}
 	}
 }

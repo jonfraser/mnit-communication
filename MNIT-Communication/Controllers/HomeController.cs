@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using MNIT_Communication.Helpers;
 using Microsoft.Owin.Security;
+using MNIT_Communication.Domain;
 
 namespace MNIT_Communication.Controllers
 {
@@ -23,8 +24,9 @@ namespace MNIT_Communication.Controllers
 
 		public ActionResult SetUserProfile(Guid id)
 		{
+			var userProfile = DependencyResolver.Current.GetService<IRegistrationService>().RetrieveNewUserProfile(id);
 			//TODO: We should be able to get the oauth token from the id (that'll be in redis i guess?)
-			return View(id);
+			return View(userProfile);
 		}
 
 		public ActionResult LinkExternalAccount(Guid id)

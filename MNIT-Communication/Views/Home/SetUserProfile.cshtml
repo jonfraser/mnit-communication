@@ -1,4 +1,4 @@
-﻿@model Guid
+﻿@model MNIT_Communication.Domain.NewUserProfile
 @{
     ViewBag.Title = "Set User Profile";
 }
@@ -13,7 +13,7 @@
             <label for="email">Email:</label>
         </div>
         <div class="col-md-8">
-            <input type="email" id="email" ng-model="email" />
+            <input type="email" id="email" class="form-control input-lg" ng-model="email" />
         </div>
     </div>
     <div class="row">
@@ -21,7 +21,7 @@
             <label for="mobile">Mobile Phone:</label>
         </div>
         <div class="col-md-8">
-            <input type="text" id="mobile" ng-model="mobile" />
+            <input type="text" id="mobile" class="form-control input-lg" ng-model="mobile" />
         </div>
     </div>
     <div class="row">
