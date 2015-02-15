@@ -36,6 +36,9 @@
         angular.module('communicationApp', [])
             .controller('UserProfileController', ['$scope', '$http', function ($scope, $http) {
 
+                $scope.email = '@Model.EmailAddressExternalProvider';
+                $scope.mobile = '@Model.MobilePhoneNumber';
+
                 $scope.setUserProfile = function (newUserRegistrationId) {
                     var data = {
                         "newUserRegistrationId": newUserRegistrationId,

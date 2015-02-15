@@ -11,22 +11,37 @@ using System.Web.Mvc;
 using MNIT_Communication.Helpers;
 using Microsoft.Owin.Security;
 using MNIT_Communication.Domain;
+using System.Net.Http;
+using Newtonsoft.Json;
 
 namespace MNIT_Communication.Controllers
 {
 	public class HomeController : Controller
 	{
+		private IRegistrationService registrationService;
+
+		public HomeController(IRegistrationService regSvc)
+		{
+			registrationService = regSvc;
+		}
 
 		public ActionResult Index()
 		{
 			return View();
 		}
 
-		public ActionResult SetUserProfile(Guid id)
+		public async Task<ActionResult> SetUserProfile(Guid id)
 		{
-			var userProfile = DependencyResolver.Current.GetService<IRegistrationService>().RetrieveNewUserProfile(id);
-			//TODO: We should be able to get the oauth token from the id (that'll be in redis i guess?)
-			return View(userProfile);
+			using(var client = new HttpClient())
+			{
+				var getProfileUri = HttpContext.Request.Url.Scheme + 
+									"://" + 
+									HttpContext.Request.Url.Authority + 
+									Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "User", newUserRegistrationId = id.ToString() });
+				var response = await client.GetStringAsync(getProfileUri);
+				var userProfile = JsonConvert.DeserializeObject(response, typeof(NewUserProfile));
+				return View(userProfile);
+			}
 		}
 
 		public ActionResult LinkExternalAccount(Guid id)
