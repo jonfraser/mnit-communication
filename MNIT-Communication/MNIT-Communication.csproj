@@ -219,7 +219,7 @@
     <Compile Include="Areas\api\v1\Alertables\Get.cs" />
     <Compile Include="Areas\api\v1\User\Base.cs" />
     <Compile Include="Areas\api\v1\User\Get.cs" />
-    <Compile Include="Areas\api\v1\User\UpdateProfile.cs" />
+    <Compile Include="Areas\api\v1\User\NewUserProfile.cs" />
     <Compile Include="Areas\api\v1\User\RejectMobile.cs" />
     <Compile Include="Areas\api\v1\User\Confirm.cs" />
     <Compile Include="Areas\api\v1\User\Register.cs" />

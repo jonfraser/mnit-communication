@@ -48,5 +48,11 @@ namespace MNIT_Communication.Services
 				MobilePhoneNumber = "+61416272575"
 			};
 		}
+		
+		public async Task InsertOrUpdateNewUserProfile(NewUserProfile request)
+		{
+			Trace.Write("FakeRegistrationService.UpdateNewUserProfile " + request.NewUserRegistrationId.ToString());
+			return;
+		}
 	}
 }

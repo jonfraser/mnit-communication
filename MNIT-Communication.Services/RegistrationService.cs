@@ -9,6 +9,7 @@ using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using Microsoft.WindowsAzure;
 using MNIT_Communication.Domain;
+using Newtonsoft.Json;
 using SendGrid;
 using StackExchange.Redis;
 
@@ -53,12 +54,8 @@ namespace MNIT_Communication.Services
 
 		private async Task StoreToken(string emailAddress, Guid accessToken)
 		{
-			ConnectionMultiplexer connection = ConnectionMultiplexer.Connect(CloudConfigurationManager.GetSetting("RedisConnection"));
-
-			IDatabase cache = connection.GetDatabase();
-
-			await cache.StringSetAsync(emailAddress, accessToken.ToString(), expiry: new TimeSpan(72, 0, 0));
-
+			IShortTermStorage store = new RedisStore();
+			await store.StoreKeyValue(emailAddress, accessToken.ToString(), new TimeSpan(72, 0, 0));
 		}
 
 		private async Task SendEmail(string email, Guid accessToken)
@@ -124,25 +121,38 @@ namespace MNIT_Communication.Services
 				}))
 			{
 				var shortUrl = shortener.Url.Insert(new Google.Apis.Urlshortener.v1.Data.Url { LongUrl = cancellationEndpoint }).Execute();
-
-				var twilioSmsPrefix = "Sent from your twilio trial account - ";
-				var smsMessage = "MNIT Communication sent this to confirm your number. If you got this by mistake, click " + shortUrl.Id;
-				if (twilioSmsPrefix.Length + smsMessage.Length > 160)
-				{
-					throw new ArgumentException("SMS Message must be less than 120 but it was " + smsMessage.Length.ToString());
-				}
-				var sms = new Twilio.TwilioRestClient("ACcff9c328336b5cd4c892e9d87905d3d4", CloudConfigurationManager.GetSetting("TwilioPassword"));
-
 				var mobileToSend = validMobile.Contains(mobileNumber) ? mobileNumber : "+61416272575";
-				sms.SendSmsMessage("+19073122358", mobileToSend, smsMessage);
+				var smsMessage = "MNIT Communication sent this to confirm your number. If you got this by mistake, click " + shortUrl.Id;
+
+				ISendSms sms = new SendTwilioSmsService();
+				await sms.SendSimple(mobileNumber, smsMessage);
 			}
 		}
 
 		public async Task<NewUserProfile> RetrieveNewUserProfile(Guid accessToken)
 		{
-			//TODO: get out of redis
+			IShortTermStorage store = new RedisStore();
+			var existingRequest = await store.GetValue<NewUserProfile>(accessToken.ToString());
+			if (existingRequest != null)
+			{
+				return existingRequest;
+			}
 			return new NewUserProfile { NewUserRegistrationId = accessToken };
-			
+
+		}
+
+		public async Task InsertOrUpdateNewUserProfile(NewUserProfile request)
+		{
+			IShortTermStorage store = new RedisStore();
+			var existingRequest = await store.GetValue<NewUserProfile>(request.NewUserRegistrationId.ToString());
+			if (existingRequest != null)
+			{
+				existingRequest.EmailAddressExternalProvider = request.EmailAddressExternalProvider ?? existingRequest.EmailAddressExternalProvider;
+				existingRequest.EmailAdressInternal = request.EmailAdressInternal ?? existingRequest.EmailAdressInternal;
+				existingRequest.MobilePhoneNumber = request.MobilePhoneNumber ?? existingRequest.MobilePhoneNumber;
+			}
+			var requestForStorage = JsonConvert.SerializeObject(existingRequest ?? request);
+			await store.StoreKeyValue(request.NewUserRegistrationId.ToString(), requestForStorage, new TimeSpan(72, 0, 0));
 		}
 	}
 

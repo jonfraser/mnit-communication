@@ -127,9 +127,12 @@
     <Compile Include="IAlertsService.cs" />
     <Compile Include="IRegistrationService.cs" />
     <Compile Include="ISendSms.cs" />
+    <Compile Include="IShortTermStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RedisStore.cs" />
     <Compile Include="RegistrationService.cs" />
     <Compile Include="SendTelstraSmsService.cs" />
+    <Compile Include="SendTwilioSmsService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

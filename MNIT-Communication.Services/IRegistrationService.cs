@@ -13,6 +13,9 @@ namespace MNIT_Communication.Services
 		Task VerifyMobileNumber(string mobileNumber, Guid accessToken);
 
 		Task<NewUserProfile> RetrieveNewUserProfile(Guid id);
+
+		Task InsertOrUpdateNewUserProfile(NewUserProfile request);
+
 	}
 
 }

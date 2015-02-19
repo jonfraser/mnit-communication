@@ -41,12 +41,12 @@
 
                 $scope.setUserProfile = function (newUserRegistrationId) {
                     var data = {
-                        "newUserRegistrationId": newUserRegistrationId,
-                        "email": $scope.email,
-                        "mobile": $scope.mobile
+                        "NewUserRegistrationId": newUserRegistrationId,
+                        "EmailAddressExternalProvider": $scope.email,
+                        "MobilePhoneNumber": $scope.mobile
                     };
 
-                    $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "UpdateProfile", controller = "User"})',
+                    $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User"})',
                         JSON.stringify(data)).
                       success(function (data) {
                           window.location = "/alerts/newuser/" + newUserRegistrationId;
