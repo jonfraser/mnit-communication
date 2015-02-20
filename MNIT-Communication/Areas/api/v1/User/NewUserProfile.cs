@@ -12,7 +12,13 @@ namespace MNIT_Communication.Areas.api.v1
 {
     public partial class UserController : ApiController
     {
-		
+		[HttpGet]
+		[Route("api/User/NewUserProfile")]
+		public async Task<NewUserProfile> NewUserProfileGet(Guid newUserRegistrationId)
+		{
+			return await registrationService.RetrieveNewUserProfile(newUserRegistrationId) as NewUserProfile;
+		}
+
 		[HttpPut]
 		[Route("api/User/NewUserProfile")]
         public async Task NewUserProfileUpdate([FromBody]NewUserProfile request)

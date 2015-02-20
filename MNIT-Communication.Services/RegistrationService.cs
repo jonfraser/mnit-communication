@@ -147,6 +147,7 @@ namespace MNIT_Communication.Services
 			var existingRequest = await store.GetValue<NewUserProfile>(request.NewUserRegistrationId.ToString());
 			if (existingRequest != null)
 			{
+				existingRequest.ExternalProvider = request.ExternalProvider ?? existingRequest.ExternalProvider;
 				existingRequest.EmailAddressExternalProvider = request.EmailAddressExternalProvider ?? existingRequest.EmailAddressExternalProvider;
 				existingRequest.EmailAdressInternal = request.EmailAdressInternal ?? existingRequest.EmailAdressInternal;
 				existingRequest.MobilePhoneNumber = request.MobilePhoneNumber ?? existingRequest.MobilePhoneNumber;

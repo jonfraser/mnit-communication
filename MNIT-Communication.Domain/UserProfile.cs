@@ -9,12 +9,14 @@ namespace MNIT_Communication.Domain
 	public class NewUserProfile : UserProfile
 	{
 		public Guid NewUserRegistrationId { get; set; }
+
 	}
 
 	public class UserProfile
 	{
 		public int Id { get; set; }
 		public string EmailAdressInternal { get; set; }
+		public string ExternalProvider { get; set; }
 		public string EmailAddressExternalProvider { get; set; }
 		public string MobilePhoneNumber { get; set; }
 	}

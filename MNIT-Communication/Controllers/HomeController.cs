@@ -37,7 +37,7 @@ namespace MNIT_Communication.Controllers
 				var getProfileUri = HttpContext.Request.Url.Scheme + 
 									"://" + 
 									HttpContext.Request.Url.Authority + 
-									Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "User", newUserRegistrationId = id.ToString() });
+									Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User", newUserRegistrationId = id.ToString() });
 				var response = await client.GetStringAsync(getProfileUri);
 				var userProfile = JsonConvert.DeserializeObject(response, typeof(NewUserProfile));
 				return View(userProfile);
@@ -68,10 +68,27 @@ namespace MNIT_Communication.Controllers
 				return new HttpUnauthorizedResult();
 			}
 
-			var provider = loginInfo.Login.LoginProvider;
-			var email = loginInfo.Email;
-			//TODO: create an api endpoint to call that will allow setting of an external provider on a user
-			//TODO: Store this info
+			//todo: I'd prefer to not be waiting on this extra check, or deferringit 
+			var newRegistrationIdFromReturnUrl = new Guid(StringHelpers.PullGuidOffEndOfUrl(returnUrl));
+			if(await registrationService.RetrieveNewUserProfile(newRegistrationIdFromReturnUrl) == null)
+			{
+				return new HttpNotFoundResult();
+			}
+
+			using (var client = new HttpClient())
+			{
+				var putProfileUri = HttpContext.Request.Url.Scheme +
+									"://" +
+									HttpContext.Request.Url.Authority +
+									Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User"});
+				var response = await client.PutAsJsonAsync(putProfileUri, new NewUserProfile
+					{
+						EmailAddressExternalProvider = loginInfo.Email,
+						NewUserRegistrationId = newRegistrationIdFromReturnUrl,
+						ExternalProvider = loginInfo.Login.LoginProvider
+					});
+			}
+
 			return Redirect(returnUrl);
 
 		}
