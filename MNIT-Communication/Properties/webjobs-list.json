@@ -6,6 +6,9 @@
     },
     {
       "filePath": "../VerifyMobileNumberJob/VerifyMobileNumberJob.csproj"
+    },
+    {
+        "filePath": "../AlertUserViaSms/AlertUserViaSmsJob.csproj"
     }
   ]
 }

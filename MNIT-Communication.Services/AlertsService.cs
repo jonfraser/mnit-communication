@@ -17,14 +17,13 @@ namespace MNIT_Communication.Services
         {
             var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
             var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
-            var queueExists = namespaceManager.QueueExists(Queues.Alerts);
+            var queueExists = await namespaceManager.QueueExistsAsync(Queues.AlertsRegistration);
             if (!queueExists)
             {
-                await namespaceManager.CreateQueueAsync(Queues.Alerts);
+                await namespaceManager.CreateQueueAsync(Queues.AlertsRegistration);
             }
 
-            var client = QueueClient.CreateFromConnectionString(connectionString, Queues.Alerts);
-
+            var client = QueueClient.CreateFromConnectionString(connectionString, Queues.AlertsRegistration);
 
             foreach (var alertable in alertables)
             {
@@ -40,5 +39,29 @@ namespace MNIT_Communication.Services
             return newUserRegistrationId;
         }
 
-    }
+		public async Task RaiseAlert(Guid alertableId, string alertDetail, string alertInfoShort)
+		{
+			//push a topic onto the queue
+			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+			var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
+			var queueExists = await namespaceManager.TopicExistsAsync(Topics.Alerts);
+			if (!queueExists)
+			{
+				await namespaceManager.CreateTopicAsync(Topics.Alerts);
+			}
+
+			var client = TopicClient.CreateFromConnectionString(connectionString, Topics.Alerts);
+
+			var message = new AlertBrokeredMessage
+			{
+				CorrelationId = Guid.NewGuid(),
+				AlertableId = alertableId,
+				AlertDetail = alertDetail,
+				AlertInfoShort = alertInfoShort,
+				AlertRaiser = 0 //TODO
+			};
+
+			await client.SendAsync(new BrokeredMessage(message));
+		}
+	}
 }

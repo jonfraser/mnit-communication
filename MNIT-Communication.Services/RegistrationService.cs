@@ -26,7 +26,7 @@ namespace MNIT_Communication.Services
 		{
 			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
 			var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
-			var queueExists = namespaceManager.QueueExists(Queues.Registration);
+			var queueExists = await namespaceManager.QueueExistsAsync(Queues.Registration);
 			if (!queueExists)
 			{
 				await namespaceManager.CreateQueueAsync(Queues.Registration);
@@ -93,7 +93,7 @@ namespace MNIT_Communication.Services
 		{
 			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
 			var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
-			var queueExists = namespaceManager.QueueExists(Queues.MobileNumberVerify);
+			var queueExists = await namespaceManager.QueueExistsAsync(Queues.MobileNumberVerify);
 			if (!queueExists)
 			{
 				await namespaceManager.CreateQueueAsync(Queues.MobileNumberVerify);

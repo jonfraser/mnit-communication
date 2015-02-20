@@ -213,6 +213,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\api\apiAreaRegistration.cs" />
     <Compile Include="Areas\api\BaseExceptionFilterAttribute.cs" />
+    <Compile Include="Areas\api\v1\Alerts\Raise.cs" />
     <Compile Include="Areas\api\v1\Alerts\AssignNew.cs" />
     <Compile Include="Areas\api\v1\Alerts\Base.cs" />
     <Compile Include="Areas\api\v1\Alerts\Get.cs" />
