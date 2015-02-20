@@ -113,20 +113,16 @@ namespace MNIT_Communication.Services
 
 		public async Task VerifyMobileNumber(string mobileNumber, Guid accessToken)
 		{
+			IUrlShorten urlShortener = new GoogleUrlShortener();
 			var cancellationEndpoint = string.Format("https://mnit-communication.azurewebsites.net/api/User/RejectMobile/{0}", accessToken.ToString());
-			using (var shortener = new Google.Apis.Urlshortener.v1.UrlshortenerService(new Google.Apis.Services.BaseClientService.Initializer
-				{
-					ApplicationName = "MNIT Communication",
-					ApiKey = CloudConfigurationManager.GetSetting("GoogleApiKey")
-				}))
-			{
-				var shortUrl = shortener.Url.Insert(new Google.Apis.Urlshortener.v1.Data.Url { LongUrl = cancellationEndpoint }).Execute();
-				var mobileToSend = validMobile.Contains(mobileNumber) ? mobileNumber : "+61416272575";
-				var smsMessage = "MNIT Communication sent this to confirm your number. If you got this by mistake, click " + shortUrl.Id;
+			var shortEndpoint = await urlShortener.Shorten(cancellationEndpoint);
 
-				ISendSms sms = new SendTwilioSmsService();
-				await sms.SendSimple(mobileNumber, smsMessage);
-			}
+			var mobileToSend = validMobile.Contains(mobileNumber) ? mobileNumber : "+61416272575";
+			var smsMessage = "MNIT Communication sent this to confirm your number. If you got this by mistake, click " + shortEndpoint;
+
+			ISendSms sms = new SendTwilioSmsService();
+			await sms.SendSimple(mobileNumber, smsMessage);
+
 		}
 
 		public async Task<NewUserProfile> RetrieveNewUserProfile(Guid accessToken)

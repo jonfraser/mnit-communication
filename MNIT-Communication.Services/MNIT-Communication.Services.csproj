@@ -124,6 +124,7 @@
     <Compile Include="AlertsService.cs" />
     <Compile Include="FakeAlertsService.cs" />
     <Compile Include="FakeRegistrationService.cs" />
+    <Compile Include="GoogleUrlShortener.cs" />
     <Compile Include="IAlertsService.cs" />
     <Compile Include="IRegistrationService.cs" />
     <Compile Include="ISendSms.cs" />

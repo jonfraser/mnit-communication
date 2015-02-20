@@ -32,11 +32,11 @@ namespace MNIT_Communication.Controllers
 
 		public async Task<ActionResult> SetUserProfile(Guid id)
 		{
-			using(var client = new HttpClient())
+			using (var client = new HttpClient())
 			{
-				var getProfileUri = HttpContext.Request.Url.Scheme + 
-									"://" + 
-									HttpContext.Request.Url.Authority + 
+				var getProfileUri = HttpContext.Request.Url.Scheme +
+									"://" +
+									HttpContext.Request.Url.Authority +
 									Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User", newUserRegistrationId = id.ToString() });
 				var response = await client.GetStringAsync(getProfileUri);
 				var userProfile = JsonConvert.DeserializeObject(response, typeof(NewUserProfile));
@@ -54,7 +54,6 @@ namespace MNIT_Communication.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult ExternalLogin(string provider, string returnUrl)
 		{
-
 			// Request a redirect to the external login provider
 			return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Home", new { ReturnUrl = returnUrl }));
 		}
@@ -68,19 +67,14 @@ namespace MNIT_Communication.Controllers
 				return new HttpUnauthorizedResult();
 			}
 
-			//todo: I'd prefer to not be waiting on this extra check, or deferringit 
 			var newRegistrationIdFromReturnUrl = new Guid(StringHelpers.PullGuidOffEndOfUrl(returnUrl));
-			if(await registrationService.TemporaryAccessTokenExists(newRegistrationIdFromReturnUrl) == false)
-			{
-				return new HttpNotFoundResult();
-			}
 
 			using (var client = new HttpClient())
 			{
 				var putProfileUri = HttpContext.Request.Url.Scheme +
 									"://" +
 									HttpContext.Request.Url.Authority +
-									Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User"});
+									Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User" });
 				var response = await client.PutAsJsonAsync(putProfileUri, new NewUserProfile
 					{
 						EmailAddressExternalProvider = loginInfo.Email,

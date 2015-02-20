@@ -27,7 +27,12 @@ namespace MNIT_Communication.Services
 
 		public async Task<T> GetValue<T>(string key)
 		{
-			return JsonConvert.DeserializeObject<T>(await _cache.StringGetAsync(key));
+			var keyValue = await _cache.StringGetAsync(key);
+			if(keyValue.IsNullOrEmpty)
+			{
+				return default(T);
+			}
+			return JsonConvert.DeserializeObject<T>(keyValue);
 		}
 
 
