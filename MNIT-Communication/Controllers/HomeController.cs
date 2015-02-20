@@ -70,7 +70,7 @@ namespace MNIT_Communication.Controllers
 
 			//todo: I'd prefer to not be waiting on this extra check, or deferringit 
 			var newRegistrationIdFromReturnUrl = new Guid(StringHelpers.PullGuidOffEndOfUrl(returnUrl));
-			if(await registrationService.RetrieveNewUserProfile(newRegistrationIdFromReturnUrl) == null)
+			if(await registrationService.TemporaryAccessTokenExists(newRegistrationIdFromReturnUrl) == false)
 			{
 				return new HttpNotFoundResult();
 			}

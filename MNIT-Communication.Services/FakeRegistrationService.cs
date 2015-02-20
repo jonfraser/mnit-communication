@@ -54,5 +54,12 @@ namespace MNIT_Communication.Services
 			Trace.Write("FakeRegistrationService.UpdateNewUserProfile " + request.NewUserRegistrationId.ToString());
 			return;
 		}
+
+
+		public async Task<bool> TemporaryAccessTokenExists(Guid newRegistrationIdFromReturnUrl)
+		{
+			Trace.Write("FakeRegistrationService.TemporaryAccessTokenExists " + newRegistrationIdFromReturnUrl.ToString());
+			return true;
+		}
 	}
 }

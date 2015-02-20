@@ -11,5 +11,7 @@ namespace MNIT_Communication.Services
 		Task StoreKeyValue(string key, string value, TimeSpan lifespan);
 
 		Task<T> GetValue<T>(string key);
+
+		Task<bool> KeyExists(string key);
 	}
 }

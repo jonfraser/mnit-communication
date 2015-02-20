@@ -29,5 +29,11 @@ namespace MNIT_Communication.Services
 		{
 			return JsonConvert.DeserializeObject<T>(await _cache.StringGetAsync(key));
 		}
+
+
+		public async Task<bool> KeyExists(string key)
+		{
+			return await _cache.KeyExistsAsync(key);
+		}
 	}
 }

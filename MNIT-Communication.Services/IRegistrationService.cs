@@ -15,7 +15,8 @@ namespace MNIT_Communication.Services
 		Task<NewUserProfile> RetrieveNewUserProfile(Guid id);
 
 		Task InsertOrUpdateNewUserProfile(NewUserProfile request);
-
+		
+		Task<bool> TemporaryAccessTokenExists(Guid newRegistrationIdFromReturnUrl);
 	}
 
 }

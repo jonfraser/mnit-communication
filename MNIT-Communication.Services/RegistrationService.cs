@@ -155,6 +155,13 @@ namespace MNIT_Communication.Services
 			var requestForStorage = JsonConvert.SerializeObject(existingRequest ?? request);
 			await store.StoreKeyValue(request.NewUserRegistrationId.ToString(), requestForStorage, new TimeSpan(72, 0, 0));
 		}
+
+
+		public async Task<bool> TemporaryAccessTokenExists(Guid newRegistrationId)
+		{
+			IShortTermStorage store = new RedisStore();
+			return await store.KeyExists(newRegistrationId.ToString());
+		}
 	}
 
 }
