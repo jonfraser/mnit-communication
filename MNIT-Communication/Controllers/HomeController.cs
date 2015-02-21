@@ -13,6 +13,7 @@ using Microsoft.Owin.Security;
 using MNIT_Communication.Domain;
 using System.Net.Http;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace MNIT_Communication.Controllers
 {
@@ -61,28 +62,36 @@ namespace MNIT_Communication.Controllers
 		[AllowAnonymous]
 		public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
 		{
-			var loginInfo = await HttpContext.GetOwinContext().Authentication.GetExternalLoginInfoAsync();
+			var owinAuth = HttpContext.GetOwinContext().Authentication;
+			var loginInfo = await owinAuth.GetExternalLoginInfoAsync();
 			if (loginInfo == null)
 			{
 				return new HttpUnauthorizedResult();
 			}
 
-			var newRegistrationIdFromReturnUrl = new Guid(StringHelpers.PullGuidOffEndOfUrl(returnUrl));
+			//var identity = new ClaimsIdentity(loginInfo.ExternalIdentity.Claims);
+			//owinAuth.SignIn(identity);
 
-			using (var client = new HttpClient())
+			//TODO: this would theoretically be called whenever someone auths from any stage in teh app,
+			//not just initial setup - need to check for this
+			if (returnUrl.StartsWith("/Home/SetUserProfile"))
 			{
-				var putProfileUri = HttpContext.Request.Url.Scheme +
-									"://" +
-									HttpContext.Request.Url.Authority +
-									Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User" });
-				var response = await client.PutAsJsonAsync(putProfileUri, new NewUserProfile
-					{
-						EmailAddressExternalProvider = loginInfo.Email,
-						NewUserRegistrationId = newRegistrationIdFromReturnUrl,
-						ExternalProvider = loginInfo.Login.LoginProvider
-					});
-			}
+				var newRegistrationIdFromReturnUrl = new Guid(StringHelpers.PullGuidOffEndOfUrl(returnUrl));
 
+				using (var client = new HttpClient())
+				{
+					var putProfileUri = HttpContext.Request.Url.Scheme +
+										"://" +
+										HttpContext.Request.Url.Authority +
+										Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User" });
+					var response = await client.PutAsJsonAsync(putProfileUri, new NewUserProfile
+						{
+							EmailAddressExternalProvider = loginInfo.Email,
+							NewUserRegistrationId = newRegistrationIdFromReturnUrl,
+							ExternalProvider = loginInfo.Login.LoginProvider
+						});
+				}
+			}
 			return Redirect(returnUrl);
 
 		}

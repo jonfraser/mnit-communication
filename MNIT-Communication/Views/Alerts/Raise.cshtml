@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = "Raise an alert";
+}
+<h1>Uh oh!</h1>
+<p class="lead">
+    Has something gone wrong? Select the services that are currently unavailable and enter a quick note to go along to all the
+    subscribers. You'll get a reminder in 50 minutes to update the status of the outage so that all users can be kept up to date.
+</p>
+<form class="container-fluid" ng-controller="AlertsController" ng-submit="raiseAlert()">
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Applications</h4>
+            <ul class="list-unstyled list-inline">
+                <li ng-repeat="alertable in appAlertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" />
+                        {{alertable.Name}}
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Interfaces</h4>
+            <ul class="list-unstyled list-inline">
+                <li ng-repeat="alertable in interfaceAlertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" />
+                        {{alertable.Name}}
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h4>Servers</h4>
+            <ul class="list-unstyled list-inline">
+                <li ng-repeat="alertable in svrAlertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" />
+                        {{alertable.Name}}
+                    </label>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label for="shortInfo">Short Info:</label>
+        </div>
+        <div class="col-md-8">
+            <input type="text" id="shortInfo" class="form-control input-lg" ng-model="shortInfo" maxlength="140" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label for="longInfo">Long detail:</label>
+        </div>
+        <div class="col-md-8">
+            <input type="text" id="longInfo" class="form-control input-lg" ng-model="longInfo" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <button type="submit" class="btn btn-primary btn-lg">Raise the alarm!</button>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    <script type="text/javascript">
+        angular.module('communicationApp', [])
+            .directive('onFinishRender', function ($timeout) {
+                return {
+                    restrict: 'A',
+                    link: function (scope, element, attr) {
+                        if (scope.$last === true) {
+                            scope.$evalAsync(attr.onFinishRender);
+                        }
+                    }
+                }
+            })
+          .controller('AlertsController', ['$scope', '$http', function ($scope, $http) {
+
+              $scope.toggelize = function () {
+                  $('li label input').bootstrapToggle({
+                      on: 'Yes',
+                      off: 'No'
+                  });
+              };
+
+              $scope.raiseAlert = function () {
+                  var data = {
+                      "AlertInfoShort": $scope.shortInfo,
+                      "AlertDetail": $scope.longInfo,
+                      "AlertableId": ['440394b8-8b90-46dd-bf13-a420a4358cc2']
+                  };
+                  $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Raise", controller = "Alerts"})',
+                      JSON.stringify(data)).
+                    success(function (data) {
+                        window.location = "/";
+                    }).
+                    error(function (data) { alert(data); });
+
+              };
+
+              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Applications"})').
+                    success(function (data) {
+                        $scope.appAlertables = data;
+                    }).
+                    error(function () { $scope.appAlertables = ['No application alertables were retrieved from the server'] });
+
+              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Interfaces"})').
+                                  success(function (data) {
+                                      $scope.interfaceAlertables = data;
+                                  }).
+                                  error(function () { $scope.interfaceAlertables = ['No interface alertables were retrieved from the server'] });
+
+              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Servers"})').
+                    success(function (data) {
+                        $scope.svrAlertables = data;
+                    }).
+                    error(function () { $scope.svrAlertables = ['No server alertables were retrieved from the server'] });
+
+          }]);
+
+    </script>
+}

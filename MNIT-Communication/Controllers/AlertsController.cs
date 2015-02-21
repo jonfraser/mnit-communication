@@ -22,5 +22,13 @@ namespace MNIT_Communication.Controllers
 
 			return View();
 		}
+
+		[HttpGet]
+		//[Authorize]
+		public ActionResult Raise()
+		{
+			//Do nothing, just return the view as we will ajax in the alerts via the rest api
+			return View();
+		}
     }
 }

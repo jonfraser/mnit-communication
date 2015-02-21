@@ -12,7 +12,7 @@ namespace AlertUserViaExternalEmailJob
 {
 	public class Functions
 	{
-		public async static Task ProcessQueueMessage([ServiceBusTrigger(Topics.Alerts, Topics.Alerts + "-SMS")] AlertBrokeredMessage message, TextWriter log)
+		public async static Task ProcessQueueMessage([ServiceBusTrigger(Topics.Alerts, Topics.Alerts + "-ExternalEmail")] AlertBrokeredMessage message, TextWriter log)
 		{
 			log.WriteLine(message);
 			ISendEmail mail = new SendGridEmailService();

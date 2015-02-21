@@ -24,12 +24,13 @@ namespace MNIT_Communication.App_Start
 #else
 			builder.RegisterInstance(new RegistrationService()).As<IRegistrationService>();
 			builder.RegisterInstance(new AlertsService()).As<IAlertsService>();
-#endif
 
 			builder.RegisterInstance(new GoogleUrlShortener()).As<IUrlShorten>();
 			builder.RegisterInstance(new SendTwilioSmsService()).As<ISendSms>();
 			builder.RegisterInstance(new RedisStore()).As<IShortTermStorage>();
 			builder.RegisterInstance(new SendGridEmailService()).As<ISendEmail>();
+#endif
+
 
 			builder.RegisterControllers(typeof(MvcApplication).Assembly);
 			builder.RegisterApiControllers(Assembly.GetExecutingAssembly());

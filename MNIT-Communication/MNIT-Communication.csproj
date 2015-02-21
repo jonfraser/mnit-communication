@@ -225,6 +225,7 @@
     <Compile Include="Areas\api\v1\User\Confirm.cs" />
     <Compile Include="Areas\api\v1\User\Register.cs" />
     <Compile Include="Areas\api\v1\Version\Get.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AlertsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
@@ -1162,6 +1163,8 @@
     <Content Include="Views\Home\SetUserProfile.cshtml" />
     <Content Include="Views\Home\MobileNumberRemoved.cshtml" />
     <Content Include="Scripts\version.json" />
+    <Content Include="Views\Alerts\Raise.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
