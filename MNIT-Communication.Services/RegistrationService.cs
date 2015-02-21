@@ -60,33 +60,16 @@ namespace MNIT_Communication.Services
 
 		private async Task SendEmail(string email, Guid accessToken)
 		{
-			// Create the email object first, then add the properties.
-			var myMessage = new SendGridMessage();
+			ISendEmail mail = new SendGridEmailService();
 
-			// Add the message properties.
-			myMessage.From = new MailAddress("mnit-communication@health.qld.gov.au");
+			var message = "You've got 72 hours to confirm your account via this link: https://mnit-communication.azurewebsites.net/api/User/Confirm/" + accessToken.ToString()
+						+ Environment.NewLine
+						+ "If you have already selected your alerts they will be automatically added to your account once it is confirmed.";
+			await mail.Send(from: "mnit-communication@health.qld.gov.au",
+							to: new List<String> { email },
+							subject: "You requested access?",
+							body: message);
 
-			// Add multiple addresses to the To field.
-			List<String> recipients = new List<String> { email };
-
-			myMessage.AddTo(recipients);
-
-			myMessage.Subject = "You requested access?";
-
-			//Add the HTML and Text bodies
-			myMessage.Text = "You've got 72 hours to confirm your account via this link: https://mnit-communication.azurewebsites.net/api/User/Confirm/" + accessToken.ToString();
-			myMessage.Text += Environment.NewLine;
-			myMessage.Text += "If you have already selected your alerts they will be automatically added to your account once it is confirmed.";
-
-			// Create credentials, specifying your user name and password.
-			var credentials = new NetworkCredential("azure_853e23752ff2b9ce7c30020b435ea889@azure.com",
-				CloudConfigurationManager.GetSetting("SendGridPassword"));
-
-			// Create an Web transport for sending email.
-			var transportWeb = new Web(credentials);
-
-			// Send the email.
-			await transportWeb.DeliverAsync(myMessage);
 		}
 
 		public async Task RequestVerificationOfMobileNumber(string mobileNumber, Guid accessToken)

@@ -127,12 +127,14 @@
     <Compile Include="GoogleUrlShortener.cs" />
     <Compile Include="IAlertsService.cs" />
     <Compile Include="IRegistrationService.cs" />
+    <Compile Include="ISendEmail.cs" />
     <Compile Include="ISendSms.cs" />
     <Compile Include="IShortTermStorage.cs" />
     <Compile Include="IUrlShorten.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedisStore.cs" />
     <Compile Include="RegistrationService.cs" />
+    <Compile Include="SendGridEmailService.cs" />
     <Compile Include="SendTelstraSmsService.cs" />
     <Compile Include="SendTwilioSmsService.cs" />
   </ItemGroup>

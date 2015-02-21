@@ -29,6 +29,7 @@ namespace MNIT_Communication.App_Start
 			builder.RegisterInstance(new GoogleUrlShortener()).As<IUrlShorten>();
 			builder.RegisterInstance(new SendTwilioSmsService()).As<ISendSms>();
 			builder.RegisterInstance(new RedisStore()).As<IShortTermStorage>();
+			builder.RegisterInstance(new SendGridEmailService()).As<ISendEmail>();
 
 			builder.RegisterControllers(typeof(MvcApplication).Assembly);
 			builder.RegisterApiControllers(Assembly.GetExecutingAssembly());

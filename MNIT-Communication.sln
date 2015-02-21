@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VerifyMobileNumberJob", "Ve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertUserViaSmsJob", "AlertUserViaSms\AlertUserViaSmsJob.csproj", "{26FA24B5-1B66-4048-BD18-50DF7473DA12}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertUserViaExternalEmailJob", "AlertUserViaExternalEmailJob\AlertUserViaExternalEmailJob.csproj", "{31F79284-8DA9-48B6-B2BF-8AE1DF6620B9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{26FA24B5-1B66-4048-BD18-50DF7473DA12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26FA24B5-1B66-4048-BD18-50DF7473DA12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26FA24B5-1B66-4048-BD18-50DF7473DA12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31F79284-8DA9-48B6-B2BF-8AE1DF6620B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31F79284-8DA9-48B6-B2BF-8AE1DF6620B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31F79284-8DA9-48B6-B2BF-8AE1DF6620B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31F79284-8DA9-48B6-B2BF-8AE1DF6620B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
