@@ -46,7 +46,16 @@ namespace MNIT_Communication.Areas.api.v1
                 new Alertable{ID = Guid.Parse("71657700-f95e-4528-b49d-67ed2a827c98"), Name="tpch-p269", Group = "Servers"}
 				,
                 new Alertable{ID = Guid.Parse("71657700-f95e-4528-b49d-67ed2a827c98"), Name="tpch-p271", Group = "Servers"}
-				
+				,
+                new Alertable{ID = Guid.Parse("71657700-f95e-4528-b49d-67ed2a827c98"), Name="Caboolture", Group = "Sites"}
+				,
+                new Alertable{ID = Guid.Parse("71657700-f95e-4528-b49d-67ed2a827c98"), Name="Redcliffe", Group = "Sites"}
+				,
+                new Alertable{ID = Guid.Parse("71657700-f95e-4528-b49d-67ed2a827c98"), Name="TPCH", Group = "Sites"}
+				,
+                new Alertable{ID = Guid.Parse("71657700-f95e-4528-b49d-67ed2a827c98"), Name="RBWH", Group = "Sites"}
+				,
+                new Alertable{ID = Guid.Parse("71657700-f95e-4528-b49d-67ed2a827c98"), Name="SaAS", Group = "Sites"}
             });
         }
 

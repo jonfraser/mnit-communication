@@ -2,10 +2,11 @@
 @{
     ViewBag.Title = "Set User Profile";
 }
-<h1>How will we reach you?</h1>
+<h1>Confirm your details</h1>
 <p class="lead">
-    We've got enough information to contact you on your work email, but for those times when you're not at your desk it would help
-    if we had some more information. Confirm/update the details below.
+    We've got enough information to contact you while you're at your PC (if you have one), but for those times when
+    you're not at your desk it would help if we had another email address and mobile phone number.
+    Please confirm/update the details below.
 </p>
 <form class="container-fluid" ng-controller="UserProfileController" ng-submit="setUserProfile('@Model.NewUserRegistrationId')">
     <div class="row">
@@ -21,7 +22,7 @@
             <label for="mobile">Mobile Phone:</label>
         </div>
         <div class="col-md-8">
-            <input type="text" id="mobile" class="form-control input-lg" ng-model="mobile" />
+            <input type="text" id="mobile" class="form-control input-lg" ng-model="mobile" placeholder="04xxxxxxxx" />
         </div>
     </div>
     <div class="row">
@@ -49,7 +50,7 @@
                     $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User"})',
                         JSON.stringify(data)).
                       success(function (data) {
-                          window.location = "/alerts/newuser/" + newUserRegistrationId;
+                          window.location = "/Alerts/NewUser/" + newUserRegistrationId;
                       }).
                       error(function (data) { alert(data); });
 

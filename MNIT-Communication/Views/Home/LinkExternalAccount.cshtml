@@ -6,12 +6,14 @@
     var newUserRegistrationId = string.Format("'{0}'", Model.ToString());
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
 }
-<h1>Just one more thing!</h1>
+<h1>How will we contact you?</h1>
 <p class="lead">
     To allow us to get alerts to you even when the internal QH network is down, we need an external account with an email
-    address to link your account up to. Please login with one of the following providers (hint, you'll use this account next time you want to log in here).
+    address to link your account up to (this also gives you extra security).
 </p>
-
+<p class="lead">
+    Please login with one of the following providers.
+</p>
 @using (Html.BeginForm("ExternalLogin", "Home", new { ReturnUrl = Url.Action("SetUserProfile", "Home", new { id = Model }) }))
 {
     @Html.AntiForgeryToken()
@@ -24,25 +26,3 @@
         </p>
     </div>
 }
-@*<form class="container-fluid" ng-controller="LinkExternalAccountsController">
-    <div class="row">
-        <div class="col-md-12">
-            <ul class="list-unstyled list-inline">
-                <li>Google (gmail)</li>
-                <li>Microsoft (hotmail, outlook)</li>
-                <li>Yahoo</li>
-            </ul>
-        </div>
-    </div>
-</form>
-
-@section scripts {
-    <script type="text/javascript">
-        angular.module('communicationApp', [])
-          .controller('LinkExternalAccountsController', ['$scope', '$http', function ($scope, $http) {
-
-              
-          }]);
-
-    </script>
-}*@

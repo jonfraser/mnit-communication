@@ -17,11 +17,6 @@ namespace MNIT_Communication.Services
 {
 	public class RegistrationService : IRegistrationService
 	{
-		private readonly List<string> validEmail = new List<string>(){"jon.fraser@health.qld.gov.au",
-												   "ian.missenden@health.qld.gov.au",
-												   "anthony.kanowski@health.qld.gov.au"};
-		private readonly List<string> validMobile = new List<string>() { "+61416272575" };
-
 		public async Task<Guid> SendRegistrationRequest(string email)
 		{
 			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
@@ -48,7 +43,7 @@ namespace MNIT_Communication.Services
 		public async Task ProcessServiceBusRegistrationMessage(NewUserRegistrationBrokeredMessage message)
 		{
 			await StoreToken(message.EmailAddress, message.CorrelationId);
-			var emailToSend = validEmail.Contains(message.EmailAddress) ? message.EmailAddress : "fraser.jc@gmail.com";
+			var emailToSend = message.EmailAddress;
 			await SendEmail(emailToSend, message.CorrelationId);
 		}
 
@@ -67,7 +62,7 @@ namespace MNIT_Communication.Services
 						+ "If you have already selected your alerts they will be automatically added to your account once it is confirmed.";
 			await mail.Send(from: "mnit-communication@health.qld.gov.au",
 							to: new List<String> { email },
-							subject: "You requested access?",
+							subject: "Confirm your MNIT Communication account",
 							body: message);
 
 		}
@@ -100,8 +95,8 @@ namespace MNIT_Communication.Services
 			var cancellationEndpoint = string.Format("https://mnit-communication.azurewebsites.net/api/User/RejectMobile/{0}", accessToken.ToString());
 			var shortEndpoint = await urlShortener.Shorten(cancellationEndpoint);
 
-			var mobileToSend = validMobile.Contains(mobileNumber) ? mobileNumber : "+61416272575";
-			var smsMessage = "MNIT Communication sent this to confirm your number. If you got this by mistake, click " + shortEndpoint;
+			var mobileToSend = mobileNumber;
+			var smsMessage = "MNIT Communication sent this to confirm your number. If you got this by mistake, click " + shortEndpoint + " otherwise delete this message.";
 
 			ISendSms sms = new SendTwilioSmsService();
 			await sms.SendSimple(mobileNumber, smsMessage);

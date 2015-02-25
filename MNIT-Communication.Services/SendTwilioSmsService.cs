@@ -11,6 +11,10 @@ namespace MNIT_Communication.Services
 	{
 		public async Task SendSimple(string mobileNumber, string message)
 		{
+			if ((mobileNumber ?? "").Length == 10)
+			{
+				mobileNumber = "+61" + mobileNumber.Substring(1);
+			}
 
 			var twilioSmsPrefix = "Sent from your twilio trial account - ";
 			if (twilioSmsPrefix.Length + message.Length > 160)

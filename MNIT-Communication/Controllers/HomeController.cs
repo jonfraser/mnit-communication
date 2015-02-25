@@ -69,6 +69,7 @@ namespace MNIT_Communication.Controllers
 				return new HttpUnauthorizedResult();
 			}
 
+			//var identity = new ClaimsIdentity(loginInfo.ExternalIdentity.Claims, "ApplicationCookie");
 			//var identity = new ClaimsIdentity(loginInfo.ExternalIdentity.Claims);
 			//owinAuth.SignIn(identity);
 
@@ -92,8 +93,12 @@ namespace MNIT_Communication.Controllers
 						});
 				}
 			}
-			return Redirect(returnUrl);
 
+			if (Url.IsLocalUrl(returnUrl))
+			{
+				return Redirect(returnUrl);
+			}
+			throw new UnauthorizedAccessException();
 		}
 
 		public ActionResult Confirmed()
