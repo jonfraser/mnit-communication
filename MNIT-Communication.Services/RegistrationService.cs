@@ -96,7 +96,7 @@ namespace MNIT_Communication.Services
 			var shortEndpoint = await urlShortener.Shorten(cancellationEndpoint);
 
 			var mobileToSend = mobileNumber;
-			var smsMessage = "MNIT Communication sent this to confirm your number. If you got this by mistake, click " + shortEndpoint + " otherwise delete this message.";
+			var smsMessage = "MNIT Communication sent this to confirm your number. Not you? Click " + shortEndpoint + " otherwise delete this message.";
 
 			ISendSms sms = new SendTwilioSmsService();
 			await sms.SendSimple(mobileNumber, smsMessage);
