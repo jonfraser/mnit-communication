@@ -24,7 +24,7 @@ namespace MNIT_Communication.Controllers
 		}
 
 		[HttpGet]
-		//[Authorize]
+		[Authorize]
 		public ActionResult Raise()
 		{
 			//Do nothing, just return the view as we will ajax in the alerts via the rest api
