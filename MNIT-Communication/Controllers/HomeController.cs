@@ -74,13 +74,6 @@ namespace MNIT_Communication.Controllers
 			var SignInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
 			await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
 
-			//var externalCookie = await owinAuth.AuthenticateAsync("ExternalCookie");
-			//var claims = externalCookie.Identity.Claims.ToList();
-			//claims.Add(new Claim(ClaimTypes.AuthenticationMethod, loginInfo.Login.LoginProvider));
-
-			//var ci = new ClaimsIdentity(claims, "Cookie");
-			//owinAuth.SignIn(new AuthenticationProperties{IsPersistent = false}, ci);
- 
 			//TODO: this would theoretically be called whenever someone auths from any stage in teh app,
 			//not just initial setup - need to check for this
 			if (returnUrl.StartsWith("/Home/SetUserProfile"))
