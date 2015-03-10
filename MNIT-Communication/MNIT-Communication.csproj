@@ -232,6 +232,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\ChallengeResult.cs" />
+    <Compile Include="Helpers\CustomSignIn\ApplicationNoDbContext.cs" />
+    <Compile Include="Helpers\CustomSignIn\ApplicationSignInManager.cs" />
+    <Compile Include="Helpers\CustomSignIn\ApplicationUser.cs" />
+    <Compile Include="Helpers\CustomSignIn\ApplicationUserManager.cs" />
+    <Compile Include="Helpers\CustomSignIn\NoUserStore.cs" />
     <Compile Include="Helpers\StringHelpers.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
