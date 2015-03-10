@@ -8,6 +8,7 @@
     <title>MNIT Communication</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet">
 </head>
 <body>
@@ -18,7 +19,8 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><span class="glyphicons glyphicons-bell">@Html.ActionLink("Alertables", "Raise", "Alerts")</span></li>
+                    <li><i class="fa fa-bullhorn">@Html.ActionLink("Raise an Alert", "Raise", "Alerts")</i></li>
+                    <li><i class="fa fa-bell-o">@Html.ActionLink("Current Outages", "Status", "Alerts")</i></li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

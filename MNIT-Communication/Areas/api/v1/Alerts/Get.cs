@@ -13,9 +13,9 @@ namespace MNIT_Communication.Areas.api.v1
     public partial class AlertsController : ApiController
     {
 
-		public async Task<IEnumerable<Guid>> Get([FromBody]Guid newUserRegistrationId)
+		public async Task<IEnumerable<AlertBrokeredMessage>> Get()
         {
-			return null;// await alertsService.RegisterNewUserForInitialAlerts(newUserRegistrationId, "email", alertables);
+			return await alertsService.GetCurrentAlerts();
         }
     }
 }

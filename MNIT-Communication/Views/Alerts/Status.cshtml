@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Current Outages";
+}
+<h1>Current Outages</h1>
+<p class="lead">
+    Listed below are all the currently known outages and latest update. Rest assured we are working hard to restore service and you'll be notified
+    as soon as things are back to normal.
+</p>
+<h3>{{outageSummary}}</h3>
+<form class="container-fluid" ng-controller="AlertsController">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="">
+                <thead>
+                    <tr>
+                        <td>Service</td>
+                        <td>Outage Start</td>
+                        <td>Latest Update</td>
+                        <td>Latest Update Date</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="outage in outages | orderBy:'Service'">
+                        <td>{{outage.Service}}</td>
+                        <td>{{outage.Start}}</td>
+                        <td>{{outage.Update}}</td>
+                        <td>{{outage.UpdateDate}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+@section scripts {
+    @System.Web.Optimization.Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
+    <script src="~/signalr/hubs"></script>
+    
+    <script type="text/javascript">
+
+        $(function () {
+            var outageHub = $.connection.outageHub;
+            outageHub.client.addOutageUpdateToPage = function (service, start, update, updateDate) {
+                //find existing outage and update it, or add a new one
+            };
+            $.connection.hub.start();
+        });
+
+
+        angular.module('communicationApp', [])
+            .controller('AlertsController', ['$scope', '$http', function ($scope, $http) {
+
+              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alerts"})').
+                   success(function (data) {
+                       $scope.outages = data;
+                       $scope.outageSummary = "";
+                   }).
+                   error(function () { $scope.outageSummary = 'Awesome! There aren\'t any outages at the moment!' });
+
+          
+          }]);
+
+    </script>
+}

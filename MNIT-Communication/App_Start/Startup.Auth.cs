@@ -50,7 +50,7 @@ namespace MNIT_Communication
 				ClientSecret = CloudConfigurationManager.GetSetting("GoogleAuthClientSecret")
 			});
 
-            
+			app.MapSignalR();
         }
     }
 }

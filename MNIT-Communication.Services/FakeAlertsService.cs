@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using MNIT_Communication.Domain;
 
 namespace MNIT_Communication.Services
 {
@@ -20,6 +21,13 @@ namespace MNIT_Communication.Services
 		{
 			Trace.Write("FakeAlertsService.RaiseAlert " + alertableId.ToString());
 			return Task.FromResult(0);
+		}
+
+
+		public async Task<IEnumerable<AlertBrokeredMessage>> GetCurrentAlerts()
+		{
+			Trace.Write("FakeAlertsService.GetCurrentAlerts");
+			return await Task.Run(() => new List<AlertBrokeredMessage>());
 		}
 	}
 }

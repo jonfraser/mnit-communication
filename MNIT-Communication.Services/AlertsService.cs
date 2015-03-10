@@ -10,34 +10,34 @@ using System.Web;
 
 namespace MNIT_Communication.Services
 {
-    public class AlertsService : IAlertsService
-    {
+	public class AlertsService : IAlertsService
+	{
 
-        public async Task<Guid> RegisterNewUserForInitialAlerts(Guid newUserRegistrationId, string emailAddress, IEnumerable<Guid> alertables)
-        {
-            var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-            var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
-            var queueExists = await namespaceManager.QueueExistsAsync(Queues.AlertsRegistration);
-            if (!queueExists)
-            {
-                await namespaceManager.CreateQueueAsync(Queues.AlertsRegistration);
-            }
+		public async Task<Guid> RegisterNewUserForInitialAlerts(Guid newUserRegistrationId, string emailAddress, IEnumerable<Guid> alertables)
+		{
+			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+			var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
+			var queueExists = await namespaceManager.QueueExistsAsync(Queues.AlertsRegistration);
+			if (!queueExists)
+			{
+				await namespaceManager.CreateQueueAsync(Queues.AlertsRegistration);
+			}
 
-            var client = QueueClient.CreateFromConnectionString(connectionString, Queues.AlertsRegistration);
+			var client = QueueClient.CreateFromConnectionString(connectionString, Queues.AlertsRegistration);
 
-            foreach (var alertable in alertables)
-            {
-                var message = new RegisterAlertBrokeredMessage
-                {
-                    CorrelationId = Guid.NewGuid(),
-                    EmailAddress = emailAddress,
-                    AlertableId = alertable
-                };
-                await client.SendAsync(new BrokeredMessage(message));
-            }
+			foreach (var alertable in alertables)
+			{
+				var message = new RegisterAlertBrokeredMessage
+				{
+					CorrelationId = Guid.NewGuid(),
+					EmailAddress = emailAddress,
+					AlertableId = alertable
+				};
+				await client.SendAsync(new BrokeredMessage(message));
+			}
 
-            return newUserRegistrationId;
-        }
+			return newUserRegistrationId;
+		}
 
 		public async Task RaiseAlert(Guid alertableId, string alertDetail, string alertInfoShort)
 		{
@@ -62,6 +62,14 @@ namespace MNIT_Communication.Services
 			};
 
 			await client.SendAsync(new BrokeredMessage(message));
+		}
+
+
+		public async Task<IEnumerable<AlertBrokeredMessage>> GetCurrentAlerts()
+		{
+			//todo: get current alerts out of SQL			
+			return await Task.Run(() => new List<AlertBrokeredMessage>());
+
 		}
 	}
 }

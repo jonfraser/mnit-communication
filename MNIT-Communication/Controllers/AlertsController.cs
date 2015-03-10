@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -28,6 +29,13 @@ namespace MNIT_Communication.Controllers
 		public ActionResult Raise()
 		{
 			//Do nothing, just return the view as we will ajax in the alerts via the rest api
+			return View();
+		}
+
+		[HttpGet]
+		[Authorize]
+		public ActionResult Status()
+		{
 			return View();
 		}
     }
