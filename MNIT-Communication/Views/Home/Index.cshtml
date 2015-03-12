@@ -1,10 +1,16 @@
 ﻿<form ng-controller="RegisterUserController" ng-submit="registerUser()">
     <div class="jumbotron form-group form-inline">
         <h1>Get Started!</h1>
-        <p class="lead">Enter your @@health email address and we'll get the process started.</p>
+        <p class="lead">
+            Enter your @@health email address and we'll get the process started.
+        </p>
+        <p>
+            By entering your email address and proceeding
+            you are agreeing to have this email address and your alert preferences stored in <a href="https://azure.microsoft.com/en-us/overview/what-is-azure/" target="_blank">The Cloud</a>.
+        </p>
 
         <fieldset ng-disabled="isSubmitting">
-            <div class="row">
+            <div class="row" style="margin-bottom:10px;">
                 <div class="col-md-6 input-group">
                     <input class="form-control input-lg"
                            placeholder="firstname.lastname@health.qld.gov.au"
@@ -12,6 +18,20 @@
                            ng-model="emailAddress"
                            maxlength="100" />
                 </div>
+            </div>
+            @*<div class="row">
+                    <div class="col-md-10 input-group checkbox">
+                        <label class=""
+                               for="agreeCloudStorage">
+                        <input class=""
+                               type="checkbox"
+                               name="agreeCloudStorage"
+                               ng-model="agreeCloudStorage" />
+                            I agree to have my email address and alert preferences stored in the Cloud.
+                        </label>
+                    </div>
+                </div>*@
+            <div class="row">
                 <div class="col-md-2 input-group">
                     <button type="submit" class="btn btn-primary btn-lg">Let's go &raquo;</button>
                 </div>
