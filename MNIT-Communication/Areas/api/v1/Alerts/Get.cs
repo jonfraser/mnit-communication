@@ -13,7 +13,7 @@ namespace MNIT_Communication.Areas.api.v1
     public partial class AlertsController : ApiController
     {
 
-		public async Task<IEnumerable<AlertBrokeredMessage>> Get()
+		public async Task<IEnumerable<AlertSummary>> Get()
         {
 			return await alertsService.GetCurrentAlerts();
         }

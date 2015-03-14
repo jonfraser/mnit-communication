@@ -65,10 +65,10 @@ namespace MNIT_Communication.Services
 		}
 
 
-		public async Task<IEnumerable<AlertBrokeredMessage>> GetCurrentAlerts()
+		public async Task<IEnumerable<AlertSummary>> GetCurrentAlerts()
 		{
 			//todo: get current alerts out of SQL			
-			return await Task.Run(() => new List<AlertBrokeredMessage>());
+			return await Task.Run(() => new List<AlertSummary>());
 
 		}
 	}

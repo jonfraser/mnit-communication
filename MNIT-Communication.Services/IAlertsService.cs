@@ -10,6 +10,6 @@ namespace MNIT_Communication.Services
 
 		Task RaiseAlert(Guid alertableId, string alertDetail, string alertInfoShort);
 
-		Task<IEnumerable<AlertBrokeredMessage>> GetCurrentAlerts();
+		Task<IEnumerable<AlertSummary>> GetCurrentAlerts();
 	}
 }

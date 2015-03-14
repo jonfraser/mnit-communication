@@ -24,10 +24,10 @@ namespace MNIT_Communication.Services
 		}
 
 
-		public async Task<IEnumerable<AlertBrokeredMessage>> GetCurrentAlerts()
+		public async Task<IEnumerable<AlertSummary>> GetCurrentAlerts()
 		{
 			Trace.Write("FakeAlertsService.GetCurrentAlerts");
-			return await Task.Run(() => new List<AlertBrokeredMessage>());
+			return await Task.Run(() => new List<AlertSummary>());
 		}
 	}
 }
