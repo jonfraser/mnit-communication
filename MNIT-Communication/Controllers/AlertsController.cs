@@ -33,7 +33,7 @@ namespace MNIT_Communication.Controllers
 		}
 
 		[HttpGet]
-		[Authorize]
+		//[Authorize]
 		public ActionResult Status()
 		{
 			return View();
