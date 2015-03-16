@@ -19,14 +19,21 @@ namespace AlertWebsiteViaSignalRJob
 
 			//todo: lookup this alert
 			//todo: send to hub
-			
-			//new MNIT_Communication.Hubs.OutageHub().SendNew(new AlertSummary
-			//{
-			//	Service = "TPCH Network",
-			//	Update = "Still waiting for a miracle",
-			//	Start = new DateTime(2015, 03, 10),
-			//	UpdateDate = DateTime.Now
-			//});
+			try
+			{
+				await MNIT_Communication.Hubs.OutageHub.SendNew(new AlertSummary
+				{
+					Service = "TPCH Network",
+					Update = "Still waiting for a miracle",
+					Start = new DateTime(2015, 03, 10),
+					UpdateDate = DateTime.Now
+				});
+			}
+			catch (Exception ex)
+			{
+				log.WriteLine(string.Format("Error in ProcessMessageQueue: {0}", ex.ToString()));
+				throw;
+			}
 		}
 	}
 }
