@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using MNIT_Communication.Domain;
+using MNIT_Communication.Hubs;
 
 namespace MNIT_Communication.Areas.api.v1
 {
@@ -16,6 +18,13 @@ namespace MNIT_Communication.Areas.api.v1
 		{
 			foreach (var alertable in request.AlertableId)
 			{
+				await OutageHub.SendNew(new AlertSummary
+				{
+					Service = "TPCH Network",
+					Update = request.AlertDetail ?? request.AlertInfoShort,
+					Start = DateTime.Now,
+					UpdateDate = DateTime.Now
+				});
 				await alertsService.RaiseAlert(alertable, request.AlertDetail ?? request.AlertInfoShort, request.AlertInfoShort);
 			}
 		}
