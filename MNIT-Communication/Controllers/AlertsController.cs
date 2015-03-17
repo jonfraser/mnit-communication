@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 
 namespace MNIT_Communication.Controllers
 {
@@ -19,8 +20,8 @@ namespace MNIT_Communication.Controllers
 		[HttpGet]
 		public ActionResult NewUserDone(Guid id)
 		{
-			//Confirm the GUID is correct
-
+			//todo: Confirm the GUID is correct
+			HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
 			return View();
 		}
 

@@ -113,7 +113,7 @@
                   $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Raise", controller = "Alerts"})',
                       JSON.stringify(data)).
                     success(function (data) {
-                        window.location = "/";
+                        window.location = '@Url.Action("Status")';
                     }).
                     error(function (data) { alert(data); });
 

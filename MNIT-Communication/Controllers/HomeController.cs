@@ -32,6 +32,7 @@ namespace MNIT_Communication.Controllers
 
 		public ActionResult Index()
 		{
+			HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
 			return View();
 		}
 
@@ -67,6 +68,8 @@ namespace MNIT_Communication.Controllers
 		public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
 		{
 			var owinAuth = HttpContext.GetOwinContext().Authentication;
+			owinAuth.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
+			
 			var loginInfo = await owinAuth.GetExternalLoginInfoAsync();
 			if (loginInfo == null)
 			{
