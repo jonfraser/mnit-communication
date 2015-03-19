@@ -20,7 +20,7 @@ namespace MNIT_Communication.Areas.api.v1
 			{
 				await OutageHub.SendNew(new AlertSummary
 				{
-					Service = "TPCH Network",
+					Service = "TPCH Network", //todo: get this out of cache reference data
 					Update = request.AlertDetail ?? request.AlertInfoShort,
 					Start = DateTime.Now,
 					UpdateDate = DateTime.Now

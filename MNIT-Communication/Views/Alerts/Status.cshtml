@@ -8,7 +8,7 @@
 </p>
 <form class="container-fluid" ng-controller="AlertsController">
     <h3>{{outageSummary}}</h3>
-    <div class="row">
+    <div class="row" style="display:none;" ng-show="outages.length > 0">
         <div class="col-md-12">
             <table class="">
                 <thead>
@@ -41,14 +41,19 @@
         angular.module('communicationApp', [])
             .controller('AlertsController', ['$scope', '$http', function ($scope, $http) {
 
-
                 $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alerts"})').
                      success(function (data) {
                          $scope.outages = data || [];
-                         $scope.outageSummary = $scope.outages.length + " current outages";
                      }).
                      error(function () {
-                         $scope.outageSummary = 'Awesome! There aren\'t any outages at the moment!'
+                         $scope.outages = [];
+                     })
+                     .finally(function () {
+                         if ($scope.outages.length === 0) {
+                            $scope.outageSummary = 'Awesome! There aren\'t any outages at the moment!'
+                         } else {
+                            $scope.outageSummary = $scope.outages.length + " current outages";
+                         }
                      });
 
                 var outageHub = $.connection.outageHub;
