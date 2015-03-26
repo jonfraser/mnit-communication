@@ -36,7 +36,14 @@ namespace MNIT_Communication.Services
 
 		public async Task SendToTopicAsync<T>(T message, string topicName) where T : IXmlSerializable
 		{
-			throw new NotImplementedException();
+			var queueExists = await _namespaceManager.TopicExistsAsync(topicName);
+			if (!queueExists)
+			{
+				await _namespaceManager.CreateTopicAsync(topicName);
+			}
+			var client = TopicClient.CreateFromConnectionString(_serviceBusConnectionString, topicName);
+
+			await client.SendAsync(new BrokeredMessage(message));
 		}
 
 	}

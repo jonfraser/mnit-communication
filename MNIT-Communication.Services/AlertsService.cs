@@ -41,14 +41,7 @@ namespace MNIT_Communication.Services
 
 		public async Task RaiseAlert(Guid alertableId, string alertDetail, string alertInfoShort)
 		{
-			var queueExists = await _namespaceManager.TopicExistsAsync(Topics.Alerts);
-			if (!queueExists)
-			{
-				await _namespaceManager.CreateTopicAsync(Topics.Alerts);
-			}
-
-			var client = TopicClient.CreateFromConnectionString(_serviceBusConnectionString, Topics.Alerts);
-
+			
 			var message = new AlertBrokeredMessage
 			{
 				CorrelationId = Guid.NewGuid(),
@@ -58,7 +51,7 @@ namespace MNIT_Communication.Services
 				AlertRaiser = 0 //TODO
 			};
 
-			await client.SendAsync(new BrokeredMessage(message));
+			await _serviceBus.SendToTopicAsync(new BrokeredMessage(message), Topics.Alerts);
 		}
 
 		public async Task<IEnumerable<AlertSummary>> GetCurrentAlerts()
