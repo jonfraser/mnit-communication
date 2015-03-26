@@ -9,7 +9,7 @@ namespace MNIT_Communication.Services
 {
 	public interface IServiceBus
 	{
-		Task SendToQueueAsync<T>(T message, string queueName) where T : IXmlSerializable;
-		Task SendToTopicAsync<T>(T message, string topicName) where T : IXmlSerializable;
+		Task SendToQueueAsync<T>(T message, string queueName);
+		Task SendToTopicAsync<T>(T message, string topicName);
 	}
 }

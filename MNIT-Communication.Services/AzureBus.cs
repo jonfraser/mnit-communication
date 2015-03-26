@@ -21,7 +21,7 @@ namespace MNIT_Communication.Services
 
 		}
 
-		public async Task SendToQueueAsync<T>(T message, string queueName) where T : IXmlSerializable
+		public async Task SendToQueueAsync<T>(T message, string queueName)
 		{
 			var queueExists = await _namespaceManager.QueueExistsAsync(queueName);
 			if (!queueExists)
@@ -34,7 +34,7 @@ namespace MNIT_Communication.Services
 
 		}
 
-		public async Task SendToTopicAsync<T>(T message, string topicName) where T : IXmlSerializable
+		public async Task SendToTopicAsync<T>(T message, string topicName)
 		{
 			var queueExists = await _namespaceManager.TopicExistsAsync(topicName);
 			if (!queueExists)

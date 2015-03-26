@@ -33,7 +33,7 @@ namespace MNIT_Communication.Services
 					EmailAddress = emailAddress,
 					AlertableId = alertable
 				};
-				await _serviceBus.SendToQueueAsync(new BrokeredMessage(message), Queues.AlertsRegistration);
+				await _serviceBus.SendToQueueAsync(message, Queues.AlertsRegistration);
 			}
 
 			return newUserRegistrationId;
@@ -51,7 +51,7 @@ namespace MNIT_Communication.Services
 				AlertRaiser = 0 //TODO
 			};
 
-			await _serviceBus.SendToTopicAsync(new BrokeredMessage(message), Topics.Alerts);
+			await _serviceBus.SendToTopicAsync(message, Topics.Alerts);
 		}
 
 		public async Task<IEnumerable<AlertSummary>> GetCurrentAlerts()
