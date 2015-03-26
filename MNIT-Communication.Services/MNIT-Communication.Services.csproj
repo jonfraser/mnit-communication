@@ -122,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlertsService.cs" />
+    <Compile Include="AzureBus.cs" />
     <Compile Include="FakeAlertsService.cs" />
     <Compile Include="FakeRegistrationService.cs" />
     <Compile Include="GoogleUrlShortener.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="IRegistrationService.cs" />
     <Compile Include="ISendEmail.cs" />
     <Compile Include="ISendSms.cs" />
+    <Compile Include="IServiceBus.cs" />
     <Compile Include="IShortTermStorage.cs" />
     <Compile Include="IUrlShorten.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

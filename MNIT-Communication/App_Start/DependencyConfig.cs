@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
+using Microsoft.WindowsAzure;
 using MNIT_Communication.Services;
 
 namespace MNIT_Communication.App_Start
@@ -21,16 +22,19 @@ namespace MNIT_Communication.App_Start
 #if DEBUG
 			builder.RegisterInstance(new FakeRegistrationService()).As<IRegistrationService>();
 			builder.RegisterInstance(new FakeAlertsService()).As<IAlertsService>();
-#else
-			builder.RegisterInstance(new RegistrationService()).As<IRegistrationService>();
-			builder.RegisterInstance(new AlertsService()).As<IAlertsService>();
 
+#else
+			builder.RegisterInstance(new AzureBus(CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString"))).As<IServiceBus>().SingleInstance();
+			builder.RegisterInstance(new RegistrationService()).As<IRegistrationService>();
+			//builder.RegisterInstance(new AlertsService()).As<IAlertsService>();
+			
 			builder.RegisterInstance(new GoogleUrlShortener()).As<IUrlShorten>();
 			builder.RegisterInstance(new SendTwilioSmsService()).As<ISendSms>();
 			builder.RegisterInstance(new RedisStore()).As<IShortTermStorage>();
 			builder.RegisterInstance(new SendGridEmailService()).As<ISendEmail>();
+			
+			builder.RegisterType<AlertsService>().As<IAlertsService>().SingleInstance();
 #endif
-
 
 			builder.RegisterControllers(typeof(MvcApplication).Assembly);
 			builder.RegisterApiControllers(Assembly.GetExecutingAssembly());

@@ -12,19 +12,19 @@ namespace MNIT_Communication.Services
 {
 	public class AlertsService : IAlertsService
 	{
+		private readonly IServiceBus _serviceBus;
+		private readonly NamespaceManager _namespaceManager;
+		private readonly string _serviceBusConnectionString;
+		public AlertsService(IServiceBus serviceBus)
+		{
+			this._serviceBus = serviceBus;
+			this._serviceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+			this._namespaceManager = NamespaceManager.CreateFromConnectionString(_serviceBusConnectionString);
+		
+		}
 
 		public async Task<Guid> RegisterNewUserForInitialAlerts(Guid newUserRegistrationId, string emailAddress, IEnumerable<Guid> alertables)
 		{
-			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-			var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
-			var queueExists = await namespaceManager.QueueExistsAsync(Queues.AlertsRegistration);
-			if (!queueExists)
-			{
-				await namespaceManager.CreateQueueAsync(Queues.AlertsRegistration);
-			}
-
-			var client = QueueClient.CreateFromConnectionString(connectionString, Queues.AlertsRegistration);
-
 			foreach (var alertable in alertables)
 			{
 				var message = new RegisterAlertBrokeredMessage
@@ -33,7 +33,7 @@ namespace MNIT_Communication.Services
 					EmailAddress = emailAddress,
 					AlertableId = alertable
 				};
-				await client.SendAsync(new BrokeredMessage(message));
+				await _serviceBus.SendToQueueAsync(new BrokeredMessage(message), Queues.AlertsRegistration);
 			}
 
 			return newUserRegistrationId;
@@ -41,16 +41,13 @@ namespace MNIT_Communication.Services
 
 		public async Task RaiseAlert(Guid alertableId, string alertDetail, string alertInfoShort)
 		{
-			//push a topic onto the queue
-			var connectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-			var namespaceManager = NamespaceManager.CreateFromConnectionString(connectionString);
-			var queueExists = await namespaceManager.TopicExistsAsync(Topics.Alerts);
+			var queueExists = await _namespaceManager.TopicExistsAsync(Topics.Alerts);
 			if (!queueExists)
 			{
-				await namespaceManager.CreateTopicAsync(Topics.Alerts);
+				await _namespaceManager.CreateTopicAsync(Topics.Alerts);
 			}
 
-			var client = TopicClient.CreateFromConnectionString(connectionString, Topics.Alerts);
+			var client = TopicClient.CreateFromConnectionString(_serviceBusConnectionString, Topics.Alerts);
 
 			var message = new AlertBrokeredMessage
 			{
@@ -64,12 +61,21 @@ namespace MNIT_Communication.Services
 			await client.SendAsync(new BrokeredMessage(message));
 		}
 
-
 		public async Task<IEnumerable<AlertSummary>> GetCurrentAlerts()
 		{
 			//todo: get current alerts out of SQL			
 			return await Task.Run(() => new List<AlertSummary>());
 
+		}
+
+		private async Task<QueueClient> EnsureQueueExists(string queueName)
+		{
+			var queueExists = await _namespaceManager.QueueExistsAsync(queueName);
+			if (!queueExists)
+			{
+				await _namespaceManager.CreateQueueAsync(queueName);
+			}
+			return QueueClient.CreateFromConnectionString(_serviceBusConnectionString, queueName);
 		}
 	}
 }
