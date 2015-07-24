@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.WindowsAzure;
+using MNIT_Communication.Services;
 
 namespace AlertUserViaSms
 {
@@ -15,7 +16,9 @@ namespace AlertUserViaSms
 		// AzureWebJobsDashboard and AzureWebJobsStorage
 		static void Main()
 		{
-			var host = new JobHost(new JobHostConfiguration
+            ServiceLocator.RegisterType<SendTelstraSmsService>().As<ISendSms>();
+            
+            var host = new JobHost(new JobHostConfiguration
 			{
 				ServiceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString")
 			});

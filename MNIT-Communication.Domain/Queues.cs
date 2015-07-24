@@ -12,9 +12,4 @@ namespace MNIT_Communication.Domain
 		public const string AlertsRegistration = "AlertsRegistrationQueue";
 		public const string MobileNumberVerify = "MobileNumberVerify";
 	}
-
-	public static class Topics
-	{
-		public const string Alerts = "AlertsTopic";
-	}
 }

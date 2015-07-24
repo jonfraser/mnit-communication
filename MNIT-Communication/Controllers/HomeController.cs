@@ -23,14 +23,7 @@ namespace MNIT_Communication.Controllers
 {
 	public class HomeController : Controller
 	{
-		private IRegistrationService registrationService;
-
-		public HomeController(IRegistrationService regSvc)
-		{
-			registrationService = regSvc;
-		}
-
-		public ActionResult Index()
+        public ActionResult Index()
 		{
 			HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
 			return View();

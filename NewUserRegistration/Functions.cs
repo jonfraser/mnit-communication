@@ -16,7 +16,7 @@ namespace NewUserRegistration
 		public async static Task ProcessQueueMessage([ServiceBusTrigger(Queues.Registration)] NewUserRegistrationBrokeredMessage message, TextWriter log)
 		{
 			log.WriteLine("Received message " + message.CorrelationId.ToString() + " from queue for " + message.EmailAddress);
-			var svc = new RegistrationService();
+		    var svc = ServiceLocator.Resolve<IRegistrationService>();
 
 			try
 			{

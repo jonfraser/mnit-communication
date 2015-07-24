@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.WindowsAzure;
+using MNIT_Communication.Services;
 
 namespace VerifyMobileNumberJob
 {
@@ -15,7 +17,14 @@ namespace VerifyMobileNumberJob
 		// AzureWebJobsDashboard and AzureWebJobsStorage
 		static void Main()
 		{
-			var host = new JobHost(new JobHostConfiguration
+            ServiceLocator.RegisterType<RegistrationService>().As<IRegistrationService>();
+            ServiceLocator.RegisterInstance(default(ISendSms)).As<ISendSms>(); //Not required
+            ServiceLocator.RegisterInstance(default(IUrlShorten)).As<IUrlShorten>(); //Not required
+            ServiceLocator.RegisterType<SendGridEmailService>().As<ISendEmail>();
+            ServiceLocator.RegisterType<RedisStore>().As<IShortTermStorage>();
+            ServiceLocator.RegisterInstance(default(IServiceBus)).As<IServiceBus>(); //Not required
+            
+            var host = new JobHost(new JobHostConfiguration
 			{
 				ServiceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString")
 			});

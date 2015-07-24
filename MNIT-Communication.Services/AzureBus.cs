@@ -13,7 +13,7 @@ namespace MNIT_Communication.Services
 	{
 		private readonly NamespaceManager _namespaceManager;
 		private readonly string _serviceBusConnectionString;
-
+        
 		public AzureBus(string serviceBusConnectionString)
 		{
 			this._serviceBusConnectionString = serviceBusConnectionString;

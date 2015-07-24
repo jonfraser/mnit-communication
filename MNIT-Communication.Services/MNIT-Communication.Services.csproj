@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Apis">
       <HintPath>..\packages\Google.Apis.1.9.1\lib\net40\Google.Apis.dll</HintPath>
     </Reference>
@@ -123,8 +126,13 @@
   <ItemGroup>
     <Compile Include="AlertsService.cs" />
     <Compile Include="AzureBus.cs" />
-    <Compile Include="FakeAlertsService.cs" />
-    <Compile Include="FakeRegistrationService.cs" />
+    <Compile Include="Fakes\FakeAlertsService.cs" />
+    <Compile Include="Fakes\FakeEmailService.cs" />
+    <Compile Include="Fakes\FakeRegistrationService.cs" />
+    <Compile Include="Fakes\FakeServiceBus.cs" />
+    <Compile Include="Fakes\FakeShortTermStorage.cs" />
+    <Compile Include="Fakes\FakeSmsService.cs" />
+    <Compile Include="Fakes\FakeUrlShortener.cs" />
     <Compile Include="GoogleUrlShortener.cs" />
     <Compile Include="IAlertsService.cs" />
     <Compile Include="IRegistrationService.cs" />
@@ -139,6 +147,7 @@
     <Compile Include="SendGridEmailService.cs" />
     <Compile Include="SendTelstraSmsService.cs" />
     <Compile Include="SendTwilioSmsService.cs" />
+    <Compile Include="ServiceLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

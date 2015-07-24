@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using MNIT_Communication.Domain;
 
-namespace MNIT_Communication.Services
+namespace MNIT_Communication.Services.Fakes
 {
 	public class FakeAlertsService : IAlertsService
 	{

@@ -2,13 +2,15 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MNIT_Communication.Helpers;
+using Xunit;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace MNIT_Communication.Tests
 {
-	[TestClass]
-	public class HelperTests
+
+	public class StringHelperTests
 	{
-		[TestMethod]
+		[Fact]
 		public async Task StringWithGuidCorrectlyReturnsGuid()
 		{
 			var guid = Guid.NewGuid();
@@ -17,7 +19,7 @@ namespace MNIT_Communication.Tests
 			Assert.AreEqual(guid.ToString(), StringHelpers.PullGuidOffEndOfUrl(url));
 		}
 
-		[TestMethod]
+		[Fact]
 		public async Task StringWithoutGuidCorrectlyReturnsNothing()
 		{
 			var guid = Guid.NewGuid();

@@ -10,6 +10,7 @@ using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using Microsoft.WindowsAzure;
 using MNIT_Communication.Services;
+using MNIT_Communication.Services.Fakes;
 
 namespace MNIT_Communication.App_Start
 {
@@ -18,31 +19,38 @@ namespace MNIT_Communication.App_Start
 		public static void BuildUpContainer()
 		{
 			var builder = new ContainerBuilder();
+            
+            builder.RegisterType<RegistrationService>().As<IRegistrationService>();
+            builder.RegisterType<AlertsService>().As<IAlertsService>().SingleInstance();
 
 #if DEBUG
-			builder.RegisterInstance(new FakeRegistrationService()).As<IRegistrationService>();
-			builder.RegisterInstance(new FakeAlertsService()).As<IAlertsService>();
+		    builder.RegisterType<FakeServiceBus>().As<IServiceBus>();
+            builder.RegisterType<FakeUrlShortener>().As<IUrlShorten>();
+            builder.RegisterType<FakeSmsService>().As<ISendSms>();
+            builder.RegisterType<FakeShortTermStorage>().As<IShortTermStorage>();
+            builder.RegisterType<FakeEmailService>().As<ISendEmail>();
 
 #else
-			builder.RegisterInstance(new AzureBus(CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString"))).As<IServiceBus>().SingleInstance();
-			builder.RegisterInstance(new RegistrationService()).As<IRegistrationService>();
-			//builder.RegisterInstance(new AlertsService()).As<IAlertsService>();
-			
-			builder.RegisterInstance(new GoogleUrlShortener()).As<IUrlShorten>();
-			builder.RegisterInstance(new SendTwilioSmsService()).As<ISendSms>();
-			builder.RegisterInstance(new RedisStore()).As<IShortTermStorage>();
-			builder.RegisterInstance(new SendGridEmailService()).As<ISendEmail>();
-			
-			builder.RegisterType<AlertsService>().As<IAlertsService>().SingleInstance();
+		    var serviceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
+            builder.RegisterInstance(new AzureBus(serviceBusConnectionString)).As<IServiceBus>().SingleInstance();
+            builder.RegisterType<GoogleUrlShortener>().As<IUrlShorten>();
+            builder.RegisterType<SendTelstraSmsService>().As<ISendSms>();
+            builder.RegisterType<RedisStore>().As<IShortTermStorage>();
+            builder.RegisterType<SendGridEmailService>().As<ISendEmail>();
 #endif
 
-			builder.RegisterControllers(typeof(MvcApplication).Assembly);
+            builder.RegisterControllers(typeof(MvcApplication).Assembly);
 			builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 
 			var config = GlobalConfiguration.Configuration;
 
 			var container = builder.Build();
-			config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+
+#if DEBUG
+		    ServiceLocator.Container = container;
+#endif
+
+            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 			DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 		}
 	}

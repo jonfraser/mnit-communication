@@ -15,7 +15,7 @@ namespace AlertUserViaSms
 		public async static Task ProcessQueueMessage([ServiceBusTrigger(Topics.Alerts, Topics.Alerts+"-SMS")] AlertBrokeredMessage message, TextWriter log)
 		{
 			log.WriteLine(message);
-			ISendSms sms = new SendTelstraSmsService();
+		    var sms = ServiceLocator.Resolve<ISendSms>();
 			var mobileNumber = "0416272575";
 			//TODO:get teh mobile numbers to send to or would this actually just push a message onto anotehr
 			//queue for each mobile number found? That would mean that this message process won't be dependant on

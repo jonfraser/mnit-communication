@@ -15,7 +15,8 @@ namespace AlertUserViaExternalEmailJob
 		public async static Task ProcessQueueMessage([ServiceBusTrigger(Topics.Alerts, Topics.Alerts + "-ExternalEmail")] AlertBrokeredMessage message, TextWriter log)
 		{
 			log.WriteLine(message);
-			ISendEmail mail = new SendGridEmailService();
+		    var mail = ServiceLocator.Resolve<ISendEmail>();
+
 			await mail.Send(from: "mnit-communication@health.qld.gov.au",
 										to: new List<String> { "fraser.jc@gmail.com" },
 										subject: "An alert has been raised!",
