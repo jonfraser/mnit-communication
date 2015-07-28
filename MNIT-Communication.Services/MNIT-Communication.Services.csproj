@@ -126,6 +126,7 @@
   <ItemGroup>
     <Compile Include="AlertsService.cs" />
     <Compile Include="AzureBus.cs" />
+    <Compile Include="Fakes\FakeNamespaceManager.cs" />
     <Compile Include="Fakes\FakeAlertsService.cs" />
     <Compile Include="Fakes\FakeEmailService.cs" />
     <Compile Include="Fakes\FakeRegistrationService.cs" />
@@ -135,12 +136,14 @@
     <Compile Include="Fakes\FakeUrlShortener.cs" />
     <Compile Include="GoogleUrlShortener.cs" />
     <Compile Include="IAlertsService.cs" />
+    <Compile Include="INamespaceManager.cs" />
     <Compile Include="IRegistrationService.cs" />
     <Compile Include="ISendEmail.cs" />
     <Compile Include="ISendSms.cs" />
     <Compile Include="IServiceBus.cs" />
     <Compile Include="IShortTermStorage.cs" />
     <Compile Include="IUrlShorten.cs" />
+    <Compile Include="NamespaceManagerWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedisStore.cs" />
     <Compile Include="RegistrationService.cs" />

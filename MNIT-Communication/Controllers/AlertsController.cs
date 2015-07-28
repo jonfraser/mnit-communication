@@ -11,9 +11,11 @@ namespace MNIT_Communication.Controllers
     public class AlertsController : Controller
     {
         [HttpGet]
-        public ActionResult NewUser(Guid? id)
+        public ActionResult Subscribe(Guid? id)
         {
             //Do nothing, just return the view as we will ajax in the alerts via the rest api
+            ViewBag.NewUser = id.HasValue;
+            ViewBag.newUserJS = ViewBag.NewUser.ToString().ToLower();
             return View(id);
         }
 

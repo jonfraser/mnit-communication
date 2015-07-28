@@ -29,7 +29,7 @@ namespace MNIT_Communication.App_Start
             builder.RegisterType<FakeSmsService>().As<ISendSms>();
             builder.RegisterType<FakeShortTermStorage>().As<IShortTermStorage>();
             builder.RegisterType<FakeEmailService>().As<ISendEmail>();
-
+		    builder.RegisterType<FakeNamespaceManager>().As<INamespaceManager>();
 #else
 		    var serviceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
             builder.RegisterInstance(new AzureBus(serviceBusConnectionString)).As<IServiceBus>().SingleInstance();
@@ -37,6 +37,7 @@ namespace MNIT_Communication.App_Start
             builder.RegisterType<SendTelstraSmsService>().As<ISendSms>();
             builder.RegisterType<RedisStore>().As<IShortTermStorage>();
             builder.RegisterType<SendGridEmailService>().As<ISendEmail>();
+            builder.RegisterType<NamespaceManagerWrapper>().As<INamespaceManager>();
 #endif
 
             builder.RegisterControllers(typeof(MvcApplication).Assembly);

@@ -13,6 +13,9 @@ namespace MNIT_Communication.Services.Fakes
         
         public async Task StoreKeyValue(string key, string value, TimeSpan lifespan)
         {
+            if (await KeyExists(key))
+                RemoveValue(key);
+            
             cache.Add(key, value);
         }
 
@@ -25,6 +28,11 @@ namespace MNIT_Communication.Services.Fakes
             }
 
             return default(T);
+        }
+
+        private void RemoveValue(string key)
+        {
+            cache.Remove(key);
         }
 
         public Task<bool> KeyExists(string key)

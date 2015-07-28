@@ -38,10 +38,19 @@ namespace MNIT_Communication
 					//	validateInterval: TimeSpan.FromMinutes(30),
 					//	regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
-            });            
-            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-			
-			app.UseMicrosoftAccountAuthentication(
+            });  
+            
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);          
+#if DEBUG
+            app.UseDevelopmentAuthentication(new DevelopmentAuthenticationOptions
+            {
+                UserId = "1",
+                UserName = "perskest",
+                Email = "sjperske@gmail.com",
+                Phone = "0400099743"
+            });
+#else
+            app.UseMicrosoftAccountAuthentication(
 				clientId: CloudConfigurationManager.GetSetting("MicrosoftAuthClientID"),
 				clientSecret: CloudConfigurationManager.GetSetting("MicrosoftAuthClientSecret"));
 			app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
@@ -50,7 +59,11 @@ namespace MNIT_Communication
 				ClientSecret = CloudConfigurationManager.GetSetting("GoogleAuthClientSecret")
 			});
 
-			app.MapSignalR();
+#endif
+
+
+
+            app.MapSignalR();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MNIT_Communication.Domain
 {
-    public class RegisterAlertBrokeredMessage
+    public class SubscribeToAlertBrokeredMessage
     {
         public Guid CorrelationId { get; set; }
         public string EmailAddress { get; set; }

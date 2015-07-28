@@ -13,30 +13,30 @@ namespace MNIT_Communication.Services
 	public class AlertsService : IAlertsService
 	{
 		private readonly IServiceBus _serviceBus;
-		private readonly NamespaceManager _namespaceManager;
+		private readonly INamespaceManager _namespaceManager;
 		private readonly string _serviceBusConnectionString;
-		public AlertsService(IServiceBus serviceBus)
+		public AlertsService(IServiceBus serviceBus, INamespaceManager namespaceManager)
 		{
 			this._serviceBus = serviceBus;
 			this._serviceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
-			this._namespaceManager = NamespaceManager.CreateFromConnectionString(_serviceBusConnectionString);
+			this._namespaceManager = namespaceManager;
 		
 		}
 
-		public async Task<Guid> RegisterNewUserForInitialAlerts(Guid newUserRegistrationId, string emailAddress, IEnumerable<Guid> alertables)
+		public async Task<Guid> SubscribeToAlerts(Guid userId, string emailAddress, IEnumerable<Guid> alertables)
 		{
 			foreach (var alertable in alertables)
 			{
-				var message = new RegisterAlertBrokeredMessage
+				var message = new SubscribeToAlertBrokeredMessage
 				{
 					CorrelationId = Guid.NewGuid(),
 					EmailAddress = emailAddress,
 					AlertableId = alertable
 				};
-				await _serviceBus.SendToQueueAsync(message, Queues.AlertsRegistration);
+				await _serviceBus.SendToQueueAsync(message, Queues.AlertsSubscription);
 			}
 
-			return newUserRegistrationId;
+			return userId;
 		}
 
 		public async Task RaiseAlert(Guid alertableId, string alertDetail, string alertInfoShort)

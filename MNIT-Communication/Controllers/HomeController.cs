@@ -24,22 +24,55 @@ namespace MNIT_Communication.Controllers
 	public class HomeController : Controller
 	{
         public ActionResult Index()
-		{
-			HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
+        {
+            if (System.Web.HttpContext.Current.Request.IsAuthenticated)
+                return RedirectToRoute(new {Controller = "Alerts", Action = "Status"});
+            
+            HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
 			return View();
 		}
-
-		public async Task<ActionResult> SetUserProfile(Guid id)
+        
+        public async Task<ActionResult> SetUserProfile(dynamic id, bool newUser = true)
 		{
 			using (var client = new HttpClient())
 			{
-				var getProfileUri = HttpContext.Request.Url.Scheme +
-									"://" +
-									HttpContext.Request.Url.Authority +
-									Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User", newUserRegistrationId = id.ToString() });
-				var response = await client.GetStringAsync(getProfileUri);
-				var userProfile = JsonConvert.DeserializeObject(response, typeof(NewUserProfile));
-				return View(userProfile);
+
+			    var scheme = HttpContext.Request.Url.Scheme + "://";
+			    var authority = HttpContext.Request.Url.Authority;
+			    string url;
+			    var type = typeof(NewUserProfile);
+                
+                string getProfileUri;
+			    object userProfile;
+
+			    if (newUser)
+			    {
+                    url = Url.HttpRouteUrl("DefaultApi",
+                        new
+                        {
+                            action = "NewUserProfile",
+                            controller = "User",
+                            newUserRegistrationId = id.ToString()
+                        });
+                    
+			    }
+			    else
+			    {
+                    url = Url.HttpRouteUrl("DefaultApi", 
+                        new
+                        {
+                            action = "UserProfile", 
+                            controller = "User", 
+                            id = id.ToString()
+                        });
+
+			    }
+
+			    getProfileUri = scheme + authority + url;
+                var response = await client.GetStringAsync(getProfileUri);
+                userProfile = JsonConvert.DeserializeObject(response, type);
+
+                return View("SetUserProfile", userProfile);
 			}
 		}
 
@@ -53,7 +86,10 @@ namespace MNIT_Communication.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult ExternalLogin(string provider, string returnUrl)
 		{
-			// Request a redirect to the external login provider
+		    if (string.IsNullOrEmpty(returnUrl))
+		        returnUrl = "/";
+            
+            // Request a redirect to the external login provider
 			return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Home", new { ReturnUrl = returnUrl }));
 		}
 
@@ -73,7 +109,7 @@ namespace MNIT_Communication.Controllers
 
 			//TODO: this would theoretically be called whenever someone auths from any stage in teh app,
 			//not just initial setup - need to check for this
-			if (returnUrl.StartsWith("/Home/SetUserProfile"))
+			if (!string.IsNullOrEmpty(returnUrl) && returnUrl.StartsWith("/Home/SetUserProfile"))
 			{
 				var newRegistrationIdFromReturnUrl = new Guid(StringHelpers.PullGuidOffEndOfUrl(returnUrl));
 

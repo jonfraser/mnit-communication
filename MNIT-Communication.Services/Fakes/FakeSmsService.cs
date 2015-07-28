@@ -11,8 +11,10 @@ namespace MNIT_Communication.Services.Fakes
     {
         public async Task SendSimple(string mobileNumber, string message)
         {
+            Debug.WriteLine("-------SMS SENT---------");
             Debug.WriteLine(mobileNumber,"TO");
             Debug.WriteLine(message, "MESSAGE");
+            Debug.WriteLine("-------END SMS---------");
         }
     }
 }

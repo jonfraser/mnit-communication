@@ -19,8 +19,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><i class="fa fa-bullhorn">@Html.ActionLink("Raise an Alert", "Raise", "Alerts")</i></li>
-                    <li><i class="fa fa-bell-o">@Html.ActionLink("Current Outages", "Status", "Alerts")</i></li>
+                    <li><i class="fa fa-bullhorn">@Html.ActionLink("Raise an Alert", "Raise", "Alerts", new { area = "" }, new { style = "color:white" })</i></li>
+                    <li><i class="fa fa-bell-o">@Html.ActionLink("Current Outages", "Status", "Alerts", new { area = "" }, new { style = "color:white" })</i></li>
+                    <li><i class="fa fa-bell-o">@Html.ActionLink("My Notifications", "Subscribe", "Alerts", new { area = "" }, new { style = "color:white" })</i></li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

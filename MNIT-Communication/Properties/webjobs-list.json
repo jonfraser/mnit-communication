@@ -11,7 +11,10 @@
       "filePath": "../AlertUserViaSms/AlertUserViaSmsJob.csproj"
     },
     {
-      "filePath": "../AlertUserViaExternalEmailJob/AlertUserViaExternalEmailJob.csproj"
+        "filePath": "../AlertUserViaExternalEmailJob/AlertUserViaExternalEmailJob.csproj"
+    },
+    {
+      "filePath": "../SubscribeToAlertsJob/SubscribeToAlertsJob.csproj"
     }
   ]
 }

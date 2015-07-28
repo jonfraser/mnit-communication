@@ -8,7 +8,7 @@ namespace MNIT_Communication.Services.Fakes
 {
 	public class FakeAlertsService : IAlertsService
 	{
-		public async Task<Guid> RegisterNewUserForInitialAlerts(Guid newUserRegistrationId, string emailAddress, IEnumerable<Guid> alertables)
+		public async Task<Guid> SubscribeToAlerts(Guid userId, string emailAddress, IEnumerable<Guid> alertables)
 		{
 			Trace.Write("FakeAlertsService.RegisterNewUserForInitialAlerts " + emailAddress);
 			return await Task.Run(() => Guid.NewGuid());

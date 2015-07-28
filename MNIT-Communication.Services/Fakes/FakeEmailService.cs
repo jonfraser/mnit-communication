@@ -12,10 +12,12 @@ namespace MNIT_Communication.Services.Fakes
     {
         public async Task Send(string @from, List<string> to, string subject, string body)
         {
+            Debug.WriteLine("-------EMAIL SENT---------");
             Debug.WriteLine(string.Join(",", to), "TO");
             Debug.WriteLine(from, "FROM");
             Debug.WriteLine(subject, "SUBJECT");
             Debug.WriteLine(body, "MESSAGE");
+            Debug.WriteLine("-------END EMAIL---------");
         }
     }
 }

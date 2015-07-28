@@ -11,15 +11,16 @@ namespace MNIT_Communication.Areas.api.v1
 	public partial class AlertsController : ApiController
 	{
 		[HttpPost]
-		public async Task<Guid> AssignNew([FromBody]AssignNewAlertsRequest request)
+		public async Task<Guid> Subscribe([FromBody]AlertsSubscriptionRequest request)
 		{
-			return await alertsService.RegisterNewUserForInitialAlerts(request.newUserRegistrationId, "email", request.alertables);
+			//TODO - Replace hardcoded email with Claim Value?
+            return await alertsService.SubscribeToAlerts(request.userId, "email", request.alertables);
 		}
 	}
 
-	public class AssignNewAlertsRequest
+    public class AlertsSubscriptionRequest
 	{
-		public Guid newUserRegistrationId { get; set; }
+		public Guid userId { get; set; }
 		public IEnumerable<Guid> alertables { get; set; }
 	}
 }

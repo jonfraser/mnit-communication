@@ -9,7 +9,7 @@ namespace MNIT_Communication.Domain
 	public static class Queues
 	{
 		public const string Registration = "RegistrationQueue";
-		public const string AlertsRegistration = "AlertsRegistrationQueue";
+		public const string AlertsSubscription = "AlertsSubscriptionQueue";
 		public const string MobileNumberVerify = "MobileNumberVerify";
 	}
 }
