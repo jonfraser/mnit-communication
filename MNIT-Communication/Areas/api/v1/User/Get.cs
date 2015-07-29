@@ -14,9 +14,9 @@ namespace MNIT_Communication.Areas.api.v1
     {
 		
         [HttpGet]
-        public async Task<UserProfile> Get(Guid newUserRegistrationId)
+        public async Task<UserProfile> Get(Guid id)
         {
-			return await registrationService.RetrieveNewUserProfile(newUserRegistrationId) as UserProfile;
+			return await userService.RetrieveUserProfile(id);
 		}
 
     }

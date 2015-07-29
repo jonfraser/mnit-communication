@@ -129,7 +129,8 @@
     <Compile Include="Fakes\FakeNamespaceManager.cs" />
     <Compile Include="Fakes\FakeAlertsService.cs" />
     <Compile Include="Fakes\FakeEmailService.cs" />
-    <Compile Include="Fakes\FakeRegistrationService.cs" />
+    <Compile Include="Fakes\FakeUserService.cs" />
+    <Compile Include="Fakes\FakeRepository.cs" />
     <Compile Include="Fakes\FakeServiceBus.cs" />
     <Compile Include="Fakes\FakeShortTermStorage.cs" />
     <Compile Include="Fakes\FakeSmsService.cs" />
@@ -137,7 +138,8 @@
     <Compile Include="GoogleUrlShortener.cs" />
     <Compile Include="IAlertsService.cs" />
     <Compile Include="INamespaceManager.cs" />
-    <Compile Include="IRegistrationService.cs" />
+    <Compile Include="IUserService.cs" />
+    <Compile Include="IRepository.cs" />
     <Compile Include="ISendEmail.cs" />
     <Compile Include="ISendSms.cs" />
     <Compile Include="IServiceBus.cs" />
@@ -146,7 +148,7 @@
     <Compile Include="NamespaceManagerWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RedisStore.cs" />
-    <Compile Include="RegistrationService.cs" />
+    <Compile Include="UserService.cs" />
     <Compile Include="SendGridEmailService.cs" />
     <Compile Include="SendTelstraSmsService.cs" />
     <Compile Include="SendTwilioSmsService.cs" />

@@ -11,12 +11,12 @@ namespace MNIT_Communication.Services.Fakes
     {
         public async Task SendToQueueAsync<T>(T message, string queueName)
         {
-            var registrationService = ServiceLocator.Resolve<IRegistrationService>();
+            var userService = ServiceLocator.Resolve<IUserService>();
             
             if (queueName == Queues.Registration)
             {
                 var castMessage = message as NewUserRegistrationBrokeredMessage;
-                await registrationService.ProcessServiceBusRegistrationMessage(castMessage);
+                await userService.ProcessServiceBusRegistrationMessage(castMessage);
             }
 
             if (queueName == Queues.AlertsSubscription)
@@ -28,7 +28,7 @@ namespace MNIT_Communication.Services.Fakes
             if (queueName == Queues.MobileNumberVerify)
             {
                 var castMessage = message as VerifyMobileNumberBrokeredMessage;
-                await registrationService.VerifyMobileNumber(castMessage.MobileNumber, castMessage.NewUserRegistrationId);
+                await userService.VerifyMobileNumber(castMessage.MobileNumber, castMessage.NewUserRegistrationId);
             }
         }
 

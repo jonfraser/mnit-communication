@@ -11,12 +11,16 @@ namespace MNIT_Communication.Services.Fakes
     {
         private static Dictionary<string, string> cache = new Dictionary<string, string>();
         
-        public async Task StoreKeyValue(string key, string value, TimeSpan lifespan)
+        public async Task StoreValue<T>(string key, T value, TimeSpan lifespan)
         {
             if (await KeyExists(key))
                 RemoveValue(key);
-            
-            cache.Add(key, value);
+
+            var valueIsString = typeof (T) == typeof (string);
+
+            var serializedValue = valueIsString ? value.ToString(): JsonConvert.SerializeObject(value);
+
+            cache.Add(key, serializedValue);
         }
 
         public async Task<T> GetValue<T>(string key)
@@ -40,5 +44,7 @@ namespace MNIT_Communication.Services.Fakes
             var exists = cache.ContainsKey(key) && !string.IsNullOrEmpty(cache[key]);
             return Task.FromResult(exists);
         }
+
+        
     }
 }

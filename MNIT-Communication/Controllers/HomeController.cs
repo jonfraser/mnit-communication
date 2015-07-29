@@ -32,47 +32,31 @@ namespace MNIT_Communication.Controllers
 			return View();
 		}
         
-        public async Task<ActionResult> SetUserProfile(dynamic id, bool newUser = true)
+        public async Task<ActionResult> SetUserProfile(dynamic id)
 		{
 			using (var client = new HttpClient())
 			{
-
-			    var scheme = HttpContext.Request.Url.Scheme + "://";
+                var scheme = HttpContext.Request.Url.Scheme + "://";
 			    var authority = HttpContext.Request.Url.Authority;
-			    string url;
-			    var type = typeof(NewUserProfile);
                 
-                string getProfileUri;
-			    object userProfile;
+                //TODO - why did this route stop working //i.e /api/User/UserProfile/[GUID_HERE]. Had to move to query string below :(
+                //var url = Url.HttpRouteUrl("DefaultApi",
+                //        new
+                //        {
+                //            action = "UserProfile",
+                //            controller = "User",
+                //            id = id
+                //        });
 
-			    if (newUser)
-			    {
-                    url = Url.HttpRouteUrl("DefaultApi",
-                        new
-                        {
-                            action = "NewUserProfile",
-                            controller = "User",
-                            newUserRegistrationId = id.ToString()
-                        });
-                    
-			    }
-			    else
-			    {
-                    url = Url.HttpRouteUrl("DefaultApi", 
-                        new
-                        {
-                            action = "UserProfile", 
-                            controller = "User", 
-                            id = id.ToString()
-                        });
+			    var url = @"/api/User/UserProfile?id=" + id.ToString();
 
-			    }
-
-			    getProfileUri = scheme + authority + url;
+			    var type = typeof(UserProfile);
+                
+                var getProfileUri = scheme + authority + url;
                 var response = await client.GetStringAsync(getProfileUri);
-                userProfile = JsonConvert.DeserializeObject(response, type);
+                var userProfile = JsonConvert.DeserializeObject(response, type);
 
-                return View("SetUserProfile", userProfile);
+                return View(userProfile);
 			}
 		}
 
@@ -111,20 +95,22 @@ namespace MNIT_Communication.Controllers
 			//not just initial setup - need to check for this
 			if (!string.IsNullOrEmpty(returnUrl) && returnUrl.StartsWith("/Home/SetUserProfile"))
 			{
-				var newRegistrationIdFromReturnUrl = new Guid(StringHelpers.PullGuidOffEndOfUrl(returnUrl));
+				var id = new Guid(StringHelpers.PullGuidOffEndOfUrl(returnUrl));
 
 				using (var client = new HttpClient())
 				{
 					var putProfileUri = HttpContext.Request.Url.Scheme +
 										"://" +
 										HttpContext.Request.Url.Authority +
-										Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User" });
-					var response = await client.PutAsJsonAsync(putProfileUri, new NewUserProfile
-						{
-							EmailAddressExternalProvider = loginInfo.Email,
-							NewUserRegistrationId = newRegistrationIdFromReturnUrl,
-							ExternalProvider = loginInfo.Login.LoginProvider
-						});
+										Url.HttpRouteUrl("DefaultApi", new { action = "UserProfile", controller = "User" });
+					//TODO - if Response = failure?
+                    var response = await client.PutAsJsonAsync(putProfileUri, new UserProfile
+					{
+						Id = id,
+                        EmailAddressExternalProvider = loginInfo.Email,
+                        ExternalProvider = loginInfo.Login.LoginProvider,
+                        ExternalId = loginInfo.Login.ProviderKey
+					});
 				}
 			}
 

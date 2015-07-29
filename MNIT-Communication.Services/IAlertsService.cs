@@ -6,7 +6,7 @@ namespace MNIT_Communication.Services
 {
 	public interface IAlertsService
 	{
-		Task<Guid> SubscribeToAlerts(Guid userId, string emailAddress, IEnumerable<Guid> alertables);
+		Task<Guid> SubscribeToAlerts(Guid userId, IEnumerable<Guid> alertables);
 
 		Task RaiseAlert(Guid alertableId, string alertDetail, string alertInfoShort);
 

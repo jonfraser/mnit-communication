@@ -16,13 +16,10 @@ namespace NewUserRegistration
 		// AzureWebJobsDashboard and AzureWebJobsStorage
 		public static void Main()
 		{
-            ServiceLocator.RegisterType<RegistrationService>().As<IRegistrationService>();
+            ServiceLocator.RegisterType<UserService>().As<IUserService>();
             ServiceLocator.RegisterType<SendTwilioSmsService>().As<ISendSms>();
             ServiceLocator.RegisterType<GoogleUrlShortener>().As<IUrlShorten>();
-            ServiceLocator.RegisterInstance(default(ISendEmail)).As<ISendEmail>(); //Not required
-            ServiceLocator.RegisterInstance(default(IShortTermStorage)).As<IShortTermStorage>(); //Not required 
-            ServiceLocator.RegisterInstance(default(IServiceBus)).As<IServiceBus>(); //Not required
-
+ 
 
 			var host = new JobHost(new JobHostConfiguration
 				{

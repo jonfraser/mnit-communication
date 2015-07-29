@@ -14,6 +14,10 @@ namespace MNIT_Communication.Areas.api.v1
         [HttpGet]
 		public async Task<HttpResponseMessage> Confirm(Guid id)
         {
+            var profile = await userService.RetrieveUserProfile(id);
+            profile.Confirmed = true;
+            await userService.InsertOrUpdateUserProfile(profile);
+            
             var response = Request.CreateResponse(HttpStatusCode.Found);
             response.Headers.Location = new Uri(string.Format("{0}://{1}/Home/Confirmed", Request.RequestUri.Scheme, Request.RequestUri.Authority));
             return response;

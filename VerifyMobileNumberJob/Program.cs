@@ -17,12 +17,9 @@ namespace VerifyMobileNumberJob
 		// AzureWebJobsDashboard and AzureWebJobsStorage
 		static void Main()
 		{
-            ServiceLocator.RegisterType<RegistrationService>().As<IRegistrationService>();
-            ServiceLocator.RegisterInstance(default(ISendSms)).As<ISendSms>(); //Not required
-            ServiceLocator.RegisterInstance(default(IUrlShorten)).As<IUrlShorten>(); //Not required
+            ServiceLocator.RegisterType<UserService>().As<IUserService>();
             ServiceLocator.RegisterType<SendGridEmailService>().As<ISendEmail>();
             ServiceLocator.RegisterType<RedisStore>().As<IShortTermStorage>();
-            ServiceLocator.RegisterInstance(default(IServiceBus)).As<IServiceBus>(); //Not required
             
             var host = new JobHost(new JobHostConfiguration
 			{

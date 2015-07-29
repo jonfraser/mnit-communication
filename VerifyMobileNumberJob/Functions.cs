@@ -15,7 +15,7 @@ namespace VerifyMobileNumberJob
 		public async static Task ProcessQueueMessage([ServiceBusTrigger(Queues.MobileNumberVerify)] VerifyMobileNumberBrokeredMessage message, TextWriter log)
 		{
 			log.WriteLine("Received message " + message.CorrelationId.ToString() + " from queue for " + message.MobileNumber);
-		    var svc = ServiceLocator.Resolve<IRegistrationService>();
+		    var svc = ServiceLocator.Resolve<IUserService>();
 
 			try
 			{

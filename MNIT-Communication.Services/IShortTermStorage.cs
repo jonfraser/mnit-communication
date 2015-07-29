@@ -8,8 +8,8 @@ namespace MNIT_Communication.Services
 {
 	public interface IShortTermStorage
 	{
-		Task StoreKeyValue(string key, string value, TimeSpan lifespan);
-
+		Task StoreValue<T>(string key, T value, TimeSpan lifespan);
+        
 		Task<T> GetValue<T>(string key);
 
 		Task<bool> KeyExists(string key);

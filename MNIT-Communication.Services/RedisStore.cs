@@ -19,12 +19,12 @@ namespace MNIT_Communication.Services
 			_cache = connection.GetDatabase();
 		}
 
-		public async Task StoreKeyValue(string key, string value, TimeSpan lifespan)
+		public async Task StoreValue<T>(string key, T value, TimeSpan lifespan)
 		{
-			await _cache.StringSetAsync(key, value, expiry: lifespan);
+            var serializedValue = JsonConvert.SerializeObject(value);
+            await _cache.StringSetAsync(key, serializedValue, expiry: lifespan);
 		}
-
-
+        
 		public async Task<T> GetValue<T>(string key)
 		{
 			var keyValue = await _cache.StringGetAsync(key);
@@ -32,10 +32,10 @@ namespace MNIT_Communication.Services
 			{
 				return default(T);
 			}
+
 			return JsonConvert.DeserializeObject<T>(keyValue);
 		}
-
-
+        
 		public async Task<bool> KeyExists(string key)
 		{
 			return await _cache.KeyExistsAsync(key);

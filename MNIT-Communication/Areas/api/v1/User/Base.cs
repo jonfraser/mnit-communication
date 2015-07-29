@@ -7,10 +7,10 @@ namespace MNIT_Communication.Areas.api.v1
 {
 	public partial class UserController : ApiController
 	{
-		private IRegistrationService registrationService;
-        public UserController(IRegistrationService registrationService)
+		private IUserService userService;
+        public UserController(IUserService userService)
 		{
-            this.registrationService = registrationService;
+            this.userService = userService;
 		}
 		
 	}

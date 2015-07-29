@@ -5,10 +5,8 @@ using MNIT_Communication.Domain;
 
 namespace MNIT_Communication.Services.Fakes
 {
-	public class FakeRegistrationService : IRegistrationService
+	public class FakeUserService : IUserService
 	{
-		
-
 		public async System.Threading.Tasks.Task<Guid> SendRegistrationRequest(string email)
 		{
 			Trace.Write("FakeRegistrationService.SendRegistrationRequest " + email);
@@ -33,22 +31,28 @@ namespace MNIT_Communication.Services.Fakes
 			Trace.Write("FakeRegistrationService.RequestVerificationOfMobileNumber " + mobileNumber);
 			return;
 		}
-		
-		public async Task<NewUserProfile> RetrieveNewUserProfile(Guid accessToken)
+        
+		public async Task<UserProfile> RetrieveUserProfile(Guid accessToken)
 		{
-			Trace.Write("FakeRegistrationService.RetrieveNewUserProfile");
-			return new NewUserProfile
+			Trace.Write("FakeRegistrationService.RetrieveUserProfile");
+			return new UserProfile
 			{
-				NewUserRegistrationId = accessToken,
+				Id = accessToken,
 				EmailAddressExternalProvider = "fraser.jc@gmail.com",
 				EmailAdressInternal = "jon.fraser@health.qld.gov.au",
-				MobilePhoneNumber = "+61416272575"
+				MobilePhoneNumber = "+61416272575",
+                Confirmed = false
 			};
 		}
+
+        public async Task<UserProfile> RetrieveUserProfile(Func<UserProfile, bool> predicate)
+        {
+            return await RetrieveUserProfile(Guid.NewGuid());
+        }
 		
-		public async Task InsertOrUpdateNewUserProfile(NewUserProfile request)
+		public async Task InsertOrUpdateUserProfile(UserProfile request)
 		{
-			Trace.Write("FakeRegistrationService.UpdateNewUserProfile " + request.NewUserRegistrationId.ToString());
+			Trace.Write("FakeRegistrationService.UpdateUserProfile " + request.Id.ToString());
 			return;
 		}
 
@@ -58,5 +62,8 @@ namespace MNIT_Communication.Services.Fakes
 			Trace.Write("FakeRegistrationService.TemporaryAccessTokenExists " + newRegistrationIdFromReturnUrl.ToString());
 			return true;
 		}
-	}
+
+
+       
+    }
 }

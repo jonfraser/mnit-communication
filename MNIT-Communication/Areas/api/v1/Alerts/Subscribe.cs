@@ -13,8 +13,7 @@ namespace MNIT_Communication.Areas.api.v1
 		[HttpPost]
 		public async Task<Guid> Subscribe([FromBody]AlertsSubscriptionRequest request)
 		{
-			//TODO - Replace hardcoded email with Claim Value?
-            return await alertsService.SubscribeToAlerts(request.userId, "email", request.alertables);
+			return await alertsService.SubscribeToAlerts(request.userId, request.alertables);
 		}
 	}
 

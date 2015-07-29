@@ -8,8 +8,9 @@ using Xunit;
 
 namespace MNIT_Communication.Tests.Services
 {
-	public class RegistrationServiceTests
+	public class UserServiceTests
 	{
+        private static Mock<IRepository> repoMock;
         private static Mock<IShortTermStorage> storeMock;
         private static Mock<ISendEmail> mailMock;
         private static FakeEmailService mailFake = new FakeEmailService();
@@ -17,13 +18,14 @@ namespace MNIT_Communication.Tests.Services
         private static Mock<IUrlShorten> urlMock;
         private static Mock<IServiceBus> serviceBusMock; 
         
-        public RegistrationServiceTests()
+        public UserServiceTests()
 	    {
 	        ConfigureMocks();
 	    }
 
 	    public static void ConfigureMocks()
 	    {
+            repoMock = new Mock<IRepository>(); 
             storeMock = new Mock<IShortTermStorage>();
             mailMock = new Mock<ISendEmail>();
             smsMock = new Mock<ISendSms>();
@@ -44,7 +46,7 @@ namespace MNIT_Communication.Tests.Services
                 var confirmationLink = "https://mnit-communication.azurewebsites.net/api/User/Confirm/";
                 var hoursToConfirm = 72;
                 
-                var service = new RegistrationService(storeMock.Object, mailMock.Object, smsMock.Object, urlMock.Object, serviceBusMock.Object);
+                var service = new UserService(repoMock.Object, storeMock.Object, mailMock.Object, smsMock.Object, urlMock.Object, serviceBusMock.Object);
 
                 var message = new Domain.NewUserRegistrationBrokeredMessage
                 {
@@ -62,7 +64,7 @@ namespace MNIT_Communication.Tests.Services
                 
                 await service.ProcessServiceBusRegistrationMessage(message);
 
-                storeMock.Verify(m => m.StoreKeyValue(
+                storeMock.Verify(m => m.StoreValue(
                     message.EmailAddress, //key
                     message.CorrelationId.ToString(), //value
                     It.Is<TimeSpan>(timeSpan => timeSpan.TotalHours == hoursToConfirm)), //lifespan
@@ -88,7 +90,7 @@ namespace MNIT_Communication.Tests.Services
             [Fact]
             public async Task WithValidNumberShouldSendSms()
             {
-                var service = new RegistrationService(storeMock.Object, mailMock.Object, smsMock.Object, urlMock.Object, serviceBusMock.Object);
+                var service = new UserService(repoMock.Object, storeMock.Object, mailMock.Object, smsMock.Object, urlMock.Object, serviceBusMock.Object);
                 var accessToken = Guid.NewGuid();
                 var mobileNumber = "+61416272575";
                 

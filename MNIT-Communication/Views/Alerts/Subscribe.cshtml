@@ -1,14 +1,10 @@
-﻿@model Guid?
+﻿@using MNIT_Communication.Domain
+@model UserProfile
 @{
     ViewBag.Title = "Select your alerts";
-    var newUserRegistrationId = string.Empty;
-    if(ViewBag.NewUser)
-    {
-        newUserRegistrationId = string.Format("'{0}'", Model.Value.ToString());
-    }
 }
 <h1>Select some alerts</h1>
-@if (ViewBag.NewUser)
+@if (!Model.Confirmed)
 {
     <p class="lead">
         We've sent an email to your @@health to confirm your account creation, but before you go and do that spend a moment to select the
@@ -16,7 +12,7 @@
     </p>
 }
 
-<form class="container-fluid" ng-controller="AlertsController" ng-submit="registerAlerts(@newUserRegistrationId)">
+<form class="container-fluid" ng-controller="AlertsController" ng-submit="registerAlerts('@Model.Id')">
     <div class="row">
         <div class="col-md-12">
             <h4>Sites</h4>
@@ -78,6 +74,8 @@
 
 @section scripts {
     <script type="text/javascript">
+        var confirmed = @Model.Confirmed.ToString().ToLower();
+        
         angular.module('communicationApp', [])
             .directive('onFinishRender', function ($timeout) {
                 return {
@@ -107,7 +105,7 @@
                   $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Subscribe", controller = "Alerts"})',
                       JSON.stringify(data)).
                     success(function (data) {
-                        if (@ViewBag.newUserJS == true) {
+                        if (confirmed == false) {
                             window.location = "/Alerts/NewUserDone/" + data;
                         }
                     }).

@@ -20,14 +20,15 @@ namespace MNIT_Communication.App_Start
 		{
 			var builder = new ContainerBuilder();
             
-            builder.RegisterType<RegistrationService>().As<IRegistrationService>();
+            builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<AlertsService>().As<IAlertsService>().SingleInstance();
 
 #if DEBUG
 		    builder.RegisterType<FakeServiceBus>().As<IServiceBus>();
             builder.RegisterType<FakeUrlShortener>().As<IUrlShorten>();
             builder.RegisterType<FakeSmsService>().As<ISendSms>();
-            builder.RegisterType<FakeShortTermStorage>().As<IShortTermStorage>();
+            builder.RegisterType<FakeShortTermStorage>().As<IShortTermStorage>().SingleInstance();
+		    builder.RegisterType<FakeRepository>().As<IRepository>().SingleInstance();
             builder.RegisterType<FakeEmailService>().As<ISendEmail>();
 		    builder.RegisterType<FakeNamespaceManager>().As<INamespaceManager>();
 #else
@@ -46,11 +47,9 @@ namespace MNIT_Communication.App_Start
 			var config = GlobalConfiguration.Configuration;
 
 			var container = builder.Build();
-
-#if DEBUG
-		    ServiceLocator.Container = container;
-#endif
-
+            
+            ServiceLocator.Container = container;
+            
             config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
 			DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
 		}

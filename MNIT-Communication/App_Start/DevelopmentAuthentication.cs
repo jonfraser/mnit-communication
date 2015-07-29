@@ -170,7 +170,7 @@ namespace MNIT_Communication
         protected override Task<AuthenticationTicket> AuthenticateCoreAsync()
         {
             var identity = new ClaimsIdentity(Options.SignInAsAuthenticationType);
-            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, Options.UserId, null, Options.AuthenticationType));
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, Options.UserId, null, Options.Caption, Options.Caption));
             identity.AddClaim(new Claim(ClaimTypes.Name, Options.UserName));
             identity.AddClaim(new Claim(ClaimTypes.Email, Options.Email));
             identity.AddClaim(new Claim(ClaimTypes.HomePhone, Options.Phone));

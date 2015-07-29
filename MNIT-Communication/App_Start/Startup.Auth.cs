@@ -1,14 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
+using MNIT_Communication.Services;
 using Owin;
 using MNIT_Communication.Models;
 using Microsoft.WindowsAzure;
 using MNIT_Communication.Controllers;
 using MNIT_Communication.Helpers.CustomSignIn;
+using Thinktecture.IdentityModel.Extensions;
 
 namespace MNIT_Communication
 {
@@ -38,13 +46,39 @@ namespace MNIT_Communication
 					//	validateInterval: TimeSpan.FromMinutes(30),
 					//	regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
-            });  
-            
-            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);          
+            });
+  
+            app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
+
+            app.UseClaimsTransformation(async principal =>
+            {
+                if (principal.HasClaim(ClaimTypes.Sid))
+                    return principal;
+
+                var userService = ServiceLocator.Resolve<IUserService>();
+                var externalIdClaim = principal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier);
+                
+                if (externalIdClaim == null)
+                    return principal;
+
+                var userProfile = await userService.RetrieveUserProfile(u => u.ExternalId == externalIdClaim.Value);
+
+                if (userProfile == null)
+                    return principal;
+
+                var claimsToAdd = new List<Claim>{
+                    new Claim(ClaimTypes.Sid, userProfile.Id.ToString())
+                };
+
+                var identity = new ClaimsIdentity(principal.Identity, claimsToAdd);
+                var newPrincipal = new ClaimsPrincipal(identity);
+
+                return newPrincipal;
+            });
 #if DEBUG
             app.UseDevelopmentAuthentication(new DevelopmentAuthenticationOptions
             {
-                UserId = "1",
+                UserId = "8B2BFBA3-6DFF-413B-882F-08FACA4E80C9",
                 UserName = "perskest",
                 Email = "sjperske@gmail.com",
                 Phone = "0400099743"
@@ -65,5 +99,7 @@ namespace MNIT_Communication
 
             app.MapSignalR();
         }
+
+       
     }
 }

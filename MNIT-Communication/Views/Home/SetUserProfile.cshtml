@@ -1,4 +1,4 @@
-﻿@model MNIT_Communication.Domain.NewUserProfile
+﻿@model MNIT_Communication.Domain.UserProfile
 @{
     ViewBag.Title = "Set User Profile";
 }
@@ -8,7 +8,7 @@
     you're not at your desk it would help if we had another email address and mobile phone number.
     Please confirm/update the details below.
 </p>
-<form class="container-fluid" ng-controller="UserProfileController" ng-submit="setUserProfile('@Model.NewUserRegistrationId')">
+<form class="container-fluid" ng-controller="UserProfileController" ng-submit="setUserProfile('@Model.Id')">
     <div class="row">
         <div class="col-md-2">
             <label for="email">Email:</label>
@@ -40,17 +40,21 @@
                 $scope.email = '@Model.EmailAddressExternalProvider';
                 $scope.mobile = '@Model.MobilePhoneNumber';
 
-                $scope.setUserProfile = function (newUserRegistrationId) {
+                //TODO - serialize the Model intead? Seems redundant to re-create this object
+                $scope.setUserProfile = function (userId) {
                     var data = {
-                        "NewUserRegistrationId": newUserRegistrationId,
-                        "EmailAddressExternalProvider": $scope.email,
-                        "MobilePhoneNumber": $scope.mobile
+                        Id: userId,
+                        EmailAdressInternal: '@Model.EmailAdressInternal',
+                        EmailAddressExternalProvider: $scope.email,
+                        ExternalProvider: '@Model.ExternalProvider',
+                        MobilePhoneNumber: $scope.mobile,
+                        Confirmed: '@Model.Confirmed.ToString().ToLower()'
                     };
 
-                    $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "NewUserProfile", controller = "User"})',
+                    $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "UserProfile", controller = "User"})',
                         JSON.stringify(data)).
                       success(function (data) {
-                          window.location = "/Alerts/Subscribe/" + newUserRegistrationId;
+                          window.location = "/Alerts/Subscribe/" + userId;
                       }).
                       error(function (data) { alert(data); });
 

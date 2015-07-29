@@ -14,27 +14,35 @@ namespace MNIT_Communication.Services
 	{
 		private readonly IServiceBus _serviceBus;
 		private readonly INamespaceManager _namespaceManager;
-		private readonly string _serviceBusConnectionString;
-		public AlertsService(IServiceBus serviceBus, INamespaceManager namespaceManager)
+	    private readonly IUserService userService;
+	    private readonly string _serviceBusConnectionString;
+		public AlertsService(IServiceBus serviceBus, INamespaceManager namespaceManager, IUserService userService)
 		{
 			this._serviceBus = serviceBus;
 			this._serviceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
 			this._namespaceManager = namespaceManager;
-		
+		    this.userService = userService;
 		}
 
-		public async Task<Guid> SubscribeToAlerts(Guid userId, string emailAddress, IEnumerable<Guid> alertables)
+		public async Task<Guid> SubscribeToAlerts(Guid userId, IEnumerable<Guid> alertables)
 		{
-			foreach (var alertable in alertables)
-			{
-				var message = new SubscribeToAlertBrokeredMessage
-				{
-					CorrelationId = Guid.NewGuid(),
-					EmailAddress = emailAddress,
-					AlertableId = alertable
-				};
-				await _serviceBus.SendToQueueAsync(message, Queues.AlertsSubscription);
-			}
+		    var userProfile = await userService.RetrieveUserProfile(userId);
+		    userProfile.AlertSubscriptions = alertables.ToList();
+
+		    await userService.InsertOrUpdateUserProfile(userProfile);
+            
+            //TODO - do we want/need to publish this message to the bus?
+            //foreach (var alertable in alertables)
+            //{
+            //    var message = new SubscribeToAlertBrokeredMessage
+            //    {
+            //        CorrelationId = Guid.NewGuid(),
+            //        UserId = userProfile.Id,
+            //        EmailAddress = userProfile.EmailAddressExternalProvider,
+            //        AlertableId = alertable
+            //    };
+            //    await _serviceBus.SendToQueueAsync(message, Queues.AlertsSubscription);
+            //}
 
 			return userId;
 		}
