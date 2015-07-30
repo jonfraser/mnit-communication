@@ -16,7 +16,7 @@ namespace MNIT_Communication.Areas.api.v1
         {
 			//TODO: For the new user registration id passed in, remove the mobile number on the account
             var response = Request.CreateResponse(HttpStatusCode.Found);
-			response.Headers.Location = new Uri(string.Format("{0}://{1}/Home/MobileNumberRemoved", Request.RequestUri.Scheme, Request.RequestUri.Authority));
+			response.Headers.Location = new Uri(string.Format("{0}://{1}/Account/MobileNumberRemoved", Request.RequestUri.Scheme, Request.RequestUri.Authority));
 			return response;
 
         }

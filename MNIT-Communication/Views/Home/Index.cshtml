@@ -59,7 +59,7 @@
                       JSON.stringify($scope.emailAddress)).
                     success(function (data) {
                         $scope.emailAddress = '';
-                        window.location = "/Home/LinkExternalAccount/" + data;
+                        window.location = "/Account/LinkExternalAccount/" + data;
                     }).
                     error(function (data) { alert(data); $scope.isSubmitting = false; });
                   

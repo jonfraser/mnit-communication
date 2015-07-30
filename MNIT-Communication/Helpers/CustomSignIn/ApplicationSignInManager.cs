@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -24,5 +25,12 @@ namespace MNIT_Communication.Helpers.CustomSignIn
 		{
 			return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
 		}
+
+	    public override Task SignInAsync(ApplicationUser user, bool isPersistent, bool rememberBrowser)
+	    {
+	        
+            
+            return base.SignInAsync(user, isPersistent, rememberBrowser);
+	    }
 	}
 }

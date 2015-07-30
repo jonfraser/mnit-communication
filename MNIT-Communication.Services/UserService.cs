@@ -114,6 +114,7 @@ namespace MNIT_Communication.Services
 			var registeredUser = await repository.Get<UserProfile>(id);
             if (registeredUser != null)
 			{
+                //TODO - Cache this value
                 return registeredUser;
 			}
 
@@ -127,7 +128,14 @@ namespace MNIT_Communication.Services
         //WARNING - This method only returns persisted (i.e. Confirmed) UserProfiles
 	    public async Task<UserProfile> RetrieveUserProfile(Func<UserProfile, bool> predicate)
 	    {
-	        return (await repository.Get(predicate)).FirstOrDefault();
+            //TODO - Cache this value
+            return (await repository.Get(predicate)).FirstOrDefault();
+	    }
+
+        //WARNING - This method only returns persisted (i.e. Confirmed) UserProfiles
+	    public async Task<UserProfile> RetrieveUserProfileByExternalId(string externalId)
+	    {
+            return await RetrieveUserProfile(up => up.ExternalId == externalId);
 	    }
 
 		public async Task InsertOrUpdateUserProfile(UserProfile profile)
@@ -149,7 +157,9 @@ namespace MNIT_Communication.Services
 		    }
 		    else
 		    {
-		        await repository.Upsert(toPersist);
+                //TODO - Delete cached value if any
+                //TODO - Check that the same ExternalId has not already been used for a Profile? (Someone could register twice) If so, delete and re-insert, or update original?
+                await repository.Upsert(toPersist);
 		    }
 		}
 

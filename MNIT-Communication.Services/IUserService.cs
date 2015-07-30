@@ -17,6 +17,8 @@ namespace MNIT_Communication.Services
 
         Task<UserProfile> RetrieveUserProfile(Func<UserProfile, bool> predicate);
 
+	    Task<UserProfile> RetrieveUserProfileByExternalId(string externalId);
+
 		Task InsertOrUpdateUserProfile(UserProfile profile);
 		
 		Task<bool> TemporaryAccessTokenExists(Guid id);

@@ -9,6 +9,9 @@ using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using Microsoft.WindowsAzure;
+using MNIT_Communication.Attributes;
+using MNIT_Communication.Controllers;
+using MNIT_Communication.Helpers;
 using MNIT_Communication.Services;
 using MNIT_Communication.Services.Fakes;
 
@@ -19,7 +22,8 @@ namespace MNIT_Communication.App_Start
 		public static void BuildUpContainer()
 		{
 			var builder = new ContainerBuilder();
-            
+
+		    builder.RegisterType<AspNetRuntimeContext>().As<IRuntimeContext>();
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<AlertsService>().As<IAlertsService>().SingleInstance();
 
@@ -40,7 +44,15 @@ namespace MNIT_Communication.App_Start
             builder.RegisterType<SendGridEmailService>().As<ISendEmail>();
             builder.RegisterType<NamespaceManagerWrapper>().As<INamespaceManager>();
 #endif
+            //Register Filters 
+            //builder.Register(c => new UserProfileConfirmedAttribute(c.Resolve<IRuntimeContext>()))
+            //    .AsAuthorizationFilterFor<AlertsController>();
 
+            builder.RegisterType<UserProfileConfirmedAttribute>().PropertiesAutowired(PropertyWiringOptions.PreserveSetValues);
+            
+            builder.RegisterFilterProvider();
+            
+            //Register Controllers
             builder.RegisterControllers(typeof(MvcApplication).Assembly);
 			builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
 

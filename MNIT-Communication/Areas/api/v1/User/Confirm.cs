@@ -19,7 +19,7 @@ namespace MNIT_Communication.Areas.api.v1
             await userService.InsertOrUpdateUserProfile(profile);
             
             var response = Request.CreateResponse(HttpStatusCode.Found);
-            response.Headers.Location = new Uri(string.Format("{0}://{1}/Home/Confirmed", Request.RequestUri.Scheme, Request.RequestUri.Authority));
+            response.Headers.Location = new Uri(string.Format("{0}://{1}/Account/Confirmed", Request.RequestUri.Scheme, Request.RequestUri.Authority));
             return response;
 
         }

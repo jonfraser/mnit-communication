@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using MNIT_Communication.Services
+@{
+    var runtimeContext = ServiceLocator.Resolve<IRuntimeContext>();
+}
+
+<!DOCTYPE html>
 <html ng-app="communicationApp">
 <head>
     <meta charset="utf-8" />
@@ -19,11 +24,14 @@
                 @Html.ActionLink("MNIT Communication", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><i class="fa fa-bullhorn">@Html.ActionLink("Raise an Alert", "Raise", "Alerts", new { area = "" }, new { style = "color:white" })</i></li>
-                    <li><i class="fa fa-bell-o">@Html.ActionLink("Current Outages", "Status", "Alerts", new { area = "" }, new { style = "color:white" })</i></li>
-                    <li><i class="fa fa-bell-o">@Html.ActionLink("My Notifications", "Subscribe", "Alerts", new { area = "" }, new { style = "color:white" })</i></li>
-                </ul>
+                @if (runtimeContext.HasProfile)
+                {
+                    <ul class="nav navbar-nav">
+                        <li><i class="fa fa-bullhorn">@Html.ActionLink("Raise an Alert", "Raise", "Alerts", new { area = "" }, new { style = "color:white" })</i></li>
+                        <li><i class="fa fa-bell-o">@Html.ActionLink("Current Outages", "Status", "Alerts", new { area = "" }, new { style = "color:white" })</i></li>
+                        <li><i class="fa fa-bell-o">@Html.ActionLink("My Notifications", "Subscribe", "Alerts", new { area = "" }, new { style = "color:white" })</i></li>
+                    </ul>
+                }
                 @Html.Partial("_LoginPartial")
             </div>
         </div>

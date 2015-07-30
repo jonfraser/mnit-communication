@@ -49,8 +49,13 @@ namespace MNIT_Communication.Services.Fakes
         {
             return await RetrieveUserProfile(Guid.NewGuid());
         }
-		
-		public async Task InsertOrUpdateUserProfile(UserProfile request)
+
+	    public async Task<UserProfile> RetrieveUserProfileByExternalId(string externalId)
+	    {
+            return await RetrieveUserProfile(Guid.NewGuid());
+	    }
+
+	    public async Task InsertOrUpdateUserProfile(UserProfile request)
 		{
 			Trace.Write("FakeRegistrationService.UpdateUserProfile " + request.Id.ToString());
 			return;

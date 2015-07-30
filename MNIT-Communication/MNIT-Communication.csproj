@@ -243,13 +243,17 @@
     <Compile Include="Areas\api\v1\User\Confirm.cs" />
     <Compile Include="Areas\api\v1\User\Register.cs" />
     <Compile Include="Areas\api\v1\Version\Get.cs" />
+    <Compile Include="Attributes\UserProfileConfirmedAttribute.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AlertsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\AspNetRuntimeContext.cs" />
     <Compile Include="Helpers\ChallengeResult.cs" />
+    <Compile Include="Helpers\ClaimsPrincipalExtensions.cs" />
+    <Compile Include="Helpers\ClaimsTransformer.cs" />
     <Compile Include="Helpers\CustomSignIn\ApplicationNoDbContext.cs" />
     <Compile Include="Helpers\CustomSignIn\ApplicationSignInManager.cs" />
     <Compile Include="Helpers\CustomSignIn\ApplicationUser.cs" />
@@ -1185,15 +1189,16 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Alerts\Subscribe.cshtml" />
-    <Content Include="Views\Home\Confirmed.cshtml" />
-    <Content Include="Views\Alerts\NewUserDone.cshtml" />
-    <Content Include="Views\Home\LinkExternalAccount.cshtml" />
-    <Content Include="Views\Home\SetUserProfile.cshtml" />
-    <Content Include="Views\Home\MobileNumberRemoved.cshtml" />
+    <Content Include="Views\Account\Confirmed.cshtml" />
+    <Content Include="Views\Account\NewUserDone.cshtml" />
+    <Content Include="Views\Account\LinkExternalAccount.cshtml" />
+    <Content Include="Views\Account\SetUserProfile.cshtml" />
+    <Content Include="Views\Account\MobileNumberRemoved.cshtml" />
     <Content Include="Scripts\version.json" />
     <Content Include="Views\Alerts\Raise.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Alerts\Status.cshtml" />
+    <Content Include="Views\Account\Unconfirmed.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

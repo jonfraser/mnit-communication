@@ -49,32 +49,6 @@ namespace MNIT_Communication
             });
   
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-
-            app.UseClaimsTransformation(async principal =>
-            {
-                if (principal.HasClaim(ClaimTypes.Sid))
-                    return principal;
-
-                var userService = ServiceLocator.Resolve<IUserService>();
-                var externalIdClaim = principal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier);
-                
-                if (externalIdClaim == null)
-                    return principal;
-
-                var userProfile = await userService.RetrieveUserProfile(u => u.ExternalId == externalIdClaim.Value);
-
-                if (userProfile == null)
-                    return principal;
-
-                var claimsToAdd = new List<Claim>{
-                    new Claim(ClaimTypes.Sid, userProfile.Id.ToString())
-                };
-
-                var identity = new ClaimsIdentity(principal.Identity, claimsToAdd);
-                var newPrincipal = new ClaimsPrincipal(identity);
-
-                return newPrincipal;
-            });
 #if DEBUG
             app.UseDevelopmentAuthentication(new DevelopmentAuthenticationOptions
             {

@@ -13,6 +13,8 @@
 }
 
 <form class="container-fluid" ng-controller="AlertsController" ng-submit="registerAlerts('@Model.Id')">
+    <input type="checkbox" ng-click="toggleAlertable({Name: 'Test'})" /> Test
+
     <div class="row">
         <div class="col-md-12">
             <h4>Sites</h4>
@@ -96,9 +98,9 @@
                   });
               };
 
-              $scope.registerAlerts = function (newUserRegistrationId) {
+              $scope.registerAlerts = function (userId) {
                   var data = {
-                      "userId": newUserRegistrationId,
+                      "userId": userId,
                       //TODO - replace hardcoded Alert ID with values from Angular Model
                       "alertables": ['440394b8-8b90-46dd-bf13-a420a4358cc2']
                   };
@@ -106,12 +108,17 @@
                       JSON.stringify(data)).
                     success(function (data) {
                         if (confirmed == false) {
-                            window.location = "/Alerts/NewUserDone/" + data;
+                            window.location = "/Account/NewUserDone/" + data;
                         }
                     }).
                     error(function (data) { alert(data); });
-
               };
+
+              $scope.subscribedTo = []; 
+
+              $scope.toggleAlertable = function(alertable) {
+                  console.log('called: ' + alertable.Name);
+              }
 
               $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Sites"})').
                     success(function (data) {

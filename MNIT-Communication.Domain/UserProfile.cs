@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Identity;
 
 namespace MNIT_Communication.Domain
 {
@@ -16,6 +17,16 @@ namespace MNIT_Communication.Domain
 		public string MobilePhoneNumber { get; set; }
         public bool Confirmed { get; set; }
 
+        private string displayName;
+        public string DisplayName
+        {
+            get
+            {
+                return displayName ?? string.Format("{0} (via {1})", EmailAddressExternalProvider, (ExternalProvider ?? "").ToUpper());
+            }
+            private set { displayName = value; }
+        }
+
         private IList<Guid> alertSubscriptions = new List<Guid>();
         
         public IList<Guid> AlertSubscriptions
@@ -23,5 +34,20 @@ namespace MNIT_Communication.Domain
             get { return alertSubscriptions; }
             set { alertSubscriptions = value; }
         }
-	}
+
+        public static UserProfile DefaultProfile
+        {
+            get
+            {
+                var defaultProfile = new UserProfile
+                {
+                    DisplayName = "UN-CONFIRMED ACCOUNT"
+                };
+
+                return defaultProfile;
+            }
+        }
+        
+       
+    }
 }
