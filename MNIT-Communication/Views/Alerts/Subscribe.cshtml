@@ -1,10 +1,11 @@
-﻿@using MNIT_Communication.Domain
-@model UserProfile
+﻿@using MNIT_Communication.Models
+@using MNIT_Communication.Domain
+@model BaseModel<UserProfile>
 @{
     ViewBag.Title = "Select your alerts";
 }
 <h1>Select some alerts</h1>
-@if (!Model.Confirmed)
+@if (!Model.Data.Confirmed)
 {
     <p class="lead">
         We've sent an email to your @@health to confirm your account creation, but before you go and do that spend a moment to select the
@@ -12,7 +13,7 @@
     </p>
 }
 
-<form class="container-fluid" ng-controller="AlertsController" ng-submit="registerAlerts('@Model.Id')">
+<form class="container-fluid" ng-controller="AlertsController" ng-submit="registerAlerts('@Model.Data.Id')">
     <input type="checkbox" ng-click="toggleAlertable({Name: 'Test'})" /> Test
 
     <div class="row">
@@ -76,7 +77,7 @@
 
 @section scripts {
     <script type="text/javascript">
-        var confirmed = @Model.Confirmed.ToString().ToLower();
+        var confirmed = @Model.CurrentProfile.Confirmed.ToString().ToLower();
         
         angular.module('communicationApp', [])
             .directive('onFinishRender', function ($timeout) {
@@ -124,25 +125,25 @@
                     success(function (data) {
                         $scope.siteAlertables = data;
                     }).
-                    error(function () { $scope.appAlertables = ['No site alertables were retrieved from the server'] });
+                    error(function () { $scope.appAlertables = ['No site alertables were retrieved from the server']; });
 
               $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Applications"})').
                     success(function (data) {
                         $scope.appAlertables = data;
                     }).
-                    error(function () { $scope.appAlertables = ['No application alertables were retrieved from the server']});
+                    error(function () { $scope.appAlertables = ['No application alertables were retrieved from the server'];});
 
               $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Interfaces"})').
                                   success(function (data) {
                                       $scope.interfaceAlertables = data;
                                   }).
-                                  error(function () { $scope.interfaceAlertables = ['No interface alertables were retrieved from the server'] });
+                                  error(function () { $scope.interfaceAlertables = ['No interface alertables were retrieved from the server']; });
 
               $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Servers"})').
                     success(function (data) {
                         $scope.svrAlertables = data;
                     }).
-                    error(function () { $scope.svrAlertables = ['No server alertables were retrieved from the server'] });
+                    error(function () { $scope.svrAlertables = ['No server alertables were retrieved from the server']; });
 
           }]);
 

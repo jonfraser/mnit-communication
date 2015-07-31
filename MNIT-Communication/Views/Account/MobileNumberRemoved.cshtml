@@ -1,4 +1,6 @@
-﻿<form ng-controller="ConfirmedUserController" ng-submit="closeWindow()">
+﻿@using MNIT_Communication.Models
+@model BaseModel 
+<form ng-controller="ConfirmedUserController" ng-submit="closeWindow()">
     <div class="jumbotron form-group form-inline">
         <h1>Mobile number removed!</h1>
         <p class="lead">Sorry about the confusion, your mobile number has been removed from the account it was accidently linked to.</p>

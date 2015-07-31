@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
@@ -126,9 +127,9 @@ namespace MNIT_Communication.Services
 		}
 
         //WARNING - This method only returns persisted (i.e. Confirmed) UserProfiles
-	    public async Task<UserProfile> RetrieveUserProfile(Func<UserProfile, bool> predicate)
+	    public async Task<UserProfile> RetrieveUserProfile(Expression<Func<UserProfile, bool>> predicate)
 	    {
-            //TODO - Cache this value
+           //TODO - Cache this value
             return (await repository.Get(predicate)).FirstOrDefault();
 	    }
 

@@ -48,7 +48,7 @@ namespace MNIT_Communication.Tests.Services
                 
                 var service = new UserService(repoMock.Object, storeMock.Object, mailMock.Object, smsMock.Object, urlMock.Object, serviceBusMock.Object);
 
-                var message = new Domain.NewUserRegistrationBrokeredMessage
+                var message = new MNIT_Communication.Domain.NewUserRegistrationBrokeredMessage
                 {
                     CorrelationId = Guid.NewGuid(),
                     EmailAddress = "jon.fraser@health.qld.gov.au"

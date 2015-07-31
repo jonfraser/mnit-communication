@@ -22,16 +22,20 @@ using MNIT_Communication.Helpers.CustomSignIn;
 
 namespace MNIT_Communication.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
 	{
-	    [AllowAnonymous]
-        public ActionResult Index()
+        public HomeController(IRuntimeContext runtimeContext) : base(runtimeContext)
+        {
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> Index()
         {
             if (System.Web.HttpContext.Current.Request.IsAuthenticated)
                 return RedirectToRoute(new {Controller = "Alerts", Action = "Status"});
             
             HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
-			return View();
+			return await BaseView();
 		}
         
         

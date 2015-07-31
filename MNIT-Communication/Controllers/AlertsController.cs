@@ -14,12 +14,12 @@ namespace MNIT_Communication.Controllers
 {
     //TODO - UserProfileConfirmedAttribute should be applied here via Autofac
     [Authorize]
-    public class AlertsController : Controller
+    public class AlertsController : BaseController
     {
         private readonly IUserService userService;
         private readonly IRuntimeContext runtimeContext;
 
-        public AlertsController(IUserService userService, IRuntimeContext runtimeContext)
+        public AlertsController(IUserService userService, IRuntimeContext runtimeContext) : base(runtimeContext)
         {
             this.userService = userService;
             this.runtimeContext = runtimeContext;
@@ -29,7 +29,7 @@ namespace MNIT_Communication.Controllers
         public async Task<ActionResult> Subscribe(Guid? id)
         {
             UserProfile userProfile;
-            userProfile = id.HasValue ? await userService.RetrieveUserProfile(id.Value) : runtimeContext.CurrentProfile;
+            userProfile = id.HasValue ? await userService.RetrieveUserProfile(id.Value) : await runtimeContext.CurrentProfile();
 
             if (userProfile == null)
             {
@@ -37,22 +37,22 @@ namespace MNIT_Communication.Controllers
             }
 
             //Do nothing, just return the view as we will ajax in the alerts via the rest api
-            return View(userProfile);
+            return await BaseView(userProfile);
         }
         
 		[HttpGet]
         [UserProfileConfirmed]
-		public ActionResult Raise()
+		public async Task<ActionResult> Raise()
 		{
 			//Do nothing, just return the view as we will ajax in the alerts via the rest api
-			return View();
+			return await BaseView();
 		}
 
 		[HttpGet]
         [UserProfileConfirmed]
-		public ActionResult Status()
+		public async Task<ActionResult> Status()
 		{
-			return View();
+			return await BaseView();
 		}
     }
 }

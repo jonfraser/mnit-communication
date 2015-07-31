@@ -1,7 +1,5 @@
-﻿@using MNIT_Communication.Services
-@{
-    var runtimeContext = ServiceLocator.Resolve<IRuntimeContext>();
-}
+﻿@using MNIT_Communication.Models
+@model BaseModel
 
 <!DOCTYPE html>
 <html ng-app="communicationApp">
@@ -24,7 +22,7 @@
                 @Html.ActionLink("MNIT Communication", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                @if (runtimeContext.HasProfile)
+                @if (Model.HasProfile)
                 {
                     <ul class="nav navbar-nav">
                         <li><i class="fa fa-bullhorn">@Html.ActionLink("Raise an Alert", "Raise", "Alerts", new { area = "" }, new { style = "color:white" })</i></li>
@@ -32,7 +30,7 @@
                         <li><i class="fa fa-bell-o">@Html.ActionLink("My Notifications", "Subscribe", "Alerts", new { area = "" }, new { style = "color:white" })</i></li>
                     </ul>
                 }
-                @Html.Partial("_LoginPartial")
+                @{ Html.RenderPartial("_LoginPartial", Model); }
             </div>
         </div>
     </div>

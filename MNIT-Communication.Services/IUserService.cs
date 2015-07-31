@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MNIT_Communication.Domain;
 namespace MNIT_Communication.Services
@@ -15,7 +16,7 @@ namespace MNIT_Communication.Services
 
 		Task<UserProfile> RetrieveUserProfile(Guid id);
 
-        Task<UserProfile> RetrieveUserProfile(Func<UserProfile, bool> predicate);
+        Task<UserProfile> RetrieveUserProfile(Expression<Func<UserProfile, bool>> predicate);
 
 	    Task<UserProfile> RetrieveUserProfileByExternalId(string externalId);
 

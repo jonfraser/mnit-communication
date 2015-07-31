@@ -1,4 +1,6 @@
-﻿@model MNIT_Communication.Domain.UserProfile
+﻿@using MNIT_Communication.Models;
+@using MNIT_Communication.Domain;
+@model BaseModel<UserProfile>
 @{
     ViewBag.Title = "Set User Profile";
 }
@@ -8,7 +10,7 @@
     you're not at your desk it would help if we had another email address and mobile phone number.
     Please confirm/update the details below.
 </p>
-<form class="container-fluid" ng-controller="UserProfileController" ng-submit="setUserProfile('@Model.Id')">
+<form class="container-fluid" ng-controller="UserProfileController" ng-submit="setUserProfile('@Model.Data.Id')">
     <div class="row">
         <div class="col-md-2">
             <label for="email">Email:</label>
@@ -37,18 +39,18 @@
         angular.module('communicationApp', [])
             .controller('UserProfileController', ['$scope', '$http', function ($scope, $http) {
 
-                $scope.email = '@Model.EmailAddressExternalProvider';
-                $scope.mobile = '@Model.MobilePhoneNumber';
+                $scope.email = '@Model.Data.EmailAddressExternalProvider';
+                $scope.mobile = '@Model.Data.MobilePhoneNumber';
 
                 //TODO - serialize the Model intead? Seems redundant to re-create this object
                 $scope.setUserProfile = function (userId) {
                     var data = {
                         Id: userId,
-                        EmailAdressInternal: '@Model.EmailAdressInternal',
+                        EmailAdressInternal: '@Model.Data.EmailAdressInternal',
                         EmailAddressExternalProvider: $scope.email,
-                        ExternalProvider: '@Model.ExternalProvider',
+                        ExternalProvider: '@Model.Data.ExternalProvider',
                         MobilePhoneNumber: $scope.mobile,
-                        Confirmed: '@Model.Confirmed.ToString().ToLower()'
+                        Confirmed: '@Model.Data.Confirmed.ToString().ToLower()'
                     };
 
                     $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "UserProfile", controller = "User"})',

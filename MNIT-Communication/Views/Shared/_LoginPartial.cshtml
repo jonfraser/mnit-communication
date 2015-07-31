@@ -1,9 +1,5 @@
-﻿@using MNIT_Communication.Domain
-@using MNIT_Communication.Services
-@{
-    var runtimeContext = ServiceLocator.Resolve<IRuntimeContext>();
-    var currentProfile = runtimeContext.CurrentProfile ?? UserProfile.DefaultProfile;
-}
+﻿@using MNIT_Communication.Models
+@model BaseModel
 
 @if (Request.IsAuthenticated)
 {
@@ -13,7 +9,7 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @currentProfile.DisplayName
+            @Model.CurrentProfile.DisplayName
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
     </ul>

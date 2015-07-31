@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Owin.Security.Provider;
 using MNIT_Communication.Domain;
@@ -23,24 +24,21 @@ namespace MNIT_Communication.Helpers
             get { return System.Threading.Thread.CurrentPrincipal as ClaimsPrincipal; }
         }
 
-        public UserProfile CurrentProfile
+        public async Task<UserProfile> CurrentProfile()
         {
-            get
-            {
-                if (CurrentPrincipal == null)
-                    return null;
+            if (CurrentPrincipal == null || CurrentPrincipal.Identity.IsAuthenticated == false)
+                return null;
 
-                var externalId = CurrentPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
+            var externalId = CurrentPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
 
-                var profile = userService.RetrieveUserProfileByExternalId(externalId).Result;
+            var profile = await userService.RetrieveUserProfileByExternalId(externalId);
 
-                return profile;
-            }
+            return profile;
         }
 
-        public bool HasProfile
+        public async Task<bool> HasProfile()
         {
-            get { return CurrentProfile != null; }
+             return (await CurrentProfile()) != null; 
         }
     }
 }

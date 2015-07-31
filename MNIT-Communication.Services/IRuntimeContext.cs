@@ -11,7 +11,7 @@ namespace MNIT_Communication.Services
     public interface IRuntimeContext
     {
         ClaimsPrincipal CurrentPrincipal { get; }
-        UserProfile CurrentProfile { get; }
-        bool HasProfile { get; }
+        Task<UserProfile> CurrentProfile();
+        Task<bool> HasProfile();
     }
 }

@@ -26,13 +26,14 @@ namespace MNIT_Communication.App_Start
 		    builder.RegisterType<AspNetRuntimeContext>().As<IRuntimeContext>();
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<AlertsService>().As<IAlertsService>().SingleInstance();
+            builder.RegisterType<MongoDbRepository>().As<IRepository>().SingleInstance();
 
 #if DEBUG
 		    builder.RegisterType<FakeServiceBus>().As<IServiceBus>();
             builder.RegisterType<FakeUrlShortener>().As<IUrlShorten>();
             builder.RegisterType<FakeSmsService>().As<ISendSms>();
             builder.RegisterType<FakeShortTermStorage>().As<IShortTermStorage>().SingleInstance();
-		    builder.RegisterType<FakeRepository>().As<IRepository>().SingleInstance();
+		    //builder.RegisterType<FakeRepository>().As<IRepository>().SingleInstance();
             builder.RegisterType<FakeEmailService>().As<ISendEmail>();
 		    builder.RegisterType<FakeNamespaceManager>().As<INamespaceManager>();
 #else
@@ -45,10 +46,8 @@ namespace MNIT_Communication.App_Start
             builder.RegisterType<NamespaceManagerWrapper>().As<INamespaceManager>();
 #endif
             //Register Filters 
-            //builder.Register(c => new UserProfileConfirmedAttribute(c.Resolve<IRuntimeContext>()))
-            //    .AsAuthorizationFilterFor<AlertsController>();
-
-            builder.RegisterType<UserProfileConfirmedAttribute>().PropertiesAutowired(PropertyWiringOptions.PreserveSetValues);
+            builder.Register(c => new UserProfileConfirmedAttribute(c.Resolve<IRuntimeContext>()))
+                   .PropertiesAutowired(PropertyWiringOptions.PreserveSetValues);
             
             builder.RegisterFilterProvider();
             

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using MNIT_Communication.Domain;
@@ -30,7 +31,7 @@ namespace MNIT_Communication.Services
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate">Lambda to filter with</param>
         /// <returns>Zero or more instances</returns>
-        Task<IList<T>> Get<T>(Func<T, bool> predicate) where T : BaseEntity;
+        Task<IList<T>> Get<T>(Expression<Func<T, bool>> predicate) where T : BaseEntity;
 
         /// <summary>
         /// If the object represented by the id exists, update it, otherwise insert it

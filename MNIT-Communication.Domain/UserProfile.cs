@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace MNIT_Communication.Domain
 {
@@ -18,6 +19,8 @@ namespace MNIT_Communication.Domain
         public bool Confirmed { get; set; }
 
         private string displayName;
+        
+        [BsonIgnore]
         public string DisplayName
         {
             get

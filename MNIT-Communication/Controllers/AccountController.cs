@@ -22,25 +22,22 @@ using MNIT_Communication.Helpers.CustomSignIn;
 namespace MNIT_Communication.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
-        private readonly IUserService userService;
-
-        public AccountController(IUserService userService)
-	    {
-	        this.userService = userService;
-	    }
+        public AccountController(IRuntimeContext runtimeContext) : base(runtimeContext)
+        {
+        }
 
         [AllowAnonymous]
-        public ActionResult Login(string ReturnUrl)
+        public async Task<ActionResult> Login(string ReturnUrl)
         {
 			ViewBag.ReturnUrl = ReturnUrl;
-            return View();
+            return await BaseView();
         }
 
 		[HttpPost]
         [AllowAnonymous]
-		public ActionResult LogOff()
+		public async Task<ActionResult> LogOff()
 		{
 			HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie, DefaultAuthenticationTypes.ApplicationCookie);
 			return Redirect("/");
@@ -70,14 +67,14 @@ namespace MNIT_Communication.Controllers
                 var response = await client.GetStringAsync(getProfileUri);
                 var userProfile = JsonConvert.DeserializeObject(response, type);
 
-                return View(userProfile);
+                return await BaseView(userProfile);
             }
         }
 
         [AllowAnonymous]
-        public ActionResult LinkExternalAccount(Guid id)
+        public async Task<ActionResult> LinkExternalAccount(Guid id)
         {
-            return View(id);
+            return await BaseView(id);
         }
 
         [HttpPost]
@@ -140,29 +137,29 @@ namespace MNIT_Communication.Controllers
         }
 
         [HttpGet]
-        public ActionResult NewUserDone(Guid id)
+        public async Task<ActionResult> NewUserDone(Guid id)
         {
             //TODO: Confirm the GUID is correct
             HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
-            return View();
+            return await BaseView();
         }
 
         [AllowAnonymous]
-        public ActionResult Confirmed()
+        public async Task<ActionResult> Confirmed()
         {
-            return View();
+            return await BaseView();
         }
 
         [Authorize]
-        public ActionResult Unconfirmed()
+        public async Task<ActionResult> Unconfirmed()
         {
             HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
-            return View();
+            return await BaseView();
         }
 
-        public ActionResult MobileNumberRemoved()
+        public async Task<ActionResult> MobileNumberRemoved()
         {
-            return View();
+            return await BaseView();
         }
     }
 }

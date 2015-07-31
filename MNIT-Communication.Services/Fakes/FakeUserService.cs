@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MNIT_Communication.Domain;
 
@@ -45,7 +46,7 @@ namespace MNIT_Communication.Services.Fakes
 			};
 		}
 
-        public async Task<UserProfile> RetrieveUserProfile(Func<UserProfile, bool> predicate)
+        public async Task<UserProfile> RetrieveUserProfile(Expression<Func<UserProfile, bool>> predicate)
         {
             return await RetrieveUserProfile(Guid.NewGuid());
         }

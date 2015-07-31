@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using MNIT_Communication.Domain;
@@ -36,10 +37,10 @@ namespace MNIT_Communication.Services.Fakes
             return match.Value;
         }
 
-        public async Task<IList<T>> Get<T>(Func<T, bool> predicate) where T : BaseEntity
+        public async Task<IList<T>> Get<T>(Expression<Func<T, bool>> predicate) where T : BaseEntity
         {
             var list = await Get<T>();
-            return list.Where(predicate).ToList();
+            return list.Where(predicate.Compile()).ToList();
         }
 
         public async Task<T> Upsert<T>(T item) where T: BaseEntity

@@ -1,4 +1,4 @@
-﻿@model Guid
+﻿@model MNIT_Communication.Models.BaseModel<Guid>
 @using Microsoft.Owin.Security
 
 @{
@@ -14,7 +14,7 @@
 <p class="lead">
     Please login with one of the following providers.
 </p>
-@using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Url.Action("SetUserProfile", "Account", new { id = Model }) }))
+@using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Url.Action("SetUserProfile", "Account", new { id = Model.Data }) }))
 {
     @Html.AntiForgeryToken()
     <div id="socialLoginList">
