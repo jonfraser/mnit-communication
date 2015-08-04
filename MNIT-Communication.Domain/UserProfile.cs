@@ -17,7 +17,9 @@ namespace MNIT_Communication.Domain
 		public string EmailAddressExternalProvider { get; set; }
 		public string MobilePhoneNumber { get; set; }
         public bool Confirmed { get; set; }
-
+        public bool IsAdmin { get; set; }
+        public Guid AdminGrantedBy { get; set; }
+        
         private string displayName;
         
         [BsonIgnore]
@@ -50,7 +52,5 @@ namespace MNIT_Communication.Domain
                 return defaultProfile;
             }
         }
-        
-       
-    }
+	}
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MNIT_Communication.Domain;
@@ -23,6 +25,12 @@ namespace MNIT_Communication.Services
 		Task InsertOrUpdateUserProfile(UserProfile profile);
 		
 		Task<bool> TemporaryAccessTokenExists(Guid id);
+
+        Task<IList<UserProfile>> ListAdministrators();
+
+	    Task<bool> RequestAdmin(Guid userId, Guid administratorId);
+
+        Task<bool> GrantAdmin(Guid userId, Guid administratorId);
 	}
 
 }

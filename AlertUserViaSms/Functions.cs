@@ -17,6 +17,8 @@ namespace AlertUserViaSms
 			log.WriteLine(message);
 		    var sms = ServiceLocator.Resolve<ISendSms>();
 			var mobileNumber = "0416272575";
+
+            //TODO - Get all subscribers from AlertsService and loop though to send to each one
 			//TODO:get teh mobile numbers to send to or would this actually just push a message onto anotehr
 			//queue for each mobile number found? That would mean that this message process won't be dependant on
 			//all messages succeeding

@@ -70,6 +70,22 @@ namespace MNIT_Communication.Services.Fakes
 		}
 
 
-       
-    }
+
+
+
+        public Task<System.Collections.Generic.IList<UserProfile>> ListAdministrators()
+        {
+            throw new NotImplementedException();
+        }
+
+	    public Task<bool> RequestAdmin(Guid userId, Guid administratorId)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    public Task<bool> GrantAdmin(Guid userId, Guid administratorId)
+	    {
+	        throw new NotImplementedException();
+	    }
+	}
 }

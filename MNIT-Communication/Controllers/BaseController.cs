@@ -12,7 +12,7 @@ namespace MNIT_Communication.Controllers
 {
     public class BaseController : Controller
     {
-        private readonly IRuntimeContext runtimeContext;
+        protected readonly IRuntimeContext runtimeContext;
 
         public BaseController(IRuntimeContext runtimeContext)
         {

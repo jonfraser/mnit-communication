@@ -1,0 +1,14 @@
+﻿@using MNIT_Communication.Models
+@using MNIT_Communication.Domain
+@model BaseModel<UserProfile>
+
+@{
+    ViewBag.Title = "Admin Request Granted";
+}
+
+<h1>Cheers..</h1>
+
+<p class="lead">
+    Thanks for approving this request for Administrator rights..<br />
+    I'm sure @Model.Data.EmailAdressInternal will be well chuffed!
+</p>

@@ -151,6 +151,7 @@
     <Compile Include="GoogleUrlShortener.cs" />
     <Compile Include="IAlertsService.cs" />
     <Compile Include="INamespaceManager.cs" />
+    <Compile Include="IOutageHub.cs" />
     <Compile Include="IRuntimeContext.cs" />
     <Compile Include="IUserService.cs" />
     <Compile Include="IRepository.cs" />

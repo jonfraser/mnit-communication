@@ -1,0 +1,79 @@
+﻿@using MNIT_Communication.Models
+@using MNIT_Communication.Domain
+@model BaseModel<IList<UserProfile>>
+
+@{
+    ViewBag.Title = "Request Administrative Access";
+}
+
+<form ng-controller="RequestAdminController" ng-submit="submitRequest()">
+    <div class="jumbotron form-group form-inline">
+        <div ng-show="alreadyAdmin">
+            <h1>Already Granted..</h1>
+            <p class="lead">
+                Hey @Model.CurrentProfile.EmailAdressInternal, you already have Admin rights!!
+            </p>
+        </div>
+
+        <div ng-show="!alreadyAdmin">
+            <h1>Pretty please?</h1>
+            <p class="lead">
+                You obviously think you need to have Admin rights here..<br />
+                Select an existing Admin and they may just grant that to you.
+            </p>
+            <div class="row">
+                <div class="col-md-2 input-group text-primary">
+                    <select class="input-lg" ng-model="chosenAdmin" ng-options="admin.email for admin in administrators"></select>
+                </div>
+                <div class="col-md-2 input-group">
+                    <button type="submit" class="btn btn-primary btn-lg" ng-disabled="chosenAdmin == null">Ask nicely &raquo;</button>
+                </div>
+            </div>
+        </div>
+
+        <p></p>
+        <p class="lead" ng-show="displaySuccess">
+            Request Submitted to {{chosenAdminEmail}} (an email is on it's way). Good luck with that!
+        </p>
+    </div>
+</form>
+
+
+@section scripts {
+    <script type="text/javascript">
+        angular.module('communicationApp', [])
+            .controller('RequestAdminController', [
+                '$scope', '$http', function($scope, $http) {
+
+                $scope.administrators = [@Html.Raw(string.Join(",", Model.Data.Select(a => string.Format("{{ id: '{0}', email: '{1}' }}", a.Id, a.EmailAdressInternal))))];
+                
+                $scope.alreadyAdmin = @Model.CurrentProfile.IsAdmin.ToString().ToLower();
+
+                $scope.chosenAdmin = null;
+                $scope.chosenAdminEmail = null;
+                $scope.displaySuccess = false;
+
+                $scope.submitRequest = function() {
+                    var data = {
+                        "userId": '@Model.CurrentProfile.Id',
+                        "administratorId": $scope.chosenAdmin.id
+                    };
+
+                    $scope.chosenAdminEmail = $scope.chosenAdmin.EmailAdressInternal;
+
+                    $http.post('@Url.HttpRouteUrl("DefaultApi", new {action = "RequestAdmin", controller = "User"})',
+                        JSON.stringify(data)).
+                    success(function () {
+                        $scope.chosenAdmin = null;
+                        $scope.displaySuccess = true;
+                    }).
+                    error(function() {
+                         alert('An error has occured..');
+                    });
+                };
+
+            }
+        ]);
+
+    </script>
+}

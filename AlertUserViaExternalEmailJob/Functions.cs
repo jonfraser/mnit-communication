@@ -16,6 +16,7 @@ namespace AlertUserViaExternalEmailJob
 		{
 			log.WriteLine(message);
 		    var mail = ServiceLocator.Resolve<ISendEmail>();
+            //TODO - Get all subscribers from AlertsService and loop though to send to each one
 
 			await mail.Send(from: "mnit-communication@health.qld.gov.au",
 										to: new List<String> { "fraser.jc@gmail.com" },

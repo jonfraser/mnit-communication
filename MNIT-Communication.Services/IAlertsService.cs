@@ -8,8 +8,8 @@ namespace MNIT_Communication.Services
 	{
 		Task<Guid> SubscribeToAlerts(Guid userId, IEnumerable<Guid> alertables);
 
-		Task RaiseAlert(Guid alertableId, string alertDetail, string alertInfoShort);
+		Task RaiseAlert(RaiseAlertRequest request);
 
-		Task<IEnumerable<AlertSummary>> GetCurrentAlerts();
+		Task<IEnumerable<Alert>> GetCurrentAlerts();
 	}
 }

@@ -247,6 +247,7 @@
     <Compile Include="Areas\api\v1\Alertables\Get.cs" />
     <Compile Include="Areas\api\v1\User\Base.cs" />
     <Compile Include="Areas\api\v1\User\Get.cs" />
+    <Compile Include="Areas\api\v1\User\RequestAdmin.cs" />
     <Compile Include="Areas\api\v1\User\UserProfile.cs" />
     <Compile Include="Areas\api\v1\User\RejectMobile.cs" />
     <Compile Include="Areas\api\v1\User\Confirm.cs" />
@@ -314,6 +315,8 @@
     <Content Include="Scripts\angular-messages.js" />
     <Content Include="Scripts\angular-messages.min.js" />
     <Content Include="Scripts\angular-mocks.js" />
+    <Content Include="Scripts\angular-moment.js" />
+    <Content Include="Scripts\angular-moment.min.js" />
     <Content Include="Scripts\angular-resource.js" />
     <Content Include="Scripts\angular-resource.min.js" />
     <Content Include="Scripts\angular-route.js" />
@@ -1164,6 +1167,7 @@
     <None Include="newrelic\newrelic.xsd">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Scripts\angular-moment.min.js.map" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
@@ -1176,6 +1180,17 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment-timezone-utils.js" />
+    <Content Include="Scripts\moment-timezone-with-data-2010-2020.js" />
+    <Content Include="Scripts\moment-timezone-with-data-2010-2020.min.js" />
+    <Content Include="Scripts\moment-timezone-with-data.js" />
+    <Content Include="Scripts\moment-timezone-with-data.min.js" />
+    <Content Include="Scripts\moment-timezone.js" />
+    <Content Include="Scripts\moment-timezone.min.js" />
+    <Content Include="Scripts\moment-with-locales.js" />
+    <Content Include="Scripts\moment-with-locales.min.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
@@ -1210,6 +1225,8 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Alerts\Status.cshtml" />
     <Content Include="Views\Account\Unconfirmed.cshtml" />
+    <Content Include="Views\Account\RequestAdmin.cshtml" />
+    <Content Include="Views\Account\GrantAdmin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

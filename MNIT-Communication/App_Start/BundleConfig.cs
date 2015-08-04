@@ -20,6 +20,10 @@ namespace MNIT_Communication
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/moment")
+                .Include("~/Scripts/moment.js")
+                .Include("~/Scripts/angular-moment.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap/bootstrap.css",
                       "~/Content/site.css"));

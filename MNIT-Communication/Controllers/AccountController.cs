@@ -1,4 +1,5 @@
 ﻿using Microsoft.WindowsAzure;
+using MNIT_Communication.Attributes;
 using MNIT_Communication.Services;
 using System;
 using System.Collections.Generic;
@@ -24,8 +25,11 @@ namespace MNIT_Communication.Controllers
     [Authorize]
     public class AccountController : BaseController
     {
-        public AccountController(IRuntimeContext runtimeContext) : base(runtimeContext)
+        private readonly Lazy<IUserService> userService;
+
+        public AccountController(IRuntimeContext runtimeContext, Lazy<IUserService> userService) : base(runtimeContext)
         {
+            this.userService = userService;
         }
 
         [AllowAnonymous]
@@ -160,6 +164,25 @@ namespace MNIT_Communication.Controllers
         public async Task<ActionResult> MobileNumberRemoved()
         {
             return await BaseView();
+        }
+
+        [UserProfileConfirmed]
+        public async Task<ActionResult> RequestAdmin()
+        {
+            var admins = await userService.Value.ListAdministrators();
+            return await BaseView(admins);
+        }
+
+        [IsAdministrator]
+        public async Task<ActionResult> GrantAdmin(Guid id)
+        {
+            var administratorId = (await runtimeContext.CurrentProfile()).Id; //The logged in user should be an administrator
+
+            await userService.Value.GrantAdmin(id, administratorId);
+
+            var userGrantedTo = await userService.Value.RetrieveUserProfile(id);
+
+            return await BaseView(userGrantedTo);
         }
     }
 }

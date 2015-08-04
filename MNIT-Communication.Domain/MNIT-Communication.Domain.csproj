@@ -51,13 +51,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminRequest.cs" />
     <Compile Include="Alertable.cs" />
     <Compile Include="AlertBrokeredMessage.cs" />
-    <Compile Include="AlertSummary.cs" />
+    <Compile Include="Alert.cs" />
+    <Compile Include="AlertHistory.cs" />
+    <Compile Include="AlertsSubscriptionRequest.cs" />
+    <Compile Include="AlertStatus.cs" />
     <Compile Include="BaseEntity.cs" />
     <Compile Include="NewUserRegistrationBrokeredMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Queues.cs" />
+    <Compile Include="RaiseAlertRequest.cs" />
     <Compile Include="RegisterAlertBrokeredMessage.cs" />
     <Compile Include="Topics.cs" />
     <Compile Include="UserProfile.cs" />

@@ -42,7 +42,4 @@ namespace MNIT_Communication.Services
         Task<T> Upsert<T>(T item) where T : BaseEntity;
 
     }
-
-
-
 }

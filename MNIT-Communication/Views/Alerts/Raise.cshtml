@@ -10,11 +10,13 @@
     subscribers. You'll get a reminder in 50 minutes to update the status of the outage so that all users can be kept up to date.
 </p>
 <form class="container-fluid" ng-controller="AlertsController" ng-submit="raiseAlert()">
-    <div class="row">
+    <div class="row" ng-repeat="group in groupedAlertables | orderBy:'Group'">
         <div class="col-md-12">
-            <h4>Sites</h4>
+            <h4>{{group.Group}}</h4>
             <ul class="list-unstyled list-inline">
-                <li ng-repeat="alertable in siteAlertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
+                @*TODO - Bootstrap Toggle breaks the Angular handler*@
+                @*on-finish-render="toggelize()"*@
+                <li ng-repeat="alertable in group.Alertables | orderBy:'Name'" ng-click="toggleAlertable(alertable, $event)" class="col-md-4" style="margin-bottom:10px;">
                     <label class="checkbox-inline">
                         <input type="checkbox" />
                         {{alertable.Name}}
@@ -23,45 +25,7 @@
             </ul>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <h4>Applications</h4>
-            <ul class="list-unstyled list-inline">
-                <li ng-repeat="alertable in appAlertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" />
-                        {{alertable.Name}}
-                    </label>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <h4>Interfaces</h4>
-            <ul class="list-unstyled list-inline">
-                <li ng-repeat="alertable in interfaceAlertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" />
-                        {{alertable.Name}}
-                    </label>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <h4>Servers</h4>
-            <ul class="list-unstyled list-inline">
-                <li ng-repeat="alertable in svrAlertables | orderBy:'Name'" on-finish-render="toggelize()" class="col-md-4" style="margin-bottom:10px;">
-                    <label class="checkbox-inline">
-                        <input type="checkbox" />
-                        {{alertable.Name}}
-                    </label>
-                </li>
-            </ul>
-        </div>
-    </div>
+    
     <div class="row">
         <div class="col-md-2">
             <label for="shortInfo">Short Info:</label>
@@ -107,11 +71,36 @@
                   });
               };
 
+              $scope.selectedAlertables = [];
+
+              $scope.isSelected = function(alertable) {
+                  return $scope.selectedAlertables.indexOf(alertable) > -1;
+              }
+
+              $scope.toggleAlertable = function(alertable, $event) {
+                  var checked = $event.target.checked;
+
+                  var index = $scope.selectedAlertables.indexOf(alertable);
+
+                  if (checked == false) { //Remove it, if it exists
+                      if ($scope.isSelected(alertable) ) {
+                          $scope.selectedAlertables.splice(index, 1);
+                      }
+                  } else { //Add it, if it hasn't been already
+                      if (!$scope.isSelected(alertable) ) {
+                          $scope.selectedAlertables.push(alertable);
+                      }
+                  }
+
+                  //console.log($scope.selectedAlertables);
+              }
+
               $scope.raiseAlert = function () {
                   var data = {
                       "AlertInfoShort": $scope.shortInfo,
                       "AlertDetail": $scope.longInfo,
-                      "AlertableId": ['440394b8-8b90-46dd-bf13-a420a4358cc2']
+                      "Alertables": $scope.selectedAlertables,
+                      "RaisedById": "@Model.CurrentProfile.Id"
                   };
                   $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Raise", controller = "Alerts"})',
                       JSON.stringify(data)).
@@ -122,29 +111,11 @@
 
               };
 
-              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Sites"})').
-                   success(function (data) {
-                       $scope.siteAlertables = data;
-                   }).
-                   error(function () { $scope.appAlertables = ['No site alertables were retrieved from the server'] });
-
-              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Applications"})').
-                    success(function (data) {
-                        $scope.appAlertables = data;
-                    }).
-                    error(function () { $scope.appAlertables = ['No application alertables were retrieved from the server'] });
-
-              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Interfaces"})').
-                                  success(function (data) {
-                                      $scope.interfaceAlertables = data;
-                                  }).
-                                  error(function () { $scope.interfaceAlertables = ['No interface alertables were retrieved from the server'] });
-
-              $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alertables", groupName = "Servers"})').
-                    success(function (data) {
-                        $scope.svrAlertables = data;
-                    }).
-                    error(function () { $scope.svrAlertables = ['No server alertables were retrieved from the server'] });
+              $http.get('@Url.HttpRouteUrl("DefaultApi", new {action = "Get", controller = "Alertables"})').
+                 success(function (data) {
+                     $scope.groupedAlertables = data;
+                 }).
+                 error(function () { $scope.groupedAlertables = ['No alertables were retrieved from the server']; });
 
           }]);
 

@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using MNIT_Communication.Domain;
 
 namespace MNIT_Communication.Areas.api.v1
 {
@@ -17,9 +18,5 @@ namespace MNIT_Communication.Areas.api.v1
 		}
 	}
 
-    public class AlertsSubscriptionRequest
-	{
-		public Guid userId { get; set; }
-		public IEnumerable<Guid> alertables { get; set; }
-	}
+    
 }

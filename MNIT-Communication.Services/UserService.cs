@@ -26,6 +26,8 @@ namespace MNIT_Communication.Services
 	    private readonly IUrlShorten urlShortener;
 	    private readonly IServiceBus serviceBus;
 
+	    private const string fromAddress = "mnit-communication@health.qld.gov.au"; //TODO - put this in config?
+
 	    public UserService(IRepository repository, IShortTermStorage store, ISendEmail mail, ISendSms sms, IUrlShorten urlShortener, IServiceBus serviceBus)
 	    {
 	        this.repository = repository;
@@ -76,13 +78,13 @@ namespace MNIT_Communication.Services
 
 		private async Task SendEmail(UserProfile newUser)
 		{
-			var message = "You've got 72 hours to confirm your account via this link: https://mnit-communication.azurewebsites.net/api/User/Confirm/" + newUser.Id.ToString()
-						+ Environment.NewLine
-						+ "If you have already selected your alerts they will be automatically added to your account once it is confirmed.";
-			await mail.Send(from: "mnit-communication@health.qld.gov.au",
-							to: new List<String> { newUser.EmailAdressInternal },
-							subject: "Confirm your MNIT Communication account",
-							body: message);
+            var message = "You've got 72 hours to confirm your account via this link: https://mnit-communication.azurewebsites.net/api/User/Confirm/" + newUser.Id.ToString()
+                        + Environment.NewLine
+                        + "If you have already selected your alerts they will be automatically added to your account once it is confirmed.";
+            await mail.Send(from: fromAddress,
+                            to: new List<String> { newUser.EmailAdressInternal },
+                            subject: "Confirm your MNIT Communication account",
+                            body: message);
 
 		}
 
@@ -141,7 +143,7 @@ namespace MNIT_Communication.Services
 
 		public async Task InsertOrUpdateUserProfile(UserProfile profile)
 		{
-            var toPersist = await RetrieveUserProfile(profile.Id);
+		    var toPersist = await RetrieveUserProfile(profile.Id);
 
             toPersist.ExternalProvider = profile.ExternalProvider ?? toPersist.ExternalProvider;
 		    toPersist.ExternalId = profile.ExternalId ?? toPersist.ExternalId;
@@ -151,6 +153,9 @@ namespace MNIT_Communication.Services
 		    toPersist.Confirmed = profile.Confirmed;
 		    toPersist.AlertSubscriptions = profile.AlertSubscriptions ?? toPersist.AlertSubscriptions;
 
+		    toPersist.IsAdmin = profile.IsAdmin;
+		    toPersist.AdminGrantedBy = profile.AdminGrantedBy;
+            
 		    if (!toPersist.Confirmed)
 		    {
 		        //TODO - recalculate the lifespan? i.e. if there's only 24 hours left of the original 72, is this possible?
@@ -160,15 +165,75 @@ namespace MNIT_Communication.Services
 		    {
                 //TODO - Delete cached value if any
                 //TODO - Check that the same ExternalId has not already been used for a Profile? (Someone could register twice) If so, delete and re-insert, or update original?
+                
+                //if this is the very first confirmed user of the system, make them an Admin
+                var isFirstUser = (await repository.Get<UserProfile>()).Any() == false;
+		        if (isFirstUser)
+		        {
+		            toPersist.IsAdmin = true;
+		        }
+
                 await repository.Upsert(toPersist);
 		    }
 		}
-
-
+        
 		public async Task<bool> TemporaryAccessTokenExists(Guid id)
 		{
 			return await store.KeyExists(id.ToString());
 		}
+        
+        public async Task<IList<UserProfile>> ListAdministrators()
+        {
+            var admins = await repository.Get<UserProfile>(u => u.IsAdmin);
+            return admins;
+        }
+
+	    public async Task<bool> RequestAdmin(Guid userId, Guid administratorId)
+	    {
+            var user = await RetrieveUserProfile(userId);
+            var administrator = await RetrieveUserProfile(administratorId);
+
+            if (user == null || administrator == null || administrator.IsAdmin == false)
+            {
+                throw new ArgumentException("Unable to complete this request. Either the User or Administrator do not exist, or do not have rights to grant this access");
+            }
+           
+	        var message = string.Format("The MNIT Communication user {0} has requested Admin access. You (as and existing Admin) can approve this request via this link: https://mnit-communication.azurewebsites.net/Account/GrantAdmin/{1}",
+                user.EmailAdressInternal, userId);
+           
+            await mail.Send(from: fromAddress,
+                            to: new List<String> { administrator.EmailAdressInternal, administrator.EmailAddressExternalProvider },
+                            subject: "Request to grant MNIT Communication account Administrator Access",
+                            body: message);
+
+	        return true;
+	    }
+
+	    public async Task<bool> GrantAdmin(Guid userId, Guid administratorId)
+	    {
+            var user = await RetrieveUserProfile(userId);
+            var administrator = await RetrieveUserProfile(administratorId);
+
+            if (user == null || administrator == null || administrator.IsAdmin == false)
+            {
+                throw new ArgumentException("Unable to complete this request. Either the User or Administrator do not exist, or do not have rights to grant this access");
+            }
+
+            user.IsAdmin = true;
+            user.AdminGrantedBy = administrator.Id;
+
+	        await InsertOrUpdateUserProfile(user);
+
+            var message = string.Format("Congrats..your request for Admin rights in the MNIT Communication application (https://mnit-communication.azurewebsites.net/) has been granted by {0}. Please, use it wisely!!",
+              administrator.EmailAdressInternal);
+
+            await mail.Send(from: fromAddress,
+                          to: new List<String> { user.EmailAdressInternal, user.EmailAddressExternalProvider },
+                          subject: "Request for Admin access to MNIT Communication granted!",
+                          body: message);
+
+	        return true;
+	    }
 	}
 
 }

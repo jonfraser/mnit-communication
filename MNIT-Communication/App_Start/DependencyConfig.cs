@@ -12,6 +12,7 @@ using Microsoft.WindowsAzure;
 using MNIT_Communication.Attributes;
 using MNIT_Communication.Controllers;
 using MNIT_Communication.Helpers;
+using MNIT_Communication.Hubs;
 using MNIT_Communication.Services;
 using MNIT_Communication.Services.Fakes;
 
@@ -27,6 +28,7 @@ namespace MNIT_Communication.App_Start
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<AlertsService>().As<IAlertsService>().SingleInstance();
             builder.RegisterType<MongoDbRepository>().As<IRepository>().SingleInstance();
+		    builder.RegisterType<OutageHub>().As<IOutageHub>();
 
 #if DEBUG
 		    builder.RegisterType<FakeServiceBus>().As<IServiceBus>();
@@ -47,6 +49,9 @@ namespace MNIT_Communication.App_Start
 #endif
             //Register Filters 
             builder.Register(c => new UserProfileConfirmedAttribute(c.Resolve<IRuntimeContext>()))
+                   .PropertiesAutowired(PropertyWiringOptions.PreserveSetValues);
+
+            builder.Register(c => new IsAdministratorAttribute(c.Resolve<IRuntimeContext>()))
                    .PropertiesAutowired(PropertyWiringOptions.PreserveSetValues);
             
             builder.RegisterFilterProvider();

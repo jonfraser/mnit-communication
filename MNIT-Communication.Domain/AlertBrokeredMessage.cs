@@ -13,6 +13,6 @@ namespace MNIT_Communication.Domain
 		public Guid AlertableId { get; set; }
 		public string AlertDetail { get; set; }
 		public string AlertInfoShort { get; set; }
-		public int AlertRaiser { get; set; }
+		public Guid AlertRaiser { get; set; }
 	}
 }

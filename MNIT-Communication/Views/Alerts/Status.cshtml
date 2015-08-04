@@ -10,23 +10,29 @@
 </p>
 <form class="container-fluid" ng-controller="AlertsController">
     <h3>{{outageSummary}}</h3>
-    <div class="row" style="display:none;" ng-show="outages.length > 0">
+    <div class="row" ng-show="outages.length > 0">
         <div class="col-md-12">
-            <table class="">
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <td>Service</td>
-                        <td>Outage Start</td>
-                        <td>Latest Update</td>
-                        <td>Latest Update Date</td>
+                        <th>Service</th>
+                        <th>Outage Start</th>
+                        <th>Description</th>
+                        <th>Current Status</th>
+                        <th>Last Updated</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr ng-repeat="outage in outages | orderBy:'Service'">
-                        <td>{{outage.Service}}</td>
-                        <td>{{outage.Start}}</td>
-                        <td>{{outage.Update}}</td>
-                        <td>{{outage.UpdateDate}}</td>
+                        <td>{{outage.Service.Name}}</td>
+                        <td>
+                            <span am-time-ago="outage.Start" title="{{outage.Start | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
+                        </td>
+                        <td>{{outage.Summary}}</td>
+                        <td>{{outage.LastUpdate.Display}}</td>
+                        <td>
+                            <span am-time-ago="outage.UpdateDate" title="{{outage.UpdateDate | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -37,10 +43,12 @@
 @section scripts {
     @System.Web.Optimization.Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
     <script src="~/signalr/hubs"></script>
-
+    
+    @Scripts.Render("~/bundles/moment")
+    
     <script type="text/javascript">
 
-        angular.module('communicationApp', [])
+        angular.module('communicationApp', ['angularMoment'])
             .controller('AlertsController', ['$scope', '$http', function ($scope, $http) {
 
                 $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alerts"})').
@@ -52,7 +60,7 @@
                      })
                      .finally(function () {
                          if ($scope.outages.length === 0) {
-                            $scope.outageSummary = 'Awesome! There aren\'t any outages at the moment!'
+                             $scope.outageSummary = 'Awesome! There aren\'t any outages at the moment!';
                          } else {
                             $scope.outageSummary = $scope.outages.length + " current outages";
                          }

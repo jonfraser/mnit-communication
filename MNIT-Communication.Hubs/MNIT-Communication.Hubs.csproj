@@ -69,6 +69,10 @@
       <Project>{a5151bc9-17e1-4d4f-93d4-7be7f7f5c232}</Project>
       <Name>MNIT-Communication.Domain</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MNIT-Communication.Services\MNIT-Communication.Services.csproj">
+      <Project>{A9CEE932-5056-4E49-BC1A-790D8C032132}</Project>
+      <Name>MNIT-Communication.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\jquery-1.6.4-vsdoc.js" />

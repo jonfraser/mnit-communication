@@ -41,7 +41,7 @@ namespace MNIT_Communication.Controllers
         }
         
 		[HttpGet]
-        [UserProfileConfirmed]
+        [IsAdministrator]
 		public async Task<ActionResult> Raise()
 		{
 			//Do nothing, just return the view as we will ajax in the alerts via the rest api

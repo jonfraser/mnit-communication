@@ -13,19 +13,21 @@ namespace MNIT_Communication.Services.Fakes
 			Trace.Write("FakeAlertsService.RegisterNewUserForInitialAlerts " + userId);
 			return await Task.Run(() => Guid.NewGuid());
 		}
-
-
-		public Task RaiseAlert(Guid alertableId, string alertDetail, string alertInfoShort)
+        
+		public Task RaiseAlert(RaiseAlertRequest request)
 		{
-			Trace.Write("FakeAlertsService.RaiseAlert " + alertableId.ToString());
-			return Task.FromResult(0);
+		    foreach (var alertable in request.Alertables)
+		    {
+		        Trace.Write("FakeAlertsService.RaiseAlert " + alertable.Id.ToString());
+		    }
+            
+			return Task.FromResult(new Alert());
 		}
-
-
-		public async Task<IEnumerable<AlertSummary>> GetCurrentAlerts()
+        
+		public async Task<IEnumerable<Alert>> GetCurrentAlerts()
 		{
 			Trace.Write("FakeAlertsService.GetCurrentAlerts");
-			return await Task.Run(() => new List<AlertSummary>());
+			return await Task.Run(() => new List<Alert>());
 		}
 	}
 }

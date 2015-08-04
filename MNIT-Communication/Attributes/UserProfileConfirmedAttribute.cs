@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.UI;
 using MNIT_Communication.Services;
 
 namespace MNIT_Communication.Attributes
 {
     public class UserProfileConfirmedAttribute : AuthorizeAttribute
     {
-        private IRuntimeContext runtimeContext;
+        protected IRuntimeContext runtimeContext;
 
         public UserProfileConfirmedAttribute()
         {
@@ -30,12 +31,14 @@ namespace MNIT_Communication.Attributes
 
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
+            //First, check that we have authenticated the user
             var authenticated = base.AuthorizeCore(httpContext);
             
             if (!authenticated)
                 return false;
 
-            return Task.Run(() => runtimeContext.HasProfile()).Result;
+            var hasProfile = Task.Run(() => runtimeContext.HasProfile()).Result;
+            return hasProfile;
         }
 
         protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
@@ -43,5 +46,33 @@ namespace MNIT_Communication.Attributes
             filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new {controller = "Account", action = "Unconfirmed"}));
         } 
        
-    }  
+    }
+
+    public class IsAdministratorAttribute : UserProfileConfirmedAttribute
+    {
+        public IsAdministratorAttribute()
+        {
+        }
+
+        public IsAdministratorAttribute(IRuntimeContext runtimeContext): base(runtimeContext)
+        {
+        }
+
+        protected override bool AuthorizeCore(HttpContextBase httpContext)
+        {
+            //First, check that user has a Confirmed Profile
+            var confirmed = base.AuthorizeCore(httpContext);
+
+            if (!confirmed)
+                return false;
+
+            var isAdmin = Task.Run(() => runtimeContext.CurrentProfile()).Result.IsAdmin;
+            return isAdmin;
+        }
+
+        protected override void HandleUnauthorizedRequest(AuthorizationContext filterContext)
+        {
+            filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Account", action = "RequestAdmin" }));
+        } 
+    }
 }
