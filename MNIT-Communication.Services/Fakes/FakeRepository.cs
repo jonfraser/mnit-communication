@@ -15,9 +15,12 @@ namespace MNIT_Communication.Services.Fakes
 
         public async Task<IList<T>> Get<T>() where T : BaseEntity
         {
-            var typeMatches = data.Values.Where(e => e.Type == typeof (T));
-            var list = typeMatches.Cast<Entry<T>>().Select(e => e.Value).ToList();
-            return list;
+            return await Task.Run(() =>
+            {
+                var typeMatches = data.Values.Where(e => e.Type == typeof (T));
+                var list = typeMatches.Cast<Entry<T>>().Select(e => e.Value).ToList();
+                return list;
+            });
         }
 
         public async Task<T> Get<T>(Guid id) where T : BaseEntity
@@ -57,9 +60,9 @@ namespace MNIT_Communication.Services.Fakes
             return await Get<T>(item.Id);
         }
 
-        private Task<bool> Exists(Guid id)
+        private async Task<bool> Exists(Guid id)
         {
-            return Task.FromResult(data.ContainsKey(id));
+            return await Task.Run(() => data.ContainsKey(id));
         }
 
         private abstract class Entry

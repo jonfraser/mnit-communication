@@ -8,7 +8,7 @@ namespace SubscribeToAlertsJob
 {
     public class Functions
     {
-        public async static Task ProcessQueueMessage([ServiceBusTrigger(Queues.Registration)] SubscribeToAlertBrokeredMessage message, TextWriter log)
+        public static Task ProcessQueueMessage([ServiceBusTrigger(Queues.Registration)] SubscribeToAlertBrokeredMessage message, TextWriter log)
         {
             log.WriteLine("Received message " + message.CorrelationId.ToString() + " from queue for " + message.EmailAddress);
         
@@ -21,6 +21,8 @@ namespace SubscribeToAlertsJob
                 log.WriteLine(string.Format("Error in ProcessMessageQueue: {0}", ex.ToString()));
                 throw;
             }
+
+            return Task.Run(() => {});
         }
     }
 }

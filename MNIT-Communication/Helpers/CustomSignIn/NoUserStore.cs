@@ -22,8 +22,8 @@ namespace MNIT_Communication.Helpers.CustomSignIn
 
 		public async Task<ApplicationUser> FindByIdAsync(string userId)
 		{
-			return new ApplicationUser();
-		}
+            return await Task.Run(() => new ApplicationUser());
+    	}
 
 		public Task<ApplicationUser> FindByNameAsync(string userName)
 		{
@@ -47,7 +47,7 @@ namespace MNIT_Communication.Helpers.CustomSignIn
 
 		public async Task<ApplicationUser> FindAsync(UserLoginInfo login)
 		{
-			return new ApplicationUser { UserName = login.ProviderKey };
+            return await Task.Run(() => new ApplicationUser { UserName = login.ProviderKey });
 		}
 
 		public Task<IList<UserLoginInfo>> GetLoginsAsync(ApplicationUser user)
@@ -67,7 +67,7 @@ namespace MNIT_Communication.Helpers.CustomSignIn
 
 		public async Task<bool> GetLockoutEnabledAsync(ApplicationUser user)
 		{
-			return false;
+            return await Task.Run(() => false); 
 		}
 
 		public Task<DateTimeOffset> GetLockoutEndDateAsync(ApplicationUser user)
@@ -97,7 +97,7 @@ namespace MNIT_Communication.Helpers.CustomSignIn
 
 		public async Task<bool> GetTwoFactorEnabledAsync(ApplicationUser user)
 		{
-			return false;
+            return await Task.Run(() => false);
 		}
 
 		public Task SetTwoFactorEnabledAsync(ApplicationUser user, bool enabled)

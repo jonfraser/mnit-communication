@@ -41,10 +41,13 @@ namespace MNIT_Communication.Controllers
 
 		[HttpPost]
         [AllowAnonymous]
-		public async Task<ActionResult> LogOff()
+		public async Task<RedirectResult> LogOff()
 		{
-			HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie, DefaultAuthenticationTypes.ApplicationCookie);
-			return Redirect("/");
+            return await Task.Run(() =>
+            {
+                HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ExternalCookie, DefaultAuthenticationTypes.ApplicationCookie);
+		        return Redirect("/");
+            });
 		}
 
         public async Task<ActionResult> SetUserProfile(dynamic id)

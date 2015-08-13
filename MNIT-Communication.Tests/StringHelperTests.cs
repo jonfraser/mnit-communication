@@ -11,7 +11,7 @@ namespace MNIT_Communication.Tests
 	public class StringHelperTests
 	{
 		[Fact]
-		public async Task StringWithGuidCorrectlyReturnsGuid()
+		public void StringWithGuidCorrectlyReturnsGuid()
 		{
 			var guid = Guid.NewGuid();
 			var url = "hiweufheiwwhfeui/" + guid.ToString();
@@ -20,7 +20,7 @@ namespace MNIT_Communication.Tests
 		}
 
 		[Fact]
-		public async Task StringWithoutGuidCorrectlyReturnsNothing()
+		public void StringWithoutGuidCorrectlyReturnsNothing()
 		{
 			var guid = Guid.NewGuid();
 			var url = "hiweufheiwwhfeui/qdwd23udgh2b28d673bdb8237y2d231d2";

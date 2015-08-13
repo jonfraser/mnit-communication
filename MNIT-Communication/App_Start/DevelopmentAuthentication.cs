@@ -167,17 +167,20 @@ namespace MNIT_Communication
     public class DevelopmentAuthenticationHandler : AuthenticationHandler<DevelopmentAuthenticationOptions>
     {
 
-        protected override Task<AuthenticationTicket> AuthenticateCoreAsync()
+        protected override async Task<AuthenticationTicket> AuthenticateCoreAsync()
         {
-            var identity = new ClaimsIdentity(Options.SignInAsAuthenticationType);
-            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, Options.UserId, null, Options.Caption, Options.Caption));
-            identity.AddClaim(new Claim(ClaimTypes.Name, Options.UserName));
-            identity.AddClaim(new Claim(ClaimTypes.Email, Options.Email));
-            identity.AddClaim(new Claim(ClaimTypes.HomePhone, Options.Phone));
+            return await Task.Run(() =>
+            {
+                var identity = new ClaimsIdentity(Options.SignInAsAuthenticationType);
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, Options.UserId, null, Options.Caption, Options.Caption));
+                identity.AddClaim(new Claim(ClaimTypes.Name, Options.UserName));
+                identity.AddClaim(new Claim(ClaimTypes.Email, Options.Email));
+                identity.AddClaim(new Claim(ClaimTypes.HomePhone, Options.Phone));
 
-            var properties = Options.StateDataFormat.Unprotect(Request.Query["state"]);
+                var properties = Options.StateDataFormat.Unprotect(Request.Query["state"]);
 
-            return Task.FromResult(new AuthenticationTicket(identity, properties));
+                return new AuthenticationTicket(identity, properties);
+            });
         }
 
         protected override Task ApplyResponseChallengeAsync()

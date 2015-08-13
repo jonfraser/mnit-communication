@@ -12,20 +12,23 @@ namespace MNIT_Communication.Services
 	{
 		public async Task SendSimple(string mobileNumber, string message)
 		{
-			if ((mobileNumber ?? "").Length == 10)
-			{
-				mobileNumber = "+61" + mobileNumber.Substring(1);
-			}
+		    await Task.Run(() =>
+		    {
+                if ((mobileNumber ?? "").Length == 10)
+			    {
+				    mobileNumber = "+61" + mobileNumber.Substring(1);
+			    }
 
-			var twilioSmsPrefix = "Sent from your twilio trial account - ";
-			if (twilioSmsPrefix.Length + message.Length > 160)
-			{
-				throw new ArgumentException("SMS Message must be less than 120 but it was " + message.Length.ToString());
-			}
+			    var twilioSmsPrefix = "Sent from your twilio trial account - ";
+			    if (twilioSmsPrefix.Length + message.Length > 160)
+			    {
+				    throw new ArgumentException("SMS Message must be less than 120 but it was " + message.Length.ToString());
+			    }
 
-			var sms = new TwilioRestClient("ACcff9c328336b5cd4c892e9d87905d3d4", CloudConfigurationManager.GetSetting("TwilioPassword"));
+			    var sms = new TwilioRestClient("ACcff9c328336b5cd4c892e9d87905d3d4", CloudConfigurationManager.GetSetting("TwilioPassword"));
 
-			sms.SendSmsMessage("+19073122358", mobileNumber, message);
+			    sms.SendSmsMessage("+19073122358", mobileNumber, message);
+		    });
 		}
 	}
 }

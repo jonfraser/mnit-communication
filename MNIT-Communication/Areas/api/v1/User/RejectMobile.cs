@@ -14,12 +14,13 @@ namespace MNIT_Communication.Areas.api.v1
         [HttpGet]
 		public async Task<HttpResponseMessage> RejectMobile(Guid id)
         {
-			//TODO: For the new user registration id passed in, remove the mobile number on the account
-            var response = Request.CreateResponse(HttpStatusCode.Found);
-			response.Headers.Location = new Uri(string.Format("{0}://{1}/Account/MobileNumberRemoved", Request.RequestUri.Scheme, Request.RequestUri.Authority));
-			return response;
-
+            return await Task.Run(() =>
+            {
+                //TODO: For the new user registration id passed in, remove the mobile number on the account
+                var response = Request.CreateResponse(HttpStatusCode.Found);
+			    response.Headers.Location = new Uri(string.Format("{0}://{1}/Account/MobileNumberRemoved", Request.RequestUri.Scheme, Request.RequestUri.Authority));
+			    return Task.FromResult(response);
+            });
         }
-
     }
 }

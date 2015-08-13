@@ -39,12 +39,13 @@ namespace MNIT_Communication.Services.Fakes
             cache.Remove(key);
         }
 
-        public Task<bool> KeyExists(string key)
+        public async Task<bool> KeyExists(string key)
         {
-            var exists = cache.ContainsKey(key) && !string.IsNullOrEmpty(cache[key]);
-            return Task.FromResult(exists);
+            return await Task.Run(() =>
+            {
+                var exists = cache.ContainsKey(key) && !string.IsNullOrEmpty(cache[key]);
+                return exists;
+            });
         }
-
-        
     }
 }

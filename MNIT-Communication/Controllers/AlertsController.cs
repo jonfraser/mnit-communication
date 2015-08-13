@@ -17,12 +17,10 @@ namespace MNIT_Communication.Controllers
     public class AlertsController : BaseController
     {
         private readonly IUserService userService;
-        private readonly IRuntimeContext runtimeContext;
 
         public AlertsController(IUserService userService, IRuntimeContext runtimeContext) : base(runtimeContext)
         {
             this.userService = userService;
-            this.runtimeContext = runtimeContext;
         }
 
         [HttpGet]

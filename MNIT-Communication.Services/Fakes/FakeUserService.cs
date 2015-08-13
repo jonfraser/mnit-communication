@@ -17,33 +17,34 @@ namespace MNIT_Communication.Services.Fakes
 
 		public async Task ProcessServiceBusRegistrationMessage(Domain.NewUserRegistrationBrokeredMessage message)
 		{
-			Trace.Write("FakeRegistrationService.ProcessServiceBusRegistrationMessage " + message.CorrelationId);
-			return;
-		}
+            await Task.Run(() => Trace.Write("FakeRegistrationService.ProcessServiceBusRegistrationMessage " + message.CorrelationId));
+        }
 
 		public async Task VerifyMobileNumber(string mobileNumber, Guid accessToken)
 		{
-			Trace.Write("FakeRegistrationService.VerifyMobileNumber " + mobileNumber);
-			return;
+            await Task.Run(() => Trace.Write("FakeRegistrationService.VerifyMobileNumber " + mobileNumber)); 
 		}
 
 		public async Task RequestVerificationOfMobileNumber(string mobileNumber, Guid accessToken)
 		{
-			Trace.Write("FakeRegistrationService.RequestVerificationOfMobileNumber " + mobileNumber);
-			return;
+            await Task.Run(() => Trace.Write("FakeRegistrationService.RequestVerificationOfMobileNumber " + mobileNumber));
+            
 		}
         
 		public async Task<UserProfile> RetrieveUserProfile(Guid accessToken)
 		{
-			Trace.Write("FakeRegistrationService.RetrieveUserProfile");
-			return new UserProfile
-			{
-				Id = accessToken,
-				EmailAddressExternalProvider = "fraser.jc@gmail.com",
-				EmailAdressInternal = "jon.fraser@health.qld.gov.au",
-				MobilePhoneNumber = "+61416272575",
-                Confirmed = false
-			};
+            return await Task.Run(() =>
+            {
+                Trace.Write("FakeRegistrationService.RetrieveUserProfile");
+			    return new UserProfile
+			    {
+				    Id = accessToken,
+				    EmailAddressExternalProvider = "fraser.jc@gmail.com",
+				    EmailAdressInternal = "jon.fraser@health.qld.gov.au",
+				    MobilePhoneNumber = "+61416272575",
+                    Confirmed = false
+			    };
+            });
 		}
 
         public async Task<UserProfile> RetrieveUserProfile(Expression<Func<UserProfile, bool>> predicate)
@@ -58,20 +59,19 @@ namespace MNIT_Communication.Services.Fakes
 
 	    public async Task InsertOrUpdateUserProfile(UserProfile request)
 		{
-			Trace.Write("FakeRegistrationService.UpdateUserProfile " + request.Id.ToString());
-			return;
+            await Task.Run(() => Trace.Write("FakeRegistrationService.UpdateUserProfile " + request.Id.ToString()));
+            
 		}
 
 
 		public async Task<bool> TemporaryAccessTokenExists(Guid newRegistrationIdFromReturnUrl)
 		{
-			Trace.Write("FakeRegistrationService.TemporaryAccessTokenExists " + newRegistrationIdFromReturnUrl.ToString());
-			return true;
+            return await Task.Run(() =>
+            {
+                Trace.Write("FakeRegistrationService.TemporaryAccessTokenExists " + newRegistrationIdFromReturnUrl.ToString());
+			    return true;
+            });
 		}
-
-
-
-
 
         public Task<System.Collections.Generic.IList<UserProfile>> ListAdministrators()
         {
