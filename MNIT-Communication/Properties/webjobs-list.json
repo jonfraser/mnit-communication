@@ -12,9 +12,6 @@
     },
     {
         "filePath": "../AlertUserViaExternalEmailJob/AlertUserViaExternalEmailJob.csproj"
-    },
-    {
-      "filePath": "../SubscribeToAlertsJob/SubscribeToAlertsJob.csproj"
     }
   ]
 }
