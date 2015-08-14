@@ -18,10 +18,12 @@ namespace MNIT_Communication.Services
         
         public MongoDbRepository()
         {
-            var connectionString = CloudConfigurationManager.GetSetting("MongoDBServer");
-            client = new MongoClient(connectionString);
-
+            var serverName = CloudConfigurationManager.GetSetting("MongoDBServer");
             var databaseName = CloudConfigurationManager.GetSetting("MongoDBDatabase");
+            var connectionString = string.Format("{0}/{1}", serverName, databaseName);
+
+            client = new MongoClient(connectionString);
+            
             database = client.GetDatabase(databaseName);
         }
         
