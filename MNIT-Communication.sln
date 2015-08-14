@@ -20,8 +20,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertUserViaExternalEmailJo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNIT-Communication.Hubs", "MNIT-Communication.Hubs\MNIT-Communication.Hubs.csproj", "{276EB873-AFCA-4AAA-B16A-286C5CAE1AE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubscribeToAlertsJob", "SubscribeToAlertsJob\SubscribeToAlertsJob.csproj", "{D71D7D1C-D408-416B-9DC4-88F7BF341FDF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
