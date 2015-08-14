@@ -15,14 +15,25 @@ namespace AlertUserViaSms
 		public async static Task ProcessQueueMessage([ServiceBusTrigger(Topics.Alerts, Topics.Alerts+"-SMS")] AlertBrokeredMessage message, TextWriter log)
 		{
 			log.WriteLine(message);
-		    var sms = ServiceLocator.Resolve<ISendSms>();
-			var mobileNumber = "0416272575";
-
-            //TODO - Get all subscribers from AlertsService and loop though to send to each one
-			//TODO:get teh mobile numbers to send to or would this actually just push a message onto anotehr
+           
+            var alertsService = ServiceLocator.Resolve<IAlertsService>();
+            var subscribers = await alertsService.GetSubscribersFor(message.AlertableId);
+            var sms = ServiceLocator.Resolve<ISendSms>();
+            
 			//queue for each mobile number found? That would mean that this message process won't be dependant on
 			//all messages succeeding
-			await sms.SendSimple(mobileNumber, message.AlertInfoShort);
+			
+            foreach (var subscriber in subscribers.Where(s => !string.IsNullOrEmpty(s.MobilePhoneNumber))) //Only users who have supplied a Mobile Number
+            {
+                try
+                {
+                    await sms.SendSimple(subscriber.MobilePhoneNumber, message.AlertInfoShort);
+                }
+                catch
+                {
+                    //TODO - Log errors!!!
+                }
+            }
 		}
 	}
 }

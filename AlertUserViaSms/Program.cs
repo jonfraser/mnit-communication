@@ -16,8 +16,10 @@ namespace AlertUserViaSms
 		// AzureWebJobsDashboard and AzureWebJobsStorage
 		static void Main()
 		{
+            ServiceLocator.RegisterType<MongoDbRepository>().As<IRepository>();
+            ServiceLocator.RegisterType<AlertsService>().As<IAlertsService>();
             ServiceLocator.RegisterType<SendTelstraSmsService>().As<ISendSms>();
-            
+
             var host = new JobHost(new JobHostConfiguration
 			{
 				ServiceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString")

@@ -16,6 +16,8 @@ namespace AlertUserViaExternalEmailJob
 		// AzureWebJobsDashboard and AzureWebJobsStorage
 		static void Main()
 		{
+            ServiceLocator.RegisterType<MongoDbRepository>().As<IRepository>();
+            ServiceLocator.RegisterType<AlertsService>().As<IAlertsService>();
             ServiceLocator.RegisterType<SendGridEmailService>().As<ISendEmail>();
             
             var host = new JobHost(new JobHostConfiguration

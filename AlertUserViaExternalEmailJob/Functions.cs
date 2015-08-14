@@ -16,12 +16,28 @@ namespace AlertUserViaExternalEmailJob
 		{
 			log.WriteLine(message);
 		    var mail = ServiceLocator.Resolve<ISendEmail>();
-            //TODO - Get all subscribers from AlertsService and loop though to send to each one
+		    var alertsService = ServiceLocator.Resolve<IAlertsService>();
+		    var subscribers = await alertsService.GetSubscribersFor(message.AlertableId);
 
-			await mail.Send(from: "mnit-communication@health.qld.gov.au",
-										to: new List<String> { "fraser.jc@gmail.com" },
-										subject: "An alert has been raised!",
-										body: message.AlertDetail);
+            foreach (var subscriber in subscribers)
+		    {
+		        try
+		        {
+		            var subscriberAddresses = new List<string> {subscriber.EmailAddressExternalProvider, subscriber.EmailAdressInternal};
+                    
+                    await mail.Send(from: "mnit-communication@health.qld.gov.au",
+									to: subscriberAddresses,
+									subject: "An alert has been raised!",
+									body: message.AlertDetail);
+
+		        }
+		        catch
+		        {
+		            //TODO - Log errors!!!
+		        }
+		    }
+            
+            
 		}
 	}
 }

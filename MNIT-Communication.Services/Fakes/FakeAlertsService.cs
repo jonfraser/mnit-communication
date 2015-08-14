@@ -32,5 +32,11 @@ namespace MNIT_Communication.Services.Fakes
 			Trace.Write("FakeAlertsService.GetCurrentAlerts");
 			return await Task.Run(() => new List<Alert>());
 		}
+
+	    public async Task<IEnumerable<UserProfile>> GetSubscribersFor(params Guid[] alertables)
+	    {
+            Trace.Write("FakeAlertsService.GetSubscribersFor");
+            return await Task.Run(() => new List<UserProfile>());
+	    }
 	}
 }

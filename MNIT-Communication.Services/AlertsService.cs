@@ -30,6 +30,11 @@ namespace MNIT_Communication.Services
 		    this.outageHub = outageHub;
 		}
 
+        public AlertsService(IRepository repository)
+        {
+            this.repository = repository;
+        }
+
 		public async Task<Guid> SubscribeToAlerts(Guid userId, IEnumerable<Guid> alertables)
 		{
 		    var userProfile = await userService.RetrieveUserProfile(userId);
@@ -100,7 +105,14 @@ namespace MNIT_Communication.Services
             return await repository.Get<Alert>();
 		}
 
-		private async Task<QueueClient> EnsureQueueExists(string queueName)
+	    public async Task<IEnumerable<UserProfile>> GetSubscribersFor(params Guid[] alertables)
+	    {
+	        //Find the users who are subscribed to ANY of the systems in the 'alertables' collection
+            var subscribers = await repository.Get<UserProfile>(u => u.AlertSubscriptions.Intersect(alertables.AsEnumerable()).Any());
+	        return subscribers;
+	    }
+
+	    private async Task<QueueClient> EnsureQueueExists(string queueName)
 		{
 			var queueExists = await namespaceManager.QueueExistsAsync(queueName);
 			if (!queueExists)

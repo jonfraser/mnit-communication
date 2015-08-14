@@ -35,7 +35,6 @@ namespace MNIT_Communication.App_Start
             builder.RegisterType<FakeUrlShortener>().As<IUrlShorten>();
             builder.RegisterType<FakeSmsService>().As<ISendSms>();
             builder.RegisterType<FakeShortTermStorage>().As<IShortTermStorage>().SingleInstance();
-		    //builder.RegisterType<FakeRepository>().As<IRepository>().SingleInstance();
             builder.RegisterType<FakeEmailService>().As<ISendEmail>();
 		    builder.RegisterType<FakeNamespaceManager>().As<INamespaceManager>();
 #else
