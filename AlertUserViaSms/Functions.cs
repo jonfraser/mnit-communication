@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
+using MNIT.ErrorLogging;
 using MNIT_Communication.Domain;
 using MNIT_Communication.Services;
 
@@ -15,6 +16,8 @@ namespace AlertUserViaSms
 		public async static Task ProcessQueueMessage([ServiceBusTrigger(Topics.Alerts, Topics.Alerts+"-SMS")] AlertBrokeredMessage message, TextWriter log)
 		{
 			log.WriteLine(message);
+
+            var errorLogger = ServiceLocator.Resolve<IErrorLogger>();
            
             var alertsService = ServiceLocator.Resolve<IAlertsService>();
             var subscribers = await alertsService.GetSubscribersFor(message.AlertableId);
@@ -29,9 +32,9 @@ namespace AlertUserViaSms
                 {
                     await sms.SendSimple(subscriber.MobilePhoneNumber, message.AlertInfoShort);
                 }
-                catch
+                catch(Exception ex)
                 {
-                    //TODO - Log errors!!!
+                    errorLogger.LogError(ex);
                 }
             }
 		}

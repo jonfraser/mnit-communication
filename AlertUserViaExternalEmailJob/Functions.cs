@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
+using MNIT.ErrorLogging;
 using MNIT_Communication.Domain;
 using MNIT_Communication.Services;
 
@@ -12,13 +13,18 @@ namespace AlertUserViaExternalEmailJob
 {
 	public class Functions
 	{
-		public async static Task ProcessQueueMessage([ServiceBusTrigger(Topics.Alerts, Topics.Alerts + "-ExternalEmail")] AlertBrokeredMessage message, TextWriter log)
+
+        public async static Task ProcessQueueMessage([ServiceBusTrigger(Topics.Alerts, Topics.Alerts + "-ExternalEmail")] AlertBrokeredMessage message, TextWriter log)
 		{
 			log.WriteLine(message);
-		    var mail = ServiceLocator.Resolve<ISendEmail>();
+
+            var errorLogger = ServiceLocator.Resolve<IErrorLogger>();
+
+            var mail = ServiceLocator.Resolve<ISendEmail>();
 		    var alertsService = ServiceLocator.Resolve<IAlertsService>();
 		    var subscribers = await alertsService.GetSubscribersFor(message.AlertableId);
 
+            
             foreach (var subscriber in subscribers)
 		    {
 		        try
@@ -31,9 +37,9 @@ namespace AlertUserViaExternalEmailJob
 									body: message.AlertDetail);
 
 		        }
-		        catch
+		        catch(Exception ex)
 		        {
-		            //TODO - Log errors!!!
+		            errorLogger.LogError(ex);
 		        }
 		    }
             

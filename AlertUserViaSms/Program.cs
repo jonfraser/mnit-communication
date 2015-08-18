@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.WindowsAzure;
+using MNIT.ErrorLogging;
 using MNIT_Communication.Services;
 
 namespace AlertUserViaSms
@@ -17,6 +18,11 @@ namespace AlertUserViaSms
 		static void Main()
 		{
             ServiceLocator.RegisterType<MongoDbRepository>().As<IRepository>();
+            
+            ServiceLocator.RegisterType<WebJobRuntimeContext>().As<IRuntimeContext>();
+            ServiceLocator.RegisterType<ErrorLogger>().As<IErrorLogger>();
+            ServiceLocator.RegisterType<ErrorRepository>().As<IErrorRepository>();
+
             ServiceLocator.RegisterType<AlertsService>().As<IAlertsService>();
             ServiceLocator.RegisterType<SendTelstraSmsService>().As<ISendSms>();
 

@@ -9,10 +9,13 @@ using Autofac;
 using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using Microsoft.WindowsAzure;
+using MNIT.ErrorLogging;
+using MNIT.ErrorLogging.FilterAttributes;
 using MNIT_Communication.Attributes;
 using MNIT_Communication.Controllers;
 using MNIT_Communication.Helpers;
 using MNIT_Communication.Hubs;
+using MNIT_Communication.Models;
 using MNIT_Communication.Services;
 using MNIT_Communication.Services.Fakes;
 
@@ -23,12 +26,15 @@ namespace MNIT_Communication.App_Start
 		public static void BuildUpContainer()
 		{
 			var builder = new ContainerBuilder();
+            var globalConfig = GlobalConfiguration.Configuration;
 
 		    builder.RegisterType<AspNetRuntimeContext>().As<IRuntimeContext>();
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<AlertsService>().As<IAlertsService>().SingleInstance();
             builder.RegisterType<MongoDbRepository>().As<IRepository>().SingleInstance();
 		    builder.RegisterType<OutageHub>().As<IOutageHub>();
+		    builder.Register(c => new ErrorLogger<Guid>(c.Resolve<IEnumerable<IErrorRepository>>(), identityGenerator: Guid.NewGuid)).As<IErrorLogger<Guid>>();
+		    builder.RegisterType<ErrorRepository>().As<IErrorRepository>();
 
 #if DEBUG
 		    builder.RegisterType<FakeServiceBus>().As<IServiceBus>();
@@ -52,8 +58,25 @@ namespace MNIT_Communication.App_Start
 
             builder.Register(c => new IsAdministratorAttribute(c.Resolve<IRuntimeContext>()))
                    .PropertiesAutowired(PropertyWiringOptions.PreserveSetValues);
-            
+
+		    //This delegate IsAdministratorAttribute responsible for generating the ViewModel for the Error page
+            Func<HandleErrorInfo, object> modelGenerator = info =>
+		    {
+		        var runtimeContext = ServiceLocator.Resolve<IRuntimeContext>();
+		        var currentProfile = runtimeContext.CurrentProfile().Result;
+		        var model = new BaseModel<HandleErrorInfo>(currentProfile, info);
+		        return model;
+		    };
+
+            builder.Register(c => new MvcErrorLoggingFilterAttribute(c.Resolve<IErrorLogger<Guid>>(), modelGenerator))
+                .AsExceptionFilterFor<Controller>().InstancePerRequest();
+
+            builder.Register(c => new WebApiErrorLoggingFilterAttribute(c.Resolve<IErrorLogger<Guid>>()))
+                .AsWebApiExceptionFilterFor<ApiController>().InstancePerRequest();
+
             builder.RegisterFilterProvider();
+            builder.RegisterWebApiFilterProvider(globalConfig);
+            
             
             //Register Controllers
             builder.RegisterControllers(typeof(MvcApplication).Assembly);

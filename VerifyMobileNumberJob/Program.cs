@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.WindowsAzure;
+using MNIT.ErrorLogging;
 using MNIT_Communication.Services;
 
 namespace VerifyMobileNumberJob
@@ -17,6 +18,12 @@ namespace VerifyMobileNumberJob
 		// AzureWebJobsDashboard and AzureWebJobsStorage
 		static void Main()
 		{
+            ServiceLocator.RegisterType<MongoDbRepository>().As<IRepository>();
+
+            ServiceLocator.RegisterType<WebJobRuntimeContext>().As<IRuntimeContext>();
+            ServiceLocator.RegisterType<ErrorLogger>().As<IErrorLogger>();
+            ServiceLocator.RegisterType<ErrorRepository>().As<IErrorRepository>();
+            
             ServiceLocator.RegisterType<UserService>().As<IUserService>();
             ServiceLocator.RegisterType<SendGridEmailService>().As<ISendEmail>();
             ServiceLocator.RegisterType<RedisStore>().As<IShortTermStorage>();

@@ -48,9 +48,10 @@ namespace MNIT_Communication.Controllers
 
 		[HttpGet]
         [UserProfileConfirmed]
-		public async Task<ActionResult> Status()
+		public Task<ActionResult> Status()
 		{
-			return await BaseView();
+			throw new Exception("Something broke!");
+            //return await BaseView();
 		}
     }
 }

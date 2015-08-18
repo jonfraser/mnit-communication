@@ -76,6 +76,10 @@
     <Reference Include="Microsoft.WindowsAzure.Configuration">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
+    <Reference Include="MNIT.ErrorLogging, Version=1.0.0.10, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MNIT.ErrorLogging.1.0.0.10\lib\MNIT.ErrorLogging.dll</HintPath>
+    </Reference>
     <Reference Include="MongoDB.Bson">
       <HintPath>..\packages\MongoDB.Bson.2.0.1\lib\net45\MongoDB.Bson.dll</HintPath>
     </Reference>
@@ -139,6 +143,7 @@
   <ItemGroup>
     <Compile Include="AlertsService.cs" />
     <Compile Include="AzureBus.cs" />
+    <Compile Include="ErrorRepository.cs" />
     <Compile Include="Fakes\FakeNamespaceManager.cs" />
     <Compile Include="Fakes\FakeAlertsService.cs" />
     <Compile Include="Fakes\FakeEmailService.cs" />
@@ -169,6 +174,7 @@
     <Compile Include="SendTelstraSmsService.cs" />
     <Compile Include="SendTwilioSmsService.cs" />
     <Compile Include="ServiceLocator.cs" />
+    <Compile Include="WebJobRuntimeContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
