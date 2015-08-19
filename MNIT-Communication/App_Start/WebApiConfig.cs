@@ -12,16 +12,16 @@ namespace MNIT_Communication.App_Start
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-			config.Filters.Add(new BaseExceptionFilterAttribute());
-
+			
             // Web API routes
             config.MapHttpAttributeRoutes();
-
+            
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+            
         }
     }
 }

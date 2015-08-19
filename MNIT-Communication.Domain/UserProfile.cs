@@ -16,6 +16,7 @@ namespace MNIT_Communication.Domain
         public string ExternalId { get; set; }
 		public string EmailAddressExternalProvider { get; set; }
 		public string MobilePhoneNumber { get; set; }
+        public Guid ConfirmationSecret { get; set; }
         public bool Confirmed { get; set; }
         public bool IsAdmin { get; set; }
         public Guid AdminGrantedBy { get; set; }

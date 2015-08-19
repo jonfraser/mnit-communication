@@ -157,6 +157,13 @@ namespace MNIT_Communication.Controllers
             return await BaseView();
         }
 
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmationFailed()
+        {
+            HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
+            return await BaseView();
+        }
+
         [Authorize]
         public async Task<ActionResult> Unconfirmed()
         {

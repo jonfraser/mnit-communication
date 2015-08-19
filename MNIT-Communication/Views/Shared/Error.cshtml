@@ -1,4 +1,8 @@
-﻿@model System.Web.Mvc.HandleErrorInfo
+﻿@{
+    Layout = "_Layout_Empty.cshtml";
+}
+
+@model System.Web.Mvc.HandleErrorInfo
 
 @{
     ViewBag.Title = "Error";
@@ -6,4 +10,9 @@
 
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
+<h3>Details: @Model.Exception.Message</h3>
+
+@{
+    Response.Redirect("~/Error/Oops");
+}
 

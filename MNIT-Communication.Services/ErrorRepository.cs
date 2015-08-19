@@ -27,8 +27,13 @@ namespace MNIT_Communication.Services
         public async Task AddErrorAsync<T>(IError<T> error)
         {
             var castError = error as IError<Guid>;
-            var userId = (await runtimeContext.CurrentProfile()).Id;
-            
+
+            var userId = Guid.Empty;
+            if (await runtimeContext.HasProfile())
+            {
+                userId = (await runtimeContext.CurrentProfile()).Id;
+            }
+
             if(castError == null)
                 throw new ArgumentException("This Error Repository only handles Errors with an Id of type Guid");
             

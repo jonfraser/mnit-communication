@@ -69,6 +69,7 @@ namespace MNIT_Communication.Services
 		    {
 		        Id = message.CorrelationId,
 		        EmailAdressInternal = message.EmailAddress,
+                ConfirmationSecret = Guid.NewGuid(),
                 Confirmed = false
 		    };
 
@@ -78,7 +79,7 @@ namespace MNIT_Communication.Services
 
 		private async Task SendEmail(UserProfile newUser)
 		{
-            var message = "You've got 72 hours to confirm your account via this link: https://mnit-communication.azurewebsites.net/api/User/Confirm/" + newUser.Id.ToString()
+            var message = "You've got 72 hours to confirm your account via this link: https://mnit-communication.azurewebsites.net/api/User/Confirm/" + newUser.Id + "/" + newUser.ConfirmationSecret
                         + Environment.NewLine
                         + "If you have already selected your alerts they will be automatically added to your account once it is confirmed.";
             await mail.Send(from: fromAddress,
@@ -150,6 +151,7 @@ namespace MNIT_Communication.Services
             toPersist.EmailAddressExternalProvider = profile.EmailAddressExternalProvider ?? toPersist.EmailAddressExternalProvider;
             toPersist.EmailAdressInternal = profile.EmailAdressInternal ?? toPersist.EmailAdressInternal;
             toPersist.MobilePhoneNumber = profile.MobilePhoneNumber ?? toPersist.MobilePhoneNumber;
+		    toPersist.ConfirmationSecret = profile.ConfirmationSecret != Guid.Empty ? profile.ConfirmationSecret : toPersist.ConfirmationSecret;
 		    toPersist.Confirmed = profile.Confirmed;
 		    toPersist.AlertSubscriptions = profile.AlertSubscriptions ?? toPersist.AlertSubscriptions;
 

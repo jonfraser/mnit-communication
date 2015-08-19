@@ -31,13 +31,15 @@ namespace MNIT_Communication.App_Start
 		    builder.RegisterType<AspNetRuntimeContext>().As<IRuntimeContext>();
             builder.RegisterType<UserService>().As<IUserService>();
             builder.RegisterType<AlertsService>().As<IAlertsService>().SingleInstance();
-            builder.RegisterType<MongoDbRepository>().As<IRepository>().SingleInstance();
+		    builder.RegisterType<MongoDbRepository>().As<IRepository>(); //TODO - Singleton or InstancePerRequest
 		    builder.RegisterType<OutageHub>().As<IOutageHub>();
-		    builder.Register(c => new ErrorLogger<Guid>(c.Resolve<IEnumerable<IErrorRepository>>(), identityGenerator: Guid.NewGuid)).As<IErrorLogger<Guid>>();
+            builder.Register(c => new ErrorLogger<Guid>(c.Resolve<IEnumerable<IErrorRepository>>(), identityGenerator: Guid.NewGuid)).As<IErrorLogger<Guid>>();
 		    builder.RegisterType<ErrorRepository>().As<IErrorRepository>();
 
 #if DEBUG
-		    builder.RegisterType<FakeServiceBus>().As<IServiceBus>();
+            //builder.RegisterType<FakeRepository>().As<IRepository>().SingleInstance();
+
+            builder.RegisterType<FakeServiceBus>().As<IServiceBus>();
             builder.RegisterType<FakeUrlShortener>().As<IUrlShorten>();
             builder.RegisterType<FakeSmsService>().As<ISendSms>();
             builder.RegisterType<FakeShortTermStorage>().As<IShortTermStorage>().SingleInstance();
@@ -59,16 +61,7 @@ namespace MNIT_Communication.App_Start
             builder.Register(c => new IsAdministratorAttribute(c.Resolve<IRuntimeContext>()))
                    .PropertiesAutowired(PropertyWiringOptions.PreserveSetValues);
 
-		    //This delegate IsAdministratorAttribute responsible for generating the ViewModel for the Error page
-            Func<HandleErrorInfo, object> modelGenerator = info =>
-		    {
-		        var runtimeContext = ServiceLocator.Resolve<IRuntimeContext>();
-		        var currentProfile = runtimeContext.CurrentProfile().Result;
-		        var model = new BaseModel<HandleErrorInfo>(currentProfile, info);
-		        return model;
-		    };
-
-            builder.Register(c => new MvcErrorLoggingFilterAttribute(c.Resolve<IErrorLogger<Guid>>(), modelGenerator))
+            builder.Register(c => new MvcErrorLoggingFilterAttribute(c.Resolve<IErrorLogger<Guid>>()))
                 .AsExceptionFilterFor<Controller>().InstancePerRequest();
 
             builder.Register(c => new WebApiErrorLoggingFilterAttribute(c.Resolve<IErrorLogger<Guid>>()))
