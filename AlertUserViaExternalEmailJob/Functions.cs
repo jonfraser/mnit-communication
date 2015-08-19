@@ -18,7 +18,7 @@ namespace AlertUserViaExternalEmailJob
 		{
 			log.WriteLine(message);
 
-            var errorLogger = ServiceLocator.Resolve<IErrorLogger>();
+            var errorLogger = ServiceLocator.Resolve<IErrorLogger<Guid>>();
 
             var mail = ServiceLocator.Resolve<ISendEmail>();
 		    var alertsService = ServiceLocator.Resolve<IAlertsService>();

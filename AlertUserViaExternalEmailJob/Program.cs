@@ -20,8 +20,8 @@ namespace AlertUserViaExternalEmailJob
             ServiceLocator.RegisterType<MongoDbRepository>().As<IRepository>();
 		    
             ServiceLocator.RegisterType<WebJobRuntimeContext>().As<IRuntimeContext>();
-            ServiceLocator.RegisterType<ErrorLogger>().As<IErrorLogger>();
-		    ServiceLocator.RegisterType<ErrorRepository>().As<IErrorRepository>();
+            ServiceLocator.RegisterType<ErrorLogger<Guid>>().As<IErrorLogger<Guid>>();
+            ServiceLocator.RegisterType<ErrorRepository>().As<IErrorRepository>();
 
             ServiceLocator.RegisterType<AlertsService>().As<IAlertsService>();
             ServiceLocator.RegisterType<SendGridEmailService>().As<ISendEmail>();

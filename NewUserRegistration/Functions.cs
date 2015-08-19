@@ -18,7 +18,7 @@ namespace NewUserRegistration
 		{
 			log.WriteLine("Received message " + message.CorrelationId.ToString() + " from queue for " + message.EmailAddress);
 
-            var errorLogger = ServiceLocator.Resolve<IErrorLogger>();
+            var errorLogger = ServiceLocator.Resolve<IErrorLogger<Guid>>();
 
 		    var svc = ServiceLocator.Resolve<IUserService>();
 

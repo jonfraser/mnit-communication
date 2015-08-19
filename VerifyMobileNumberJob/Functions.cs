@@ -17,7 +17,7 @@ namespace VerifyMobileNumberJob
 		{
 			log.WriteLine("Received message " + message.CorrelationId.ToString() + " from queue for " + message.MobileNumber);
 
-            var errorLogger = ServiceLocator.Resolve<IErrorLogger>();
+            var errorLogger = ServiceLocator.Resolve<IErrorLogger<Guid>>();
 
 		    var svc = ServiceLocator.Resolve<IUserService>();
 

@@ -17,7 +17,7 @@ namespace AlertUserViaSms
 		{
 			log.WriteLine(message);
 
-            var errorLogger = ServiceLocator.Resolve<IErrorLogger>();
+            var errorLogger = ServiceLocator.Resolve<IErrorLogger<Guid>>();
            
             var alertsService = ServiceLocator.Resolve<IAlertsService>();
             var subscribers = await alertsService.GetSubscribersFor(message.AlertableId);
