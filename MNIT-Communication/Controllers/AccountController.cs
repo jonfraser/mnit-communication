@@ -13,6 +13,7 @@ using MNIT_Communication.Helpers;
 using Microsoft.Owin.Security;
 using MNIT_Communication.Domain;
 using System.Net.Http;
+using System.Security;
 using Newtonsoft.Json;
 using System.Security.Claims;
 using Microsoft.AspNet.Identity.Owin;
@@ -50,38 +51,25 @@ namespace MNIT_Communication.Controllers
             });
 		}
 
-        public async Task<ActionResult> SetUserProfile(dynamic id)
+        public async Task<ActionResult> SetUserProfile(Guid? id)
         {
-            using (var client = new HttpClient())
-            {
-                var scheme = HttpContext.Request.Url.Scheme + "://";
-                var authority = HttpContext.Request.Url.Authority;
+            var userProfile = id.HasValue ? await userService.Value.RetrieveUserProfile(id.Value) : 
+                                            await runtimeContext.CurrentProfile();
 
-                //TODO - why did this route stop working //i.e /api/User/UserProfile/[GUID_HERE]. Had to move to query string below :(
-                //var url = Url.HttpRouteUrl("DefaultApi",
-                //        new
-                //        {
-                //            action = "UserProfile",
-                //            controller = "User",
-                //            id = id
-                //        });
-
-                var url = @"/api/User/UserProfile?id=" + id.ToString();
-
-                var type = typeof(UserProfile);
-
-                var getProfileUri = scheme + authority + url;
-                var response = await client.GetStringAsync(getProfileUri);
-                var userProfile = JsonConvert.DeserializeObject(response, type);
-
-                return await BaseView(userProfile);
-            }
+            return await BaseView(userProfile);
         }
 
         [AllowAnonymous]
-        public async Task<ActionResult> LinkExternalAccount(Guid id)
+        public async Task<ActionResult> LinkExternalAccount(Guid? id)
         {
-            return await BaseView(id);
+            if (id.HasValue) //Still in the Regsitration workflow, pass the id down
+                return await BaseView(id.Value);
+
+            if (await runtimeContext.HasProfile()) //Must be editing existing Link, get Profile and pass that Id
+                return await BaseView((await runtimeContext.CurrentProfile()).Id);
+
+            //If we get here, an un-authed user is playing silly buggers
+            throw new SecurityException("User attempted to browse a page whilst not authenticated!");
         }
 
         [HttpPost]

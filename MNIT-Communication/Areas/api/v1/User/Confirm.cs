@@ -14,33 +14,28 @@ namespace MNIT_Communication.Areas.api.v1
 
         // GET api/<controller>
         [HttpGet]
-        [Route("~/api/User/Confirm/{id}/{secret}")]
-        public Task<HttpResponseMessage> Confirm(Guid id, Guid secret)
+        public async Task<HttpResponseMessage> Confirm(Guid id, Guid secret)
         {
-            throw new Exception("Test Exception");
+            HttpResponseMessage response = null;
 
-            //HttpResponseMessage response = null;
+            var profile = await userService.RetrieveUserProfile(id);
 
-            //var profile = await userService.RetrieveUserProfile(id);
+            if (profile == null || profile.ConfirmationSecret != secret)
+            {
+                var exception = new ArgumentException("Non-existent user of an invalid secret was submitted for Confirmation");
+                await errorLogger.LogErrorAsync(exception);
 
-            //if (profile == null || profile.ConfirmationSecret != secret)
-            //{
-            //    var exception = new ArgumentException("Non-existent user of an invalid secret was submitted for Confirmation");
-            //    await errorLogger.LogErrorAsync(exception);
+                response = Request.CreateResponse(HttpStatusCode.Found);
+                response.Headers.Location = new Uri(string.Format("{0}://{1}/Account/ConfirmationFailed", Request.RequestUri.Scheme, Request.RequestUri.Authority));
+                return response;
+            }
 
-            //    response = Request.CreateResponse(HttpStatusCode.Found);
-            //    response.Headers.Location = new Uri(string.Format("{0}://{1}/Account/ConfirmationFailed", Request.RequestUri.Scheme, Request.RequestUri.Authority));
-            //    return response;
-            //}
+            profile.Confirmed = true;
+            await userService.InsertOrUpdateUserProfile(profile);
 
-            //profile.Confirmed = true;
-            //await userService.InsertOrUpdateUserProfile(profile);
-            
-            //response = Request.CreateResponse(HttpStatusCode.Found);
-            //response.Headers.Location = new Uri(string.Format("{0}://{1}/Account/Confirmed", Request.RequestUri.Scheme, Request.RequestUri.Authority));
-            //return response;
-
+            response = Request.CreateResponse(HttpStatusCode.Found);
+            response.Headers.Location = new Uri(string.Format("{0}://{1}/Account/Confirmed", Request.RequestUri.Scheme, Request.RequestUri.Authority));
+            return response;
         }
-
     }
 }

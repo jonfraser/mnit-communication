@@ -38,6 +38,7 @@
     <script type="text/javascript">
         angular.module('communicationApp', [])
             .controller('UserProfileController', ['$scope', '$http', function ($scope, $http) {
+                var userConfirmed = @Model.UserConfirmed.ToString().ToLower();
 
                 $scope.email = '@Model.Data.EmailAddressExternalProvider';
                 $scope.mobile = '@Model.Data.MobilePhoneNumber';
@@ -50,13 +51,19 @@
                         EmailAddressExternalProvider: $scope.email,
                         ExternalProvider: '@Model.Data.ExternalProvider',
                         MobilePhoneNumber: $scope.mobile,
-                        Confirmed: '@Model.Data.Confirmed.ToString().ToLower()'
+                        Confirmed: '@Model.Data.Confirmed.ToString().ToLower()',
+                        IsAdmin: '@Model.Data.IsAdmin.ToString().ToLower()'
                     };
 
                     $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "UserProfile", controller = "User"})',
                         JSON.stringify(data)).
                       success(function (data) {
-                          window.location = "/Alerts/Subscribe/" + userId;
+                          if (userConfirmed === false) {
+                              window.location = "/Alerts/Subscribe/" + userId;
+                          } else {
+                              window.location = "/Alerts/Subscribe";
+                          }
+
                       }).
                       error(function (data) { alert(data); });
 

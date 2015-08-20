@@ -17,6 +17,11 @@ namespace MNIT_Communication.App_Start
             config.MapHttpAttributeRoutes();
             
             config.Routes.MapHttpRoute(
+                name: "ConfirmApi",
+                routeTemplate: "api/{controller}/{action}/{id}/{secret}"
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }

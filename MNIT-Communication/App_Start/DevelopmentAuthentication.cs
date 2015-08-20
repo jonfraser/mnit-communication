@@ -126,13 +126,13 @@ namespace MNIT_Communication
         }
     }
 
-    public class DevelopmentAuthenticationOptions : AuthenticationOptions
+   public class DevelopmentAuthenticationOptions : AuthenticationOptions
     {
-        public DevelopmentAuthenticationOptions()
-            : base("Development")
+        public DevelopmentAuthenticationOptions(string authenticationType)
+            : base(authenticationType)
         {
-            this.Caption = "Development";
-            this.CallbackPath = new PathString("/signin-development");
+            this.Caption = authenticationType;
+            this.CallbackPath = new PathString("/signin-" + authenticationType.ToLower());
             this.AuthenticationMode = AuthenticationMode.Passive;
             this.AuthenticationType = DefaultAuthenticationTypes.ExternalCookie;
         }

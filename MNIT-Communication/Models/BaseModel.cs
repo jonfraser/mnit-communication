@@ -11,17 +11,15 @@ namespace MNIT_Communication.Models
     public class BaseModel
     {
         private readonly UserProfile userProfile;
-        private readonly bool hasProfile;
 
         public BaseModel(UserProfile userProfile)
         {
             this.userProfile = userProfile;
-            hasProfile = userProfile != null;
         }
 
-        public UserProfile CurrentProfile { get { return userProfile ?? UserProfile.DefaultProfile; } }
-        public bool HasProfile { get { return hasProfile; } }
-
+        public UserProfile CurrentProfile => userProfile ?? UserProfile.DefaultProfile;
+        public bool HasProfile => userProfile != null;
+        public bool UserConfirmed => HasProfile && CurrentProfile.Confirmed;
     }
 
     public class BaseModel<T>: BaseModel

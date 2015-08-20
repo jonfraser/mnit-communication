@@ -39,7 +39,7 @@
 
 @section scripts {
     <script type="text/javascript">
-    var confirmed = @Model.CurrentProfile.Confirmed.ToString().ToLower();
+    var userConfirmed = @Model.UserConfirmed.ToString().ToLower();
 
     angular.module('communicationApp', [])
         .directive('onFinishRender', function($timeout) {
@@ -98,8 +98,10 @@
                     $http.post('@Url.HttpRouteUrl("DefaultApi", new {action = "Subscribe", controller = "Alerts"})',
                         JSON.stringify(data)).
                     success(function(data) {
-                        if (confirmed == false) {
+                        if (userConfirmed === false) {
                             window.location = "/Account/NewUserDone/" + data;
+                        } else {
+                            window.location = "/"; //Home
                         }
                     }).
                     error(function(data) { alert(data); });
