@@ -11,23 +11,19 @@ namespace MNIT_Communication.Hubs
 {
 	public class OutageHub : Hub, IOutageHub
 	{
-		public async Task SendNew(Alert outageDetail)
+
+	    private IHubContext hubContext;
+        public OutageHub()
+	    {
+            hubContext = GlobalHost.ConnectionManager.GetHubContext<OutageHub>();
+        }
+
+        public async Task NotifyChange(Alert outageDetail)
 		{
 			await Task.Run(() =>
 			{
-				var hubContext = GlobalHost.ConnectionManager.GetHubContext<OutageHub>();
-				hubContext.Clients.All.addOutageUpdateToPage(outageDetail, true, false, false);
+				hubContext.Clients.All.notifyChange(outageDetail);
 			});
-		}
-
-		public void UpdateExisting(Alert outageDetail)
-		{
-			Clients.All.addOutageUpdateToPage(outageDetail, false, true, false);
-		}
-
-		public void RemoveExisting(Alert outageDetail)
-		{
-			Clients.All.addOutageUpdateToPage(outageDetail, false, false, true);
 		}
 	}
 }

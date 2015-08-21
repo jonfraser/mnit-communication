@@ -10,6 +10,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <title>MNIT Communication</title>
     @Styles.Render("~/Content/css")
+    @RenderSection("styles", required: false)
     @Scripts.Render("~/bundles/modernizr")
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//gitcdn.github.io/bootstrap-toggle/2.1.0/css/bootstrap-toggle.min.css" rel="stylesheet">
@@ -26,10 +27,12 @@
                 @Html.ActionLink("MNIT Communication", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
-                @if (Model.HasProfile)
-                {
+                
                     <ul class="nav navbar-nav navbar-right">
-                        @if (Model.CurrentProfile.IsAdmin)
+                    @if (Model.HasProfile)
+                    {
+
+                        if (Model.CurrentProfile.IsAdmin)
                         {
                             <li>
                                 <a href="/Alerts/Raise">
@@ -76,24 +79,25 @@
                                 }
                             </ul>
                         </li>
-                        @if (Request.IsAuthenticated)
-                        {
-                            <li>
-                                <a href="javascript:document.getElementById('logoutForm').submit()">
-                                    <i class="fa fa-sign-out"></i> Log off
-                                </a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li>
-                                <a id="loginLink" href="/Account/Login">
-                                    <i class="fa fa-sign-in"></i> Log in
-                                </a>
-                            </li>
-                        }
-                    </ul>
+                       
                 }
+                @if (Request.IsAuthenticated)
+                {
+                <li>
+                    <a href="javascript:document.getElementById('logoutForm').submit()">
+                        <i class="fa fa-sign-out"></i> Log off
+                    </a>
+                </li>
+                }
+                else
+                {
+                <li>
+                    <a id="loginLink" href="/Account/Login">
+                        <i class="fa fa-sign-in"></i> Log in
+                    </a>
+                </li>
+                }
+                </ul>
             </div>
         </div>
     </div>

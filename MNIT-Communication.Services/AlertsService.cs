@@ -17,10 +17,11 @@ namespace MNIT_Communication.Services
 	    private readonly IUserService userService;
 	    private readonly IRepository repository;
 	    private readonly IOutageHub outageHub;
+	    private readonly IRuntimeContext runtimeContext;
 
 	    private readonly string serviceBusConnectionString;
 
-		public AlertsService(IServiceBus serviceBus, INamespaceManager namespaceManager, IUserService userService, IRepository repository, IOutageHub outageHub)
+		public AlertsService(IServiceBus serviceBus, INamespaceManager namespaceManager, IUserService userService, IRepository repository, IOutageHub outageHub, IRuntimeContext runtimeContext)
 		{
 			this.serviceBus = serviceBus;
 			this.serviceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
@@ -28,6 +29,7 @@ namespace MNIT_Communication.Services
 		    this.userService = userService;
 		    this.repository = repository;
 		    this.outageHub = outageHub;
+		    this.runtimeContext = runtimeContext;
 		}
 
         public AlertsService(IRepository repository)
@@ -95,17 +97,35 @@ namespace MNIT_Communication.Services
                 };
 
                 await serviceBus.SendToTopicAsync(message, Topics.Alerts);
-                await outageHub.SendNew(alert);
+                await outageHub.NotifyChange(alert);
             }
 		}
 
 		public async Task<IEnumerable<Alert>> GetCurrentAlerts()
 		{
-		    //TODO - Only where current?
-            return await repository.Get<Alert>();
+            //TODO - MongoDB barfs on this query , but pulling back ALL Alerts is not cool. Should I store the latest status in the DB and query that?
+            var allAlerts = await repository.Get<Alert>();
+            var currentAlerts = allAlerts.Where(alert => alert.IsCurrent).ToArray();
+            await MarkSubscribed(currentAlerts);
+
+		    return currentAlerts;
 		}
 
-	    public async Task<IEnumerable<UserProfile>> GetSubscribersFor(params Guid[] alertables)
+	    private async Task MarkSubscribed(params Alert[] alerts)
+	    {
+            //Only attempt if we have a Profile to interrogate
+            if (await runtimeContext.HasProfile())
+            {
+                var subscriptions = (await runtimeContext.CurrentProfile()).AlertSubscriptions;
+                foreach (var alert in alerts)
+                {
+                    //If the user's subscriptions contains the Id of the service, then mark as subscribed
+                    alert.UserSubscribed = subscriptions.Contains(alert.Service.Id);
+                }
+	        }
+	    }
+
+        public async Task<IEnumerable<UserProfile>> GetSubscribersFor(params Guid[] alertables)
 	    {
 	        //Find the users who are subscribed to ANY of the systems in the 'alertables' collection
             var subscribers = await repository.Get<UserProfile>(u => u.AlertSubscriptions.Intersect(alertables.AsEnumerable()).Any());

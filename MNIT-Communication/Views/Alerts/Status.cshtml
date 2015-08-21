@@ -1,87 +1,171 @@
 ﻿@using MNIT_Communication.Models
+@using Newtonsoft.Json
 @model BaseModel
 @{
     ViewBag.Title = "Current Outages";
 }
 <h1>Current Outages</h1>
-<p class="lead">
-    Listed below are all the currently known outages and latest update. Rest assured we are working hard to restore service and you'll be notified
-    as soon as things are back to normal.
-</p>
+
 <form class="container-fluid" ng-controller="AlertsController">
-    <h3>{{outageSummary}}</h3>
-    <div class="row" ng-show="outages.length > 0">
-        <div class="col-md-12">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>Service</th>
-                        <th>Outage Start</th>
-                        <th>Description</th>
-                        <th>Current Status</th>
-                        <th>Last Updated</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="outage in outages | orderBy:'Service'">
-                        <td>{{outage.Service.Name}}</td>
-                        <td>
-                            <span am-time-ago="outage.Start" title="{{outage.Start | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
-                        </td>
-                        <td>{{outage.Summary}}</td>
-                        <td>{{outage.LastUpdate.Display}}</td>
-                        <td>
-                            <span am-time-ago="outage.UpdateDate" title="{{outage.UpdateDate | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+
+    <input type="radio" name="filter" ng-value="filterType.Subscribed" ng-model="filter">Subscribed
+    <input type="radio" name="filter" ng-value="filterType.All" ng-model="filter">All<br/>
+
+    @*<div class="btn-group" data-toggle="buttons">
+        <label class="btn btn-primary">
+            <input type="radio" name="filter" ng-value="filterType.Subscribed" ng-model="filter" autocomplete="off">Subscribed
+        </label>
+        <label class="btn btn-primary">
+            <input type="radio" name="filter" ng-value="filterType.All" ng-model="filter" autocomplete="off">All<br />
+        </label>
+    </div>*@
+    
+    <input type="radio" name="orderBy" ng-value="orderType.Service" ng-model="orderBy">Service
+    <input type="radio" name="orderBy" ng-value="orderType.Start" ng-model="orderBy">Onset Date
+    <input type="radio" name="orderBy" ng-value="orderType.Update" ng-model="orderBy">Last Update<br/>
+
+   
+        <p class="lead">{{outageDescription()}}</p>
+        <h3>{{outageSummary()}}</h3>
+
+        <div class="row" ng-show="outages.length > 0">
+            <div class="col-md-12">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Outage Start</th>
+                            <th>Description</th>
+                            <th>Current Status</th>
+                            <th>Last Updated</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="outage in outages | filter: filter | orderBy: orderBy">
+                            <td>{{outage.Service.Name}}</td>
+                            <td>
+                                <span am-time-ago="outage.Start" title="{{outage.Start | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
+                            </td>
+                            <td>{{outage.Summary}}</td>
+                            <td>{{outage.LastUpdate.Display}}</td>
+                            <td>
+                                <span am-time-ago="outage.UpdateDate" title="{{outage.UpdateDate | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#detailsModal">
+                                    <i class="fa fa-pencil-square-o"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+</form>
+
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="detailsModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
         </div>
     </div>
-</form>
+</div>
 
 @section scripts {
     @System.Web.Optimization.Scripts.Render("~/Scripts/jquery.signalR-2.2.0.min.js")
     <script src="~/signalr/hubs"></script>
-    
+
     @Scripts.Render("~/bundles/moment")
-    
+
     <script type="text/javascript">
 
         angular.module('communicationApp', ['angularMoment'])
-            .controller('AlertsController', ['$scope', '$http', function ($scope, $http) {
+            .controller('AlertsController', [
+                '$scope', '$http', '$filter', function($scope, $http, $filter) {
 
-                $http.get('@Url.HttpRouteUrl("DefaultApi", new { action = "Get", controller = "Alerts"})').
-                     success(function (data) {
-                         $scope.outages = data || [];
-                     }).
-                     error(function () {
-                         $scope.outages = [];
-                     })
-                     .finally(function () {
-                         if ($scope.outages.length === 0) {
-                             $scope.outageSummary = 'Awesome! There aren\'t any outages at the moment!';
-                         } else {
-                            $scope.outageSummary = $scope.outages.length + " current outages";
-                         }
-                     });
+                var currentProfile = @Html.Raw(JsonConvert.SerializeObject(Model.CurrentProfile));
+
+                $scope.outages = [];
+                $scope.viewedOutage = {};
+
+                var alertStatus = {
+                    Raised: 'Raised',
+                    Updated: 'Updated',
+                    Cancelled: 'Cancelled',
+                    Resolved: 'Resolved'
+                }
+
+                $scope.filterType = {
+                    All: {},
+                    Subscribed: { UserSubscribed: true }
+                }
+
+                $scope.orderType = {
+                    Service: 'Service.Name',
+                    Start: '-Start',
+                    Update: '-UpdateDate'
+                }
+
+                $scope.filter = $scope.filterType.Subscribed;
+                $scope.orderBy = $scope.orderType.Service;
+
+                $scope.outageSummary = function() {
+                    if ($scope.outages.length === 0) {
+                        return "Awesome! There aren't any outages at the moment!";
+                    }
+                    return "";
+                }
+
+                $scope.outageDescription = function() {
+                    if ($scope.outages.length > 0) {
+                        return "Listed below are all the currently known outages and latest update. Rest assured we are working hard to restore service and you'll be notified as soon as things are back to normal.";
+                    }
+
+                    return "";
+                }
+
+                $http.get('@Url.HttpRouteUrl("DefaultApi", new {action = "Get", controller = "Alerts"})').
+                    success(function(data) {
+                        $scope.outages = data || [];
+                    }).
+                    error(function() {
+                        $scope.outages = [];
+                    })
+                    .finally(function() {
+                        //no-op
+                    });
 
                 var outageHub = $.connection.outageHub;
-                outageHub.client.addOutageUpdateToPage = function (outageDetail, isNew, isUpdate, isRemove) {
-                    if (isNew) {
+                outageHub.client.notifyChange = function(outageDetail) {
+                    var status = outageDetail.LastUpdate.Status.Name;
+
+                    if (status === alertStatus.Raised) { //outage is new
+                        outageDetail.UserSubscribed = currentProfile.AlertSubscriptions.indexOf(outageDetail.Service.Id) > -1;
                         $scope.outages.push(outageDetail);
+                    } else { //updating an existing outage
+                        var existing = $filter('Id')($scope.outages, { Id: outageDetail.Id });
+                        if (existing != null) {
+                            var index = $scope.outages.indexOf(existing);
+                            $scope.outages[index] = outageDetail; //Replace with updated version
+                        }
                     }
-                    if (isUpdate) {
-                        //todo: find and update
-                    }
-                    if (isRemove) {
-                        //todo: remove
-                    }
+
                     $scope.$apply();
                 };
                 $.connection.hub.start();
-
-            }]);
+            }
+        ]);
 
     </script>
 }

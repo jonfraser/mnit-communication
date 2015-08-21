@@ -9,24 +9,30 @@ namespace MNIT_Communication
         public static void RegisterBundles(BundleCollection bundles)
         {
 
-            bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+            bundles.Add(new ScriptBundle("~/bundles/jqueryval")
+                .Include("~/Scripts/jquery.validate*"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
-                        "~/Scripts/modernizr-*"));
+            bundles.Add(new ScriptBundle("~/bundles/modernizr")
+                .Include("~/Scripts/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                      "~/Scripts/respond.js"));
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap")
+                .Include("~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/moment")
                 .Include("~/Scripts/moment.js")
                 .Include("~/Scripts/angular-moment.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap/bootstrap.css",
-                      "~/Content/site.css"));
+            bundles.Add(new StyleBundle("~/Content/css")
+                .Include("~/Content/bootstrap/bootstrap.css",
+                         "~/Content/site.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/bootstrapSwitch")   
+                    .Include("~/Scripts/bootstrap-switch.js"));
+
+            bundles.Add(new StyleBundle("~/Content/bootstrapSwitch")
+                    .Include("~/Content/bootstrap-switch.css"));
         }
     }
 }

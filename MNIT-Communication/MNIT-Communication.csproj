@@ -292,6 +292,8 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-switch.css" />
+    <Content Include="Content\bootstrap-switch.min.css" />
     <Content Include="Content\bootstrap\bootstrap.css">
       <DependentUpon>bootstrap.less</DependentUpon>
     </Content>
@@ -342,6 +344,8 @@
     <Content Include="Scripts\angular-touch.min.js" />
     <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\bootstrap-switch.js" />
+    <Content Include="Scripts\bootstrap-switch.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\errors.json" />

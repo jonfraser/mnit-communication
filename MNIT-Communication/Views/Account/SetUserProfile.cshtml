@@ -52,7 +52,8 @@
                         ExternalProvider: '@Model.Data.ExternalProvider',
                         MobilePhoneNumber: $scope.mobile,
                         Confirmed: '@Model.Data.Confirmed.ToString().ToLower()',
-                        IsAdmin: '@Model.Data.IsAdmin.ToString().ToLower()'
+                        IsAdmin: '@Model.Data.IsAdmin.ToString().ToLower()',
+                        AlertSubscriptions: [@Html.Raw(string.Join(",", Model.Data.AlertSubscriptions.Select(a => "'" + a + "'")))]
                     };
 
                     $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "UserProfile", controller = "User"})',
@@ -66,7 +67,6 @@
 
                       }).
                       error(function (data) { alert(data); });
-
                 };
 
             }]);
