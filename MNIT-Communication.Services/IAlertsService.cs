@@ -10,7 +10,9 @@ namespace MNIT_Communication.Services
 
 		Task RaiseAlert(RaiseAlertRequest request);
 
-		Task<IEnumerable<Alert>> GetCurrentAlerts();
+        Task UpdateAlert(UpdateAlertRequest request);
+
+        Task<IEnumerable<Alert>> GetCurrentAlerts();
 
         Task<IEnumerable<UserProfile>> GetSubscribersFor(params Guid[] alertables);
 	}

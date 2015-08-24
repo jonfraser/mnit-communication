@@ -10,4 +10,10 @@ namespace MNIT_Communication.Domain
         public string AlertInfoShort { get; set; }
         public Guid RaisedById { get; set; }
     }
+
+    public class UpdateAlertRequest
+    {
+        public Guid AlertId { get; set; }
+        public AlertHistory Update { get; set; }
+    }
 }

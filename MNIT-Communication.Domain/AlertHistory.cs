@@ -3,7 +3,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MNIT_Communication.Domain
 {
-    public class AlertHistory
+    public class AlertHistory: BaseEntity
     {
         public DateTime Timestamp { get; set; }
         public AlertStatus Status { get; set; }
@@ -15,5 +15,8 @@ namespace MNIT_Communication.Domain
         {
             get { return Status.Name + (string.IsNullOrEmpty(Detail) ? string.Empty : " - " + Detail); }
         }
+
+        [BsonIgnore]
+        public bool IsNew => Id == Guid.Empty;
     }
 }

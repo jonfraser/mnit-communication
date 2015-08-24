@@ -20,6 +20,9 @@ namespace MNIT_Communication
             bundles.Add(new ScriptBundle("~/bundles/bootstrap")
                 .Include("~/Scripts/respond.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/ui-bootstrap")
+                .Include("~/Scripts/ui-bootstrap-tpls-*"));
+
             bundles.Add(new ScriptBundle("~/bundles/moment")
                 .Include("~/Scripts/moment.js")
                 .Include("~/Scripts/angular-moment.js"));
@@ -33,6 +36,12 @@ namespace MNIT_Communication
 
             bundles.Add(new StyleBundle("~/Content/bootstrapSwitch")
                     .Include("~/Content/bootstrap-switch.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/jquery.datetimepicker")
+                    .Include("~/Scripts/jquery.datetimepicker.js"));
+
+            bundles.Add(new StyleBundle("~/Content/jquery.datetimepicker")
+                    .Include("~/Content/jquery.datetimepicker.css"));
         }
     }
 }

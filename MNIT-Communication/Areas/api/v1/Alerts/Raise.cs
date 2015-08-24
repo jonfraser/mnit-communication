@@ -19,7 +19,15 @@ namespace MNIT_Communication.Areas.api.v1
 		{
             await alertsService.RaiseAlert(request);
 		}
-	}
+
+        [HttpPost]
+        //[Authorize(Users = "*")]
+        public async Task Update([FromBody]UpdateAlertRequest request)
+        {
+            await alertsService.UpdateAlert(request);
+        }
+
+    }
 
 	
 }

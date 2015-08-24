@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using MNIT.ErrorLogging;
 
 namespace MNIT_Communication.Services
 {
@@ -101,7 +102,44 @@ namespace MNIT_Communication.Services
             }
 		}
 
-		public async Task<IEnumerable<Alert>> GetCurrentAlerts()
+	    public async Task UpdateAlert(UpdateAlertRequest request)
+	    {
+	        var alert = await repository.Get<Alert>(request.AlertId);
+
+            if(alert == null)
+                throw new ArgumentException(string.Format("No Alert with the Id {0} was fiund to Update!", request.AlertId), "request.AlertId");
+
+	        if (request.Update.IsNew)
+	        {
+	            request.Update.Id = Guid.NewGuid();
+	            alert.History.Add(request.Update);
+	        }
+	        else
+	        {
+	            var existingHistory = alert.History.FirstOrDefault(history => history.Id == request.Update.Id);
+
+                if (existingHistory == null)
+                    throw new ArgumentException("Attempted to Update a History entry that does not exist!");
+
+	            existingHistory = request.Update; //replace the existing history item with the updated one
+	        }
+
+	        await repository.Upsert(alert);
+
+            var message = new AlertBrokeredMessage
+            {
+                CorrelationId = alert.Id,
+                AlertableId = alert.Service.Id,
+                AlertDetail = alert.LastUpdate.Detail,
+                AlertInfoShort = alert.Summary,
+                AlertRaiser = alert.LastUpdate.UserId
+            };
+
+            await serviceBus.SendToTopicAsync(message, Topics.Alerts);
+            await outageHub.NotifyChange(alert);
+        }
+
+        public async Task<IEnumerable<Alert>> GetCurrentAlerts()
 		{
             //TODO - MongoDB barfs on this query , but pulling back ALL Alerts is not cool. Should I store the latest status in the DB and query that?
             var allAlerts = await repository.Get<Alert>();

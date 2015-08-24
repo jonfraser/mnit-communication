@@ -26,8 +26,17 @@ namespace MNIT_Communication.Services.Fakes
 			    return new Alert();
             });
 		}
-        
-		public async Task<IEnumerable<Alert>> GetCurrentAlerts()
+
+        public async Task UpdateAlert(UpdateAlertRequest request)
+        {
+            await Task.Run(() =>
+            {
+               Trace.Write("FakeAlertsService.RaiseAlert " + request.AlertId.ToString());
+               return new Alert();
+            });
+        }
+
+        public async Task<IEnumerable<Alert>> GetCurrentAlerts()
 		{
 			Trace.Write("FakeAlertsService.GetCurrentAlerts");
 			return await Task.Run(() => new List<Alert>());
