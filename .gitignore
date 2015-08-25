@@ -137,7 +137,7 @@ publish/
 # except build/, which is used as an MSBuild target.
 !**/packages/build/
 # also except MNIT.*, which are packages published on the internal nuget feed and therefore can't be restored.
-!**/packages/MNIT.*
+!**/packages/MNIT.*/
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
 #!**/packages/repositories.config
 
