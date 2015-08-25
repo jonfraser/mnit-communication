@@ -1,4 +1,5 @@
 ﻿@using MNIT_Communication.Models
+@using Newtonsoft.Json
 @model BaseModel
 
 @{
@@ -51,6 +52,8 @@
 
 @section scripts {
     <script type="text/javascript">
+        var currentProfile = @Html.Raw(JsonConvert.SerializeObject(Model.CurrentProfile));
+
         angular.module('communicationApp', [])
             .directive('onFinishRender', function ($timeout) {
                 return {
@@ -96,18 +99,18 @@
               }
 
               $scope.raiseAlert = function () {
-                  var data = {
+                  var alert = {
                       "AlertInfoShort": $scope.shortInfo,
                       "AlertDetail": $scope.longInfo,
                       "Alertables": $scope.selectedAlertables,
-                      "RaisedById": "@Model.CurrentProfile.Id"
+                      "RaisedBy": currentProfile.Summary
                   };
-                  $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Raise", controller = "Alerts"})',
-                      JSON.stringify(data)).
-                    success(function (data) {
+
+                  $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Raise", controller = "Alerts"})', JSON.stringify(alert))
+                      .success(function (data) {
                         window.location = '@Url.Action("Status")';
-                    }).
-                    error(function (data) { alert(data); });
+                      })
+                      .error(function (data) { alert(data); });
 
               };
 

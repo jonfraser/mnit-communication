@@ -63,17 +63,17 @@ namespace MNIT_Communication.Services
 
 		public async Task RaiseAlert(RaiseAlertRequest request)
 		{
-		    var uniqueIdentifier = Guid.NewGuid();
-
             foreach (var alertable in request.Alertables)
             {
+                var uniqueIdentifier = Guid.NewGuid();
+
                 var alert = new Alert
                 {
                     Id = uniqueIdentifier,
                     Service = alertable,
                     Summary = request.AlertInfoShort,
                     Start = DateTime.Now,
-                    RaisedBy = request.RaisedById
+                    RaisedBy = request.RaisedBy
                 };
 
                 var raisedEvent = new AlertHistory
@@ -81,7 +81,7 @@ namespace MNIT_Communication.Services
                     Status = AlertStatus.Raised,
                     Timestamp = DateTime.Now,
                     Detail = request.AlertDetail,
-                    UserId = alert.RaisedBy
+                    UpdatedBy = alert.RaisedBy
                 };
 
                 alert.History.Add(raisedEvent);
@@ -94,7 +94,7 @@ namespace MNIT_Communication.Services
                     AlertableId = alert.Service.Id,
                     AlertDetail = alert.LastUpdate.Detail,
                     AlertInfoShort = alert.Summary,
-                    AlertRaiser = alert.RaisedBy
+                    AlertRaiser = alert.RaisedBy.Id
                 };
 
                 await serviceBus.SendToTopicAsync(message, Topics.Alerts);
@@ -104,7 +104,8 @@ namespace MNIT_Communication.Services
 
 	    public async Task UpdateAlert(UpdateAlertRequest request)
 	    {
-	        var alert = await repository.Get<Alert>(request.AlertId);
+	        var publishMessage = false;
+            var alert = await repository.Get<Alert>(request.AlertId);
 
             if(alert == null)
                 throw new ArgumentException(string.Format("No Alert with the Id {0} was fiund to Update!", request.AlertId), "request.AlertId");
@@ -113,6 +114,7 @@ namespace MNIT_Communication.Services
 	        {
 	            request.Update.Id = Guid.NewGuid();
 	            alert.History.Add(request.Update);
+	            publishMessage = true;
 	        }
 	        else
 	        {
@@ -121,21 +123,28 @@ namespace MNIT_Communication.Services
                 if (existingHistory == null)
                     throw new ArgumentException("Attempted to Update a History entry that does not exist!");
 
-	            existingHistory = request.Update; //replace the existing history item with the updated one
+	            alert.History.Remove(existingHistory);//replace the existing history item with the updated one
+                alert.History.Add(request.Update);
+
+                //NOT publishing for History updates..
 	        }
 
 	        await repository.Upsert(alert);
 
-            var message = new AlertBrokeredMessage
+            if(publishMessage)
             {
-                CorrelationId = alert.Id,
-                AlertableId = alert.Service.Id,
-                AlertDetail = alert.LastUpdate.Detail,
-                AlertInfoShort = alert.Summary,
-                AlertRaiser = alert.LastUpdate.UserId
-            };
+                var message = new AlertBrokeredMessage
+                {
+                    CorrelationId = alert.Id,
+                    AlertableId = alert.Service.Id,
+                    AlertDetail = alert.LastUpdate.Detail,
+                    AlertInfoShort = alert.Summary,
+                    AlertRaiser = alert.LastUpdate.UpdatedBy.Id
+                };
 
-            await serviceBus.SendToTopicAsync(message, Topics.Alerts);
+                await serviceBus.SendToTopicAsync(message, Topics.Alerts);
+            }
+            
             await outageHub.NotifyChange(alert);
         }
 

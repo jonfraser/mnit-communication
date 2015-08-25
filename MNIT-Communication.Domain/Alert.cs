@@ -9,12 +9,10 @@ namespace MNIT_Communication.Domain
 {
 	public class Alert: BaseEntity
 	{
-	    
 	    public Alertable Service { get; set; }
         public string Summary { get; set; }
 		public DateTime Start { get; set; }
-		
-        public Guid RaisedBy { get; set; }
+		public UserProfile RaisedBy { get; set; }
 
 	    private IList<AlertHistory> history = new List<AlertHistory>();
 	    public IList<AlertHistory> History
@@ -46,7 +44,7 @@ namespace MNIT_Communication.Domain
                     Timestamp = Start,
                     Detail = Summary,
                     Status = AlertStatus.Raised,
-                    UserId = RaisedBy
+                    UpdatedBy = RaisedBy
                 };
             }
         }

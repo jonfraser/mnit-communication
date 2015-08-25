@@ -8,28 +8,33 @@
 
 <form class="container-fluid" ng-controller="AlertsController">
 
-        <p>
-            <div class="btn-group">
-                <label class="btn">Show</label>
-                <label class="btn btn-info" ng-model="filter" btn-radio="filterType.Subscribed">Subscribed</label>
-                <label class="btn btn-info" ng-model="filter" btn-radio="filterType.All">All</label>
-                <label class="btn">Order By</label>
-                <label class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Service">Service</label>
-                <label class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Start">Onset Date</label>
-                <label class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Update">Last Update</label>
-            </div>
-        </p>
+    <p class="lead">{{outageDescription()}}</p>
+    <h3>{{outageSummary()}}</h3>
 
-        <p class="lead">{{outageDescription()}}</p>
-        <h3>{{outageSummary()}}</h3>
+    <p>
+        <div class="btn-group">
+            <label class="btn">Show</label>
+            <label class="btn btn-info" ng-model="filter" btn-radio="filterType.Subscribed">Subscribed</label>
+            <label class="btn btn-info" ng-model="filter" btn-radio="filterType.All">All</label>
+            @*<label class="btn">Or</label>
+            <label class="btn btn-success" ng-model="filter" btn-radio="filterType.Current">Current</label>
+            <label class="btn btn-success" ng-model="filter" btn-radio="filterType.Scheduled">Scheduled</label>
+            <label class="btn btn-success" ng-model="filter" btn-radio="filterType.Past">Past</label>*@
+            <label class="btn">and Order By</label>
+            <label class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Service">Service</label>
+            <label class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Start">Onset Date</label>
+            <label class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Update">Last Update</label>
+        </div>
+    </p>
 
-        <div class="row" ng-show="outages.length > 0">
+    <div class="row" ng-show="outages.length > 0">
             <div class="col-md-12">
-                <table class="table table-striped table-hover">
+                <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
                             <th>Service</th>
                             <th>Outage Start</th>
+                            <th>Raised By</th>
                             <th>Description</th>
                             <th>Current Status</th>
                             <th>Last Updated</th>
@@ -42,6 +47,7 @@
                             <td>
                                 <span am-time-ago="outage.Start" title="{{outage.Start | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
                             </td>
+                            <td>{{outage.RaisedBy.Name}}</td>
                             <td>{{outage.Summary}}</td>
                             <td>{{outage.LastUpdate.Display}}</td>
                             <td>
@@ -76,9 +82,9 @@
                     <div class="col-sm-6">
                         <p class="input-group">
                             <span class="input-group-btn">
-                                <button type="button" class="btn btn-sm btn-info" ng-click="now()">Now</button>
+                                <button type="button" class="btn btn-info" ng-click="now()">Now</button>
                             </span>
-                           <input type="text" class="form-control datetimePicker" id="Timestamp"  ng-model="historyUpdate.Timestamp"/>
+                           <input type="text" date-time-picker class="form-control" id="Timestamp"  ng-model="historyUpdate.Timestamp"/>
                         </p>
                     </div>
 
@@ -105,8 +111,8 @@
         <table class="table table-striped table-hover" ng-show="!addHistory">
             <thead>
                 <tr>
-                    <th>As of</th>
                     <th>Status</th>
+                    <th>As of</th>
                     <th>Details</th>
                     <th>User</th>
                     <th></th>
@@ -115,16 +121,16 @@
             <tbody>
                 <tr ng-repeat="history in outage.History">
                     <td>
-                        <span am-time-ago="history.Timestamp" title="{{history.Timestamp | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
+                        {{history.Status.Name}}
                     </td>
                     <td>
-                        {{history.Status.Name}}
+                        <span am-time-ago="history.Timestamp" title="{{history.Timestamp | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
                     </td>
                     <td>
                         {{history.Detail}}
                     </td>
                     <td>
-                        {{history.UserId}}
+                        {{history.UpdatedBy.Name}}
                     </td>
                     <td>
                         <button class="btn btn-default" title="Edit this update" ng-click="editHistory(history)" ng-show="canEditHistory(history)">
@@ -167,7 +173,28 @@
     @Scripts.Render("~/bundles/jquery.datetimepicker")
 
     <script type="text/javascript">
+        var currentProfile = @Html.Raw(JsonConvert.SerializeObject(Model.CurrentProfile));
+
+        var alertStatus = {
+            Raised: 'Raised',
+            Updated: 'Updated',
+            Cancelled: 'Cancelled',
+            Resolved: 'Resolved'
+        }
+
         angular.module('communicationApp', ['angularMoment', 'ui.bootstrap'])
+            .directive('dateTimePicker', function() {
+                function link(scope, element, attrs) {
+                    element.datetimepicker({
+                        format: 'YYYY-MM-DD HH:mm',
+                        step: 5
+                    });
+                }
+
+                return {
+                    link: link
+                };
+            })
             .filter('getById', function() {
                 return function(data, id) {
                     for (var i in data) {
@@ -180,23 +207,40 @@
                     return null;
                 }
             })
+            .filter('scheduledAlertFilter', function() {
+                return function(alerts) {
+                    for (var i in alerts) {
+                        if (alerts.hasOwnProperty(i)) {
+                            var alert = alerts[i];
+                            if (alert)
+                                return alert;
+                        }
+                    }
+                    return null;
+                }
+            })
+            .filter('pastAlertFilter', function() {
+                return function(alerts) {
+                    for (var i in alerts) {
+                        if (alerts.hasOwnProperty(i)) {
+                            var alert = alerts[i];
+                            if (!alert)
+                                return alert;
+                        }
+                    }
+                    return null;
+                }
+            })
             .controller('AlertsController', [
                 '$scope', '$http', '$filter', '$modal', function($scope, $http, $filter, $modal) {
-
-                    var currentProfile = @Html.Raw(JsonConvert.SerializeObject(Model.CurrentProfile));
-
                     $scope.outages = [];
-
-                    var alertStatus = {
-                        Raised: 'Raised',
-                        Updated: 'Updated',
-                        Cancelled: 'Cancelled',
-                        Resolved: 'Resolved'
-                    }
 
                     $scope.filterType = {
                         All: {},
-                        Subscribed: { UserSubscribed: true }
+                        Subscribed: { UserSubscribed: true },
+                        Current: { IsCurrent: true },
+                        Scheduled: 'scheduledAlertFilter',
+                        Past: 'pastAlertFilter'
                     }
 
                     $scope.orderType = {
@@ -285,7 +329,9 @@
                 $scope.outage = outage;
                 $scope.currentProfile = currentProfile;
 
-                $scope.statuses = [ //TODO - get these values from the application via AJAX?
+                var dateTimeFormat = 'YYYY-MM-DD HH:mm';
+
+                $scope.statuses = [//TODO - get these values from the application via AJAX?
                     { Name: 'Updated', Description: 'Provides an update for this alert/outage', Icon: 'pencil-square-o' },
                     { Name: 'Cancelled', Description: 'Marks this alert/outage as cancelled', Icon: 'close' },
                     { Name: 'Resolved', Description: 'This outage is now resolved', Icon: 'smile-o' }
@@ -294,10 +340,10 @@
                 $scope.addHistory = false;
 
                 $scope.historyUpdate = {
-                    Timestamp: new Date(),
+                    Timestamp: moment().format(dateTimeFormat),
                     Status: $scope.statuses[0], //Updated
                     Detail: '',
-                    UserId: currentProfile.Id
+                    UpdatedBy: currentProfile.Summary
                 }
 
                 $scope.historyButtonConfig = function() {
@@ -331,6 +377,7 @@
                 $scope.editHistory = function(history) {
                     $scope.addHistory = true;
                     $scope.historyUpdate = history;
+                    $scope.historyUpdate.Timestamp = moment($scope.historyUpdate.Timestamp).format(dateTimeFormat);
                 };
 
                 $scope.saving = false;
@@ -339,38 +386,36 @@
                 $scope.saveHistory = function() {
                     $scope.saving = true;
                     $scope.saveError = '';
-                    
+
                     var url = '@Url.HttpRouteUrl("DefaultApi", new {action = "Update", controller = "Alerts"})';
 
-                    var data = {
-                        alertId: outage.Id,
-                        update: $scope.historyUpdate
-                    }
+                var data = {
+                    alertId: outage.Id,
+                    update: $scope.historyUpdate
+                }
 
-                    $http.post(url, data).
-                        success(function() {
-                            $scope.saving = false;
-                            $scope.saveError = '';
-                            $scope.ok();
-                        }).
-                        error(function() {
-                            $scope.saving = false;
-                            $scope.saveError = 'Error while performing update..Please try again!';
-                        })
-                        .finally(function() {
-                            //no-op
-                        });
-                };
+                $http.post(url, data).
+                    success(function() {
+                        $scope.saving = false;
+                        $scope.saveError = '';
+                        $scope.ok();
+                    }).
+                    error(function() {
+                        $scope.saving = false;
+                        $scope.saveError = 'Error while performing update..Please try again!';
+                    })
+                    .finally(function() {
+                        //no-op
+                    });
+            };
 
-                $scope.now = function() {
-                    $scope.historyUpdate.Timestamp = new Date();
-                };
+            $scope.now = function() {
+                $scope.historyUpdate.Timestamp = moment().format(dateTimeFormat);
+            };
 
-                $scope.ok = function() {
-                    $modalInstance.close($scope.outage);
-                };
-
-                jQuery(".datetimePicker").datetimepicker();
-            });
+            $scope.ok = function() {
+                $modalInstance.close($scope.outage);
+            };
+        });
     </script>
 }

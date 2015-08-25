@@ -71,6 +71,7 @@
     <Compile Include="RaiseAlertRequest.cs" />
     <Compile Include="RegisterAlertBrokeredMessage.cs" />
     <Compile Include="Topics.cs" />
+    <Compile Include="UpdateAlertRequest.cs" />
     <Compile Include="UserProfile.cs" />
     <Compile Include="VerifyMobileNumberBrokeredMessage.cs" />
   </ItemGroup>

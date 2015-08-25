@@ -8,7 +8,7 @@ namespace MNIT_Communication.Domain
         public DateTime Timestamp { get; set; }
         public AlertStatus Status { get; set; }
         public string Detail { get; set; }
-        public Guid UserId { get; set; }
+        public UserProfile UpdatedBy { get; set; }
 
         [BsonIgnore]
         public string Display
