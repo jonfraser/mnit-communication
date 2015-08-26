@@ -17,6 +17,9 @@ namespace MNIT_Communication.Domain
         }
 
         [BsonIgnore]
-        public bool IsNew => Id == Guid.Empty;
+        public bool IsNew
+        {
+            get { return Id == Guid.Empty; }
+        }
     }
 }

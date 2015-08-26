@@ -25,7 +25,14 @@ namespace MNIT_Communication.Domain
         public bool UserSubscribed { get; set; }
 
         [BsonIgnore] //Don't persist 
-        public bool IsCurrent => !LastUpdate.Status.Equals(AlertStatus.Resolved) && !LastUpdate.Status.Equals(AlertStatus.Cancelled);
+        public bool IsCurrent
+        {
+            get
+            {
+                return !LastUpdate.Status.Equals(AlertStatus.Resolved) &&
+                       !LastUpdate.Status.Equals(AlertStatus.Cancelled);
+            }
+        }
 
 	    [BsonIgnore] //Don't persist 
         public AlertHistory LastUpdate
