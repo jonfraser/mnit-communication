@@ -1,6 +1,7 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNIT-Communication", "MNIT-Communication\MNIT-Communication.csproj", "{BF7233B0-B97D-4E74-A404-0C6D1202F5A3}"
 EndProject
@@ -19,6 +20,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlertUserViaExternalEmailJob", "AlertUserViaExternalEmailJob\AlertUserViaExternalEmailJob.csproj", "{31F79284-8DA9-48B6-B2BF-8AE1DF6620B9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNIT-Communication.Hubs", "MNIT-Communication.Hubs\MNIT-Communication.Hubs.csproj", "{276EB873-AFCA-4AAA-B16A-286C5CAE1AE8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{605D9BE5-00D9-42D3-8B91-E27C96D51680}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,10 +65,6 @@ Global
 		{276EB873-AFCA-4AAA-B16A-286C5CAE1AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{276EB873-AFCA-4AAA-B16A-286C5CAE1AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{276EB873-AFCA-4AAA-B16A-286C5CAE1AE8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D71D7D1C-D408-416B-9DC4-88F7BF341FDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D71D7D1C-D408-416B-9DC4-88F7BF341FDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D71D7D1C-D408-416B-9DC4-88F7BF341FDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D71D7D1C-D408-416B-9DC4-88F7BF341FDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
