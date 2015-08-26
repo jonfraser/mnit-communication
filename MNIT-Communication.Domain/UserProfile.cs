@@ -42,6 +42,9 @@ namespace MNIT_Communication.Domain
         {
             get
             {
+                if (string.IsNullOrEmpty(EmailAdressInternal))
+                    return string.Empty;
+
                 var name = EmailAdressInternal.Replace(HealthEmailSuffix, "");
                 name = name.Replace(".", " ");
 
