@@ -134,9 +134,12 @@ namespace MNIT_Communication.Controllers
         [HttpGet]
         public async Task<ActionResult> NewUserDone(Guid id)
         {
+            var userProfile = await userService.Value.RetrieveUserProfile(id);
+            var secret = userProfile.ConfirmationSecret;
+            
             //TODO: Confirm the GUID is correct
             HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie, DefaultAuthenticationTypes.ExternalCookie);
-            return await BaseView();
+            return await BaseView(secret);
         }
 
         [AllowAnonymous]

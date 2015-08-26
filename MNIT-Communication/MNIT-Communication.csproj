@@ -302,9 +302,14 @@
     </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\jquery.datetimepicker.css" />
+    <Content Include="Content\Site.css">
+      <DependentUpon>Site.less</DependentUpon>
+    </Content>
+    <Content Include="Content\Site.min.css">
+      <DependentUpon>Site.css</DependentUpon>
+    </Content>
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap\variables.less" />
     <Content Include="Content\bootstrap\bootswatch.less" />
     <Content Include="newrelic\Extensions\CoreInstrumentation.xml" />
@@ -1183,6 +1188,8 @@
     <Content Include="Content\bootstrap\bootstrap.css.map">
       <DependentUpon>bootstrap.css</DependentUpon>
     </Content>
+    <None Include="compilerconfig.json" />
+    <Content Include="Content\Site.less" />
     <None Include="newrelic\newrelic.xsd">
       <SubType>Designer</SubType>
     </None>
