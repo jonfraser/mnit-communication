@@ -41,7 +41,8 @@ namespace MNIT_Communication.App_Start
             builder.RegisterType<FakeServiceBus>().As<IServiceBus>();
             builder.RegisterType<FakeUrlShortener>().As<IUrlShorten>();
             builder.RegisterType<FakeSmsService>().As<ISendSms>();
-            builder.RegisterType<FakeShortTermStorage>().As<IShortTermStorage>().SingleInstance();
+            //builder.RegisterType<FakeShortTermStorage>().As<IShortTermStorage>().SingleInstance();
+            builder.RegisterType<MongoShortTermStorage>().As<IShortTermStorage>().SingleInstance();
             builder.RegisterType<FakeEmailService>().As<ISendEmail>();
 		    builder.RegisterType<FakeNamespaceManager>().As<INamespaceManager>();
 #else
@@ -50,7 +51,7 @@ namespace MNIT_Communication.App_Start
             builder.RegisterType<GoogleUrlShortener>().As<IUrlShorten>();
             builder.RegisterType<SendTelstraSmsService>().As<ISendSms>();
             //builder.RegisterType<RedisStore>().As<IShortTermStorage>();
-            builder.RegisterType<FakeShortTermStorage>().As<IShortTermStorage>().SingleInstance();
+            builder.RegisterType<MongoShortTermStorage>().As<IShortTermStorage>().SingleInstance();
             builder.RegisterType<SendGridEmailService>().As<ISendEmail>();
             builder.RegisterType<NamespaceManagerWrapper>().As<INamespaceManager>();
 #endif

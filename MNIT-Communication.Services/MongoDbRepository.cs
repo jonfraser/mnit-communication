@@ -75,6 +75,17 @@ namespace MNIT_Communication.Services
             return await collection.FindOneAndReplaceAsync(filter, item, args);
 
         }
-       
+
+        public async Task Delete<T>(T item) where T : BaseEntity
+        {
+            await Delete<T>(item.Id);
+        }
+
+        public async Task Delete<T>(Guid id) where T : BaseEntity
+        {
+            var collection = GetCollection<T>();
+            await collection.DeleteOneAsync(i => i.Id == id);
+        }
+
     }
 }

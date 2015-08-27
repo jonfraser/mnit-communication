@@ -154,6 +154,7 @@
     <Compile Include="Fakes\FakeShortTermStorage.cs" />
     <Compile Include="Fakes\FakeSmsService.cs" />
     <Compile Include="Fakes\FakeUrlShortener.cs" />
+    <Compile Include="Fakes\MongoShortTermStorage.cs" />
     <Compile Include="GoogleUrlShortener.cs" />
     <Compile Include="IAlertsService.cs" />
     <Compile Include="INamespaceManager.cs" />

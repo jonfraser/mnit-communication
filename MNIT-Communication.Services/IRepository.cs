@@ -41,5 +41,21 @@ namespace MNIT_Communication.Services
         /// <returns></returns>
         Task<T> Upsert<T>(T item) where T : BaseEntity;
 
+        /// <summary>
+        /// If the item exists, delete it
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        Task Delete<T>(T item) where T : BaseEntity;
+
+        /// <summary>
+        /// If the object represented by the id exists, delete it
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task Delete<T>(Guid id) where T : BaseEntity;
+
     }
 }

@@ -59,6 +59,15 @@ namespace MNIT_Communication.Services.Fakes
 
             return await Get<T>(item.Id);
         }
+        public async Task Delete<T>(T item) where T : BaseEntity
+        {
+            await Task.Run(() => data.Remove(item.Id));
+        }
+
+        public async Task Delete<T>(Guid id) where T : BaseEntity
+        {
+            await Task.Run(() => data.Remove(id));
+        }
 
         private async Task<bool> Exists(Guid id)
         {
