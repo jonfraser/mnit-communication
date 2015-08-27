@@ -13,5 +13,6 @@ namespace MNIT_Communication.Services
         ClaimsPrincipal CurrentPrincipal { get; }
         Task<UserProfile> CurrentProfile();
         Task<bool> HasProfile();
+        string UserHostAddress { get; }
     }
 }

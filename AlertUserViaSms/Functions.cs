@@ -18,7 +18,8 @@ namespace AlertUserViaSms
 			log.WriteLine(message);
 
             var errorLogger = ServiceLocator.Resolve<IErrorLogger<Guid>>();
-           
+            var auditService = ServiceLocator.Resolve<IAuditService>();
+
             var alertsService = ServiceLocator.Resolve<IAlertsService>();
             var subscribers = await alertsService.GetSubscribersFor(message.AlertableId);
             var sms = ServiceLocator.Resolve<ISendSms>();
@@ -37,6 +38,13 @@ namespace AlertUserViaSms
                     errorLogger.LogError(ex);
                 }
             }
-		}
+
+            auditService.LogAuditEvent(new AuditEvent
+            {
+                AuditType = AuditType.WebJobMessageProcessing,
+                Details = "A message has been recieved by the AlertUserViaExternalEmailJob for processing and email has been sent to: " + String.Join(", ", subscribers.Select(s => s.EmailAdressInternal + "," + s.EmailAddressExternalProvider).ToArray()),
+                Data = message
+            });
+        }
 	}
 }

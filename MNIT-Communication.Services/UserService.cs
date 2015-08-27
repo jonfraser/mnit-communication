@@ -25,10 +25,11 @@ namespace MNIT_Communication.Services
 	    private readonly ISendSms sms;
 	    private readonly IUrlShorten urlShortener;
 	    private readonly IServiceBus serviceBus;
+	    private readonly IAuditService auditService;
 
 	    private const string fromAddress = "mnit-communication@health.qld.gov.au"; //TODO - put this in config?
 
-	    public UserService(IRepository repository, IShortTermStorage store, ISendEmail mail, ISendSms sms, IUrlShorten urlShortener, IServiceBus serviceBus)
+	    public UserService(IRepository repository, IShortTermStorage store, ISendEmail mail, ISendSms sms, IUrlShorten urlShortener, IServiceBus serviceBus, IAuditService auditService)
 	    {
 	        this.repository = repository;
 	        this.store = store;
@@ -36,6 +37,7 @@ namespace MNIT_Communication.Services
 	        this.sms = sms;
 	        this.urlShortener = urlShortener;
 	        this.serviceBus = serviceBus;
+	        this.auditService = auditService;
 	    }
 
         public UserService(IShortTermStorage store, ISendEmail mail)
@@ -72,6 +74,12 @@ namespace MNIT_Communication.Services
                 ConfirmationSecret = Guid.NewGuid(),
                 Confirmed = false
 		    };
+
+            await auditService.LogAuditEventAsync(new AuditEvent
+            {
+                AuditType = AuditType.UserRegistered,
+                Data = newUser,
+            });
 
 		    await InsertOrUpdateUserProfile(newUser);
             await SendEmail(newUser);
@@ -176,7 +184,14 @@ namespace MNIT_Communication.Services
 		        }
 
                 await repository.Upsert(toPersist);
-		    }
+
+                await auditService.LogAuditEventAsync(new AuditEvent
+                {
+                    AuditType = AuditType.EntityUpsert,
+                    EntityType = typeof(UserProfile).Name,
+                    EntityId = toPersist.Id
+                });
+            }
 		}
         
 		public async Task<bool> TemporaryAccessTokenExists(Guid id)

@@ -16,8 +16,10 @@ namespace MNIT_Communication.Tests.Services
         private static FakeEmailService mailFake = new FakeEmailService();
         private static Mock<ISendSms> smsMock;
         private static Mock<IUrlShorten> urlMock;
-        private static Mock<IServiceBus> serviceBusMock; 
-        
+        private static Mock<IServiceBus> serviceBusMock;
+        private static Mock<IAuditService> auditMock;
+        private static Mock<IRuntimeContext> runtimeMock;
+
         public UserServiceTests()
 	    {
 	        ConfigureMocks();
@@ -46,7 +48,7 @@ namespace MNIT_Communication.Tests.Services
                 var confirmationLink = "https://mnit-communication.azurewebsites.net/api/User/Confirm/";
                 var hoursToConfirm = 72;
                 
-                var service = new UserService(repoMock.Object, storeMock.Object, mailMock.Object, smsMock.Object, urlMock.Object, serviceBusMock.Object);
+                var service = new UserService(repoMock.Object, storeMock.Object, mailMock.Object, smsMock.Object, urlMock.Object, serviceBusMock.Object, auditMock.Object);
 
                 var message = new MNIT_Communication.Domain.NewUserRegistrationBrokeredMessage
                 {
@@ -90,7 +92,7 @@ namespace MNIT_Communication.Tests.Services
             [Fact]
             public async Task WithValidNumberShouldSendSms()
             {
-                var service = new UserService(repoMock.Object, storeMock.Object, mailMock.Object, smsMock.Object, urlMock.Object, serviceBusMock.Object);
+                var service = new UserService(repoMock.Object, storeMock.Object, mailMock.Object, smsMock.Object, urlMock.Object, serviceBusMock.Object, auditMock.Object);
                 var accessToken = Guid.NewGuid();
                 var mobileNumber = "+61416272575";
                 

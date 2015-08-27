@@ -27,10 +27,12 @@ namespace MNIT_Communication.Controllers
     public class AccountController : BaseController
     {
         private readonly Lazy<IUserService> userService;
+        private readonly IAuditService auditService;
 
-        public AccountController(IRuntimeContext runtimeContext, Lazy<IUserService> userService) : base(runtimeContext)
+        public AccountController(IRuntimeContext runtimeContext, Lazy<IUserService> userService, IAuditService auditService) : base(runtimeContext)
         {
             this.userService = userService;
+            this.auditService = auditService;
         }
 
         [AllowAnonymous]
@@ -98,15 +100,18 @@ namespace MNIT_Communication.Controllers
             var signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             await signInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
 
-            //If the user has logged in, but has no (Confirmed) Profile, redirect to the 'Unconfirmed' page 
-
             var externalId = loginInfo.Login.ProviderKey;
 
+            await auditService.LogAuditEventAsync(new AuditEvent
+            {
+                AuditType = AuditType.UserLogin,
+                Details = string.Format("Someone with an External Id {0} has just logged in via {1}", externalId, loginInfo.Login.LoginProvider)
+            });
+
+            //If the user has logged in, but has no (Confirmed) Profile, redirect to the 'Unconfirmed' page 
             //TODO: this would theoretically be called whenever someone auths from any stage in teh app, not just initial setup - need to check for this
             if (!string.IsNullOrEmpty(returnUrl) && returnUrl.StartsWith("/Account/SetUserProfile"))
             {
-                var id = new Guid(StringHelpers.PullGuidOffEndOfUrl(returnUrl));
-
                 using (var client = new HttpClient())
                 {
                     var putProfileUri = HttpContext.Request.Url.Scheme +
@@ -114,6 +119,7 @@ namespace MNIT_Communication.Controllers
                                         HttpContext.Request.Url.Authority +
                                         Url.HttpRouteUrl("DefaultApi", new { action = "UserProfile", controller = "User" });
                     //TODO - if Response = failure?
+                    var id = new Guid(StringHelpers.PullGuidOffEndOfUrl(returnUrl));
                     var response = await client.PutAsJsonAsync(putProfileUri, new UserProfile
                     {
                         Id = id,

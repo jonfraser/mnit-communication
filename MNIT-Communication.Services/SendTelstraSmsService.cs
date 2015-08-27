@@ -6,13 +6,21 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure;
+using MNIT_Communication.Domain;
 using Newtonsoft.Json;
 
 namespace MNIT_Communication.Services
 {
 	public class SendTelstraSmsService : ISendSms
 	{
-		public async Task SendSimple(string mobileNumber, string message)
+	    private readonly IAuditService auditService;
+
+	    public SendTelstraSmsService(IAuditService auditService)
+	    {
+	        this.auditService = auditService;
+	    }
+
+	    public async Task SendSimple(string mobileNumber, string message)
 		{
 			using(var client = new HttpClient())
 			{
@@ -30,7 +38,16 @@ namespace MNIT_Communication.Services
 					};
 				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", oAuth.access_token);
 				await client.PostAsync("https://api.telstra.com/v1/sms/messages", new StringContent(JsonConvert.SerializeObject(sms)));
-			}
+
+                await auditService.LogAuditEventAsync(new AuditEvent
+                {
+                    AuditType = AuditType.SmsMessageSent,
+                    Details = "An SMS message has been sent to: " + mobileNumber,
+                    Data = sms
+                });
+            }
+
+
 
 			
 		}

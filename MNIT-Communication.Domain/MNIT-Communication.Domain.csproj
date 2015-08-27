@@ -63,6 +63,9 @@
     <Compile Include="AlertHistory.cs" />
     <Compile Include="AlertsSubscriptionRequest.cs" />
     <Compile Include="AlertStatus.cs" />
+    <Compile Include="AuditEvent.cs" />
+    <Compile Include="AuditType.cs" />
+    <Compile Include="AuditVerbosity.cs" />
     <Compile Include="BaseEntity.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="NewUserRegistrationBrokeredMessage.cs" />

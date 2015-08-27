@@ -19,6 +19,7 @@ namespace AlertUserViaExternalEmailJob
 			log.WriteLine(message);
 
             var errorLogger = ServiceLocator.Resolve<IErrorLogger<Guid>>();
+            var auditService = ServiceLocator.Resolve<IAuditService>();
 
             var mail = ServiceLocator.Resolve<ISendEmail>();
 		    var alertsService = ServiceLocator.Resolve<IAlertsService>();
@@ -36,14 +37,19 @@ namespace AlertUserViaExternalEmailJob
 									subject: "An alert has been raised!",
 									body: message.AlertDetail);
 
-		        }
+                }
 		        catch(Exception ex)
 		        {
 		            errorLogger.LogError(ex);
 		        }
 		    }
-            
-            
-		}
+
+            auditService.LogAuditEvent(new AuditEvent
+            {
+                AuditType = AuditType.WebJobMessageProcessing,
+                Details = "A message has been recieved by the AlertUserViaExternalEmailJob for processing and email has been sent to: " + String.Join(", ", subscribers.Select(s => s.EmailAdressInternal + "," + s.EmailAddressExternalProvider).ToArray()),
+                Data = message
+            });
+        }
 	}
 }

@@ -4,6 +4,7 @@ using Microsoft.WindowsAzure;
 using MNIT_Communication.Domain;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -19,10 +20,11 @@ namespace MNIT_Communication.Services
 	    private readonly IRepository repository;
 	    private readonly IOutageHub outageHub;
 	    private readonly IRuntimeContext runtimeContext;
+	    private readonly IAuditService auditService;
 
 	    private readonly string serviceBusConnectionString;
 
-		public AlertsService(IServiceBus serviceBus, INamespaceManager namespaceManager, IUserService userService, IRepository repository, IOutageHub outageHub, IRuntimeContext runtimeContext)
+		public AlertsService(IServiceBus serviceBus, INamespaceManager namespaceManager, IUserService userService, IRepository repository, IOutageHub outageHub, IRuntimeContext runtimeContext, IAuditService auditService)
 		{
 			this.serviceBus = serviceBus;
 			this.serviceBusConnectionString = CloudConfigurationManager.GetSetting("Microsoft.ServiceBus.ConnectionString");
@@ -31,6 +33,7 @@ namespace MNIT_Communication.Services
 		    this.repository = repository;
 		    this.outageHub = outageHub;
 		    this.runtimeContext = runtimeContext;
+		    this.auditService = auditService;
 		}
 
         public AlertsService(IRepository repository)
@@ -97,6 +100,14 @@ namespace MNIT_Communication.Services
                     AlertRaiser = alert.RaisedBy.Id
                 };
 
+                await auditService.LogAuditEventAsync(new AuditEvent
+                {
+                    AuditType = AuditType.AlertRaised,
+                    Details = "An Alert has been raised for " + alert.Service.Name,
+                    EntityType = typeof (Alert).Name,
+                    EntityId = alert.Id
+                });
+
                 await serviceBus.SendToTopicAsync(message, Topics.Alerts);
                 await outageHub.NotifyChange(alert);
             }
@@ -144,9 +155,34 @@ namespace MNIT_Communication.Services
 
                 await serviceBus.SendToTopicAsync(message, Topics.Alerts);
             }
-            
+
+            await auditService.LogAuditEventAsync(new AuditEvent
+            {
+                AuditType = GetAuditTypeForStatus(request.Update.Status),
+                Details = "An Alert has been updated for " + alert.Service.Name,
+                EntityType = typeof(Alert).Name,
+                EntityId = alert.Id
+            });
+
             await outageHub.NotifyChange(alert);
         }
+
+	    private AuditType GetAuditTypeForStatus(AlertStatus status)
+	    {
+	        if (status.Equals(AlertStatus.Raised))
+	            return AuditType.AlertRaised;
+	        
+	        if (status.Equals(AlertStatus.Updated))
+                return AuditType.AlertUpdated;
+
+	        if (status.Equals(AlertStatus.Cancelled))
+	            return AuditType.AlertCancelled;
+
+            if (status.Equals(AlertStatus.Resolved))
+                return AuditType.AlertResolved;
+
+	        return null;
+	    }
 
         public async Task<IEnumerable<Alert>> GetCurrentAlerts()
 		{

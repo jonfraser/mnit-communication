@@ -40,5 +40,15 @@ namespace MNIT_Communication.Helpers
         {
              return (await CurrentProfile()) != null; 
         }
+        public string UserHostAddress
+        {
+            get
+            {
+                if (HttpContext.Current != null)
+                    return HttpContext.Current.Request.UserHostAddress;
+
+                return string.Empty;
+            }
+        }
     }
 }

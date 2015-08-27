@@ -6,13 +6,21 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure;
+using MNIT_Communication.Domain;
 using SendGrid;
 
 namespace MNIT_Communication.Services
 {
 	public class SendGridEmailService : ISendEmail
 	{
-		public async Task Send(string from, List<string> to, string subject, string body)
+	    private readonly IAuditService auditService;
+
+	    public SendGridEmailService(IAuditService auditService)
+	    {
+	        this.auditService = auditService;
+	    }
+
+	    public async Task Send(string from, List<string> to, string subject, string body)
 		{
 			// Create the email object first, then add the properties.
 			var myMessage = new SendGridMessage();
@@ -37,6 +45,13 @@ namespace MNIT_Communication.Services
 
 			// Send the email.
 			await transportWeb.DeliverAsync(myMessage);
-		}
+
+            await auditService.LogAuditEventAsync(new AuditEvent
+            {
+                AuditType = AuditType.EmailMessageSent,
+                Details = "An Email message has been sent to: " + to,
+                Data = myMessage
+            });
+        }
 	}
 }

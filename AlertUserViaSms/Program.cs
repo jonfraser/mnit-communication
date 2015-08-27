@@ -22,6 +22,7 @@ namespace AlertUserViaSms
             ServiceLocator.RegisterType<WebJobRuntimeContext>().As<IRuntimeContext>();
             ServiceLocator.RegisterType<ErrorLogger<Guid>>().As<IErrorLogger<Guid>>();
             ServiceLocator.RegisterType<ErrorRepository>().As<IErrorRepository>();
+            ServiceLocator.RegisterType<AuditService>().As<IAuditService>();
 
             ServiceLocator.RegisterType<AlertsService>().As<IAlertsService>();
             ServiceLocator.RegisterType<SendTelstraSmsService>().As<ISendSms>();

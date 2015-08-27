@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MNIT.ErrorLogging;
+using MNIT_Communication.Domain;
 
 namespace MNIT_Communication.Areas.api.v1
 {
@@ -32,6 +33,13 @@ namespace MNIT_Communication.Areas.api.v1
 
             profile.Confirmed = true;
             await userService.InsertOrUpdateUserProfile(profile);
+
+            auditService.LogAuditEvent(new AuditEvent
+            {
+                AuditType = AuditType.UserConfirmed,
+                EntityType = typeof(UserProfile).Name,
+                EntityId = profile.Id
+            });
 
             response = Request.CreateResponse(HttpStatusCode.Found);
             response.Headers.Location = new Uri(string.Format("{0}://{1}/Account/Confirmed", Request.RequestUri.Scheme, Request.RequestUri.Authority));

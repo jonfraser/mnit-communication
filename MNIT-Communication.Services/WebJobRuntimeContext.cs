@@ -33,5 +33,13 @@ namespace MNIT_Communication.Services
         {
             return Task.FromResult(false);
         }
+
+        public string UserHostAddress
+        {
+            get
+            {
+                return string.Empty;
+            }
+        }
     }
 }

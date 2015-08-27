@@ -35,10 +35,9 @@ namespace MNIT_Communication.App_Start
 		    builder.RegisterType<OutageHub>().As<IOutageHub>();
             builder.Register(c => new ErrorLogger<Guid>(c.Resolve<IEnumerable<IErrorRepository>>(), identityGenerator: Guid.NewGuid)).As<IErrorLogger<Guid>>();
 		    builder.RegisterType<ErrorRepository>().As<IErrorRepository>();
+		    builder.RegisterType<AuditService>().As<IAuditService>();
 
 #if DEBUG
-            //builder.RegisterType<FakeRepository>().As<IRepository>().SingleInstance();
-
             builder.RegisterType<FakeServiceBus>().As<IServiceBus>();
             builder.RegisterType<FakeUrlShortener>().As<IUrlShorten>();
             builder.RegisterType<FakeSmsService>().As<ISendSms>();
@@ -50,7 +49,8 @@ namespace MNIT_Communication.App_Start
             builder.RegisterInstance(new AzureBus(serviceBusConnectionString)).As<IServiceBus>().SingleInstance();
             builder.RegisterType<GoogleUrlShortener>().As<IUrlShorten>();
             builder.RegisterType<SendTelstraSmsService>().As<ISendSms>();
-            builder.RegisterType<RedisStore>().As<IShortTermStorage>();
+            //builder.RegisterType<RedisStore>().As<IShortTermStorage>();
+            builder.RegisterType<FakeShortTermStorage>().As<IShortTermStorage>().SingleInstance();
             builder.RegisterType<SendGridEmailService>().As<ISendEmail>();
             builder.RegisterType<NamespaceManagerWrapper>().As<INamespaceManager>();
 #endif

@@ -11,11 +11,13 @@ namespace MNIT_Communication.Areas.api.v1
 	{
 		private IUserService userService;
 	    private readonly IErrorLogger<Guid> errorLogger;
+	    private readonly IAuditService auditService;
 
-	    public UserController(IUserService userService, IErrorLogger<Guid> errorLogger)
+	    public UserController(IUserService userService, IErrorLogger<Guid> errorLogger, IAuditService auditService)
 	    {
 	        this.userService = userService;
 	        this.errorLogger = errorLogger;
+	        this.auditService = auditService;
 	    }
 	}
 }
