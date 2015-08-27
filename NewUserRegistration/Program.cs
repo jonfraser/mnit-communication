@@ -22,7 +22,8 @@ namespace NewUserRegistration
             ServiceLocator.RegisterType<WebJobRuntimeContext>().As<IRuntimeContext>();
             ServiceLocator.RegisterType<ErrorLogger<Guid>>().As<IErrorLogger<Guid>>();
             ServiceLocator.RegisterType<ErrorRepository>().As<IErrorRepository>();
-            
+            ServiceLocator.RegisterType<AuditService>().As<IAuditService>();
+
             ServiceLocator.RegisterType<UserService>().As<IUserService>();
             ServiceLocator.RegisterType<SendTwilioSmsService>().As<ISendSms>();
             ServiceLocator.RegisterType<GoogleUrlShortener>().As<IUrlShorten>();

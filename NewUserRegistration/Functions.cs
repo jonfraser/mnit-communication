@@ -16,7 +16,10 @@ namespace NewUserRegistration
 	{
 		public async static Task ProcessQueueMessage([ServiceBusTrigger(Queues.Registration)] NewUserRegistrationBrokeredMessage message, TextWriter log)
 		{
-			log.WriteLine("Received message " + message.CorrelationId.ToString() + " from queue for " + message.EmailAddress);
+		    var auditService = ServiceLocator.Resolve<IAuditService>();
+
+            var logMessage = "Received message " + message.CorrelationId.ToString() + " from queue for " + message.EmailAddress;
+            log.WriteLine(logMessage);
 
             var errorLogger = ServiceLocator.Resolve<IErrorLogger<Guid>>();
 
@@ -31,6 +34,13 @@ namespace NewUserRegistration
 				log.WriteLine(string.Format("Error in ProcessMessageQueue: {0}", ex.ToString()));
 				errorLogger.LogError(ex);
 			}
-		}
+
+            auditService.LogAuditEvent(new AuditEvent
+            {
+                AuditType = AuditType.WebJobMessageProcessing,
+                Details = "NewUserRegistrationBrokeredMessage: " + logMessage,
+                Data = message
+            });
+        }
 	}
 }
