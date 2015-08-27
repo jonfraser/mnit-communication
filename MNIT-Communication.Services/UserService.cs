@@ -60,9 +60,10 @@ namespace MNIT_Communication.Services
 				EmailAddress = email
 			};
 
-            await serviceBus.SendToQueueAsync(message, Queues.Registration);
+            //await serviceBus.SendToQueueAsync(message, Queues.Registration);
+	        await ProcessServiceBusRegistrationMessage(message);
 
-			return message.CorrelationId;
+            return message.CorrelationId;
 		}
 
 		public async Task ProcessServiceBusRegistrationMessage(NewUserRegistrationBrokeredMessage message)
@@ -99,14 +100,16 @@ namespace MNIT_Communication.Services
 
 		public async Task RequestVerificationOfMobileNumber(string mobileNumber, Guid id)
 		{
-			var message = new VerifyMobileNumberBrokeredMessage
-			{
-				CorrelationId = Guid.NewGuid(),
-				MobileNumber = mobileNumber,
-				NewUserRegistrationId = id
-			};
+			//var message = new VerifyMobileNumberBrokeredMessage
+			//{
+			//	CorrelationId = Guid.NewGuid(),
+			//	MobileNumber = mobileNumber,
+			//	NewUserRegistrationId = id
+			//};
 
-            await serviceBus.SendToQueueAsync(message, Queues.MobileNumberVerify);
+            //await serviceBus.SendToQueueAsync(message, Queues.MobileNumberVerify);
+
+		    await VerifyMobileNumber(mobileNumber, id);
 		}
 
 		public async Task VerifyMobileNumber(string mobileNumber, Guid id)
