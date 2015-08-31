@@ -211,7 +211,8 @@ namespace MNIT_Communication.Services
         public async Task<IEnumerable<UserProfile>> GetSubscribersFor(params Guid[] alertables)
 	    {
 	        //Find the users who are subscribed to ANY of the systems in the 'alertables' collection
-            var subscribers = await repository.Get<UserProfile>(u => u.AlertSubscriptions.Any(alertables.Contains));
+            //TODO - this really shouldn't pull ALL User Profiles into memory
+            var subscribers = (await repository.Get<UserProfile>()).Where(u => u.AlertSubscriptions.Any(alertables.Contains));
 	        return subscribers;
 	    }
 
