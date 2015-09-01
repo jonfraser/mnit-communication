@@ -31,11 +31,14 @@ namespace AlertUserViaSms
             {
                 try
                 {
-                    var body = string.Format(@"MNHHS Communication Alert has been {0}: '{1} by {2}'. \0x0A {3}", // '\0x0A' is a line break
-                        message.AlertStatus.ToString(), 
+                    string status = message.AlertStatus.ToString();
+
+                    var body = string.Format(@"MNHHS Communication Alert '{1}' has been {0} by {2}.{4}{3}", //
+                        status, 
                         message.AlertInfoShort, 
                         message.AlertRaiser.Name, 
-                        message.AlertDetail);
+                        message.AlertDetail,
+                        (char)10); //Line break
 
                     await sms.SendSimple(subscriber.MobilePhoneNumber, body);
                 }

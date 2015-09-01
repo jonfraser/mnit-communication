@@ -12,7 +12,9 @@ namespace MNIT_Communication.App_Start
     {
         public static void Register(HttpConfiguration config)
         {
-            config.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Local;
+#if RELEASE
+            config.Formatters.JsonFormatter.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+#endif
 
             // Web API configuration and services
 
