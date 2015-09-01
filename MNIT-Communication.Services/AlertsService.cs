@@ -145,10 +145,6 @@ namespace MNIT_Communication.Services
 	        alert.LastUpdate.Timestamp = alert.LastUpdate.Timestamp.AddHours(-10);
 #endif
             await repository.Upsert(alert);
-#if RELEASE
-            alert.LastUpdate.Timestamp = alert.LastUpdate.Timestamp.AddHours(10);
-#endif
-
 
             if (publishMessage)
             {
