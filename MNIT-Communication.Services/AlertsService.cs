@@ -140,10 +140,18 @@ namespace MNIT_Communication.Services
 
                 //NOT publishing for History updates..
 	        }
+//TODO - really bad hack her to get around TimeZone issues - there has to be a better way!
+#if RELEASE
+	        alert.LastUpdate.Timestamp = alert.LastUpdate.Timestamp.AddHours(-10);
+#endif
+            await repository.Upsert(alert);
+#if RELEASE
+            alert.LastUpdate.Timestamp = alert.LastUpdate.Timestamp.AddHours(10);
 
-	        await repository.Upsert(alert);
+#endif
 
-            if(publishMessage)
+
+            if (publishMessage)
             {
                 var message = new AlertBrokeredMessage
                 {
