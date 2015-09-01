@@ -30,13 +30,13 @@ namespace AlertUserViaExternalEmailJob
 		    {
 		        try
 		        {
-		            var subscriberAddresses = new List<string> {subscriber.EmailAddressExternalProvider, subscriber.EmailAdressInternal};
-                    var body = string.Format("MNHHS Communication sent a message: {0}:{1}", message.AlertInfoShort, message.AlertDetail);
 
-                    await mail.Send(from: "mnit-communication@health.qld.gov.au",
-									to: subscriberAddresses,
-									subject: "An alert has been raised!",
-									body: body);
+		            var from = "mnit-communication@health.qld.gov.au";
+                    var to = new List<string> {subscriber.EmailAddressExternalProvider, subscriber.EmailAdressInternal};
+		            var subject = string.Format("MNHHS Communication Alert has been {0}: '{1}'", message.AlertStatus, message.AlertInfoShort);
+                    var body = string.Format("{0} by {1}: {2}", message.AlertStatus, message.AlertRaiser.Name, message.AlertDetail);
+
+		            await mail.Send(from, to, subject, body);
 
                 }
 		        catch(Exception ex)

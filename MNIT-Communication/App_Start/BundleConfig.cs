@@ -25,7 +25,8 @@ namespace MNIT_Communication
 
             bundles.Add(new ScriptBundle("~/bundles/moment")
                 .Include("~/Scripts/moment.js")
-                .Include("~/Scripts/angular-moment.js"));
+                .Include("~/Scripts/angular-moment.js")
+                .Include("~/Scripts/moment.setLocale.en-AU.js"));
 
             bundles.Add(new StyleBundle("~/Content/css")
                 .Include("~/Content/bootstrap/bootstrap.css",

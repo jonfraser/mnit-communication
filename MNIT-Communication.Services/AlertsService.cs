@@ -95,9 +95,10 @@ namespace MNIT_Communication.Services
                 {
                     CorrelationId = uniqueIdentifier,
                     AlertableId = alert.Service.Id,
+                    AlertStatus = AlertStatus.Raised,
                     AlertDetail = alert.LastUpdate.Detail,
                     AlertInfoShort = alert.Summary,
-                    AlertRaiser = alert.RaisedBy.Id
+                    AlertRaiser = alert.RaisedBy.Summary
                 };
 
                 await auditService.LogAuditEventAsync(new AuditEvent
@@ -148,9 +149,10 @@ namespace MNIT_Communication.Services
                 {
                     CorrelationId = alert.Id,
                     AlertableId = alert.Service.Id,
+                    AlertStatus = request.Update.Status,
                     AlertDetail = alert.LastUpdate.Detail,
                     AlertInfoShort = alert.Summary,
-                    AlertRaiser = alert.LastUpdate.UpdatedBy.Id
+                    AlertRaiser = request.Update.UpdatedBy
                 };
 
                 await serviceBus.SendToTopicAsync(message, Topics.Alerts);
