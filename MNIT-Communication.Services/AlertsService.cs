@@ -142,7 +142,7 @@ namespace MNIT_Communication.Services
 	        }
             //TODO - really bad hack her to get around TimeZone issues - there has to be a better way!
 #if RELEASE
-	        //alert.LastUpdate.Timestamp = alert.LastUpdate.Timestamp.AddHours(-10);
+	        alert.LastUpdate.Timestamp = alert.LastUpdate.Timestamp.AddHours(-10);
 #endif
             await repository.Upsert(alert);
 
