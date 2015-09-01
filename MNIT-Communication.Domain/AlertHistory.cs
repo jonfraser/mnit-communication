@@ -5,6 +5,7 @@ namespace MNIT_Communication.Domain
 {
     public class AlertHistory: BaseEntity
     {
+        [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]
         public DateTime Timestamp { get; set; }
         public AlertStatus Status { get; set; }
         public string Detail { get; set; }
