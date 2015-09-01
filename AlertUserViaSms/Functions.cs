@@ -31,7 +31,8 @@ namespace AlertUserViaSms
             {
                 try
                 {
-                    await sms.SendSimple(subscriber.MobilePhoneNumber, message.AlertInfoShort);
+                    var body = string.Format("MNHHS Communication sent a message: {0}:{1}", message.AlertInfoShort, message.AlertDetail);
+                    await sms.SendSimple(subscriber.MobilePhoneNumber, body);
                 }
                 catch(Exception ex)
                 {

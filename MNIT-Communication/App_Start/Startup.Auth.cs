@@ -50,6 +50,12 @@ namespace MNIT_Communication
   
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 #if DEBUG
+             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = CloudConfigurationManager.GetSetting("GoogleAuthClientID"),
+                ClientSecret = CloudConfigurationManager.GetSetting("GoogleAuthClientSecret")
+            });
+
             app.UseDevelopmentAuthentication(new DevelopmentAuthenticationOptions("Development")
             {
                 UserId = "8B2BFBA3-6DFF-413B-882F-08FACA4E80C9",

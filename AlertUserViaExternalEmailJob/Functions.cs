@@ -31,11 +31,12 @@ namespace AlertUserViaExternalEmailJob
 		        try
 		        {
 		            var subscriberAddresses = new List<string> {subscriber.EmailAddressExternalProvider, subscriber.EmailAdressInternal};
-                    
+                    var body = string.Format("MNHHS Communication sent a message: {0}:{1}", message.AlertInfoShort, message.AlertDetail);
+
                     await mail.Send(from: "mnit-communication@health.qld.gov.au",
 									to: subscriberAddresses,
 									subject: "An alert has been raised!",
-									body: message.AlertDetail);
+									body: body);
 
                 }
 		        catch(Exception ex)
