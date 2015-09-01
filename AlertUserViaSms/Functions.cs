@@ -31,10 +31,8 @@ namespace AlertUserViaSms
             {
                 try
                 {
-                    string status = message.AlertStatus.ToString();
-
-                    var body = string.Format(@"MNHHS Communication Alert '{1}' has been {0} by {2}.{4}{3}", //
-                        status, 
+                    var body = string.Format(@"MNHHS Communication Alert '{1}' has been {0} by {2}.{4}Details: {3}", //
+                        message.AlertStatus.Name, 
                         message.AlertInfoShort, 
                         message.AlertRaiser.Name, 
                         message.AlertDetail,
