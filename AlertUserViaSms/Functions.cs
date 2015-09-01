@@ -32,7 +32,7 @@ namespace AlertUserViaSms
                 try
                 {
                     var body = string.Format(@"MNHHS Communication Alert has been {0}: '{1} by {2}'. \0x0A {3}", // '\0x0A' is a line break
-                        message.AlertStatus, 
+                        message.AlertStatus.ToString(), 
                         message.AlertInfoShort, 
                         message.AlertRaiser.Name, 
                         message.AlertDetail);
