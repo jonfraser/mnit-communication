@@ -98,7 +98,7 @@ namespace MNIT_Communication.Services
                     AlertStatus = AlertStatus.Raised,
                     AlertDetail = alert.LastUpdate.Detail,
                     AlertInfoShort = alert.Summary,
-                    AlertRaiser = alert.RaisedBy.Summary
+                    AlertRaiser = alert.RaisedBy
                 };
 
                 await auditService.LogAuditEventAsync(new AuditEvent
