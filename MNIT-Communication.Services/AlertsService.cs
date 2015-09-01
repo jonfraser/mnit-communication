@@ -120,7 +120,7 @@ namespace MNIT_Communication.Services
             var alert = await repository.Get<Alert>(request.AlertId);
 
             if(alert == null)
-                throw new ArgumentException(string.Format("No Alert with the Id {0} was fiund to Update!", request.AlertId), "request.AlertId");
+                throw new ArgumentException(string.Format("No Alert with the Id {0} was found to Update!", request.AlertId), "request.AlertId");
 
 	        if (request.Update.IsNew)
 	        {
