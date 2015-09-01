@@ -116,16 +116,6 @@ namespace MNIT_Communication.Services
 
 	    public async Task UpdateAlert(UpdateAlertRequest request)
 	    {
-            auditService.LogAuditEvent(new AuditEvent
-            {
-                AuditType = new AuditType
-                {
-                    AuditVerbosity = AuditVerbosity.Outrageous,
-                    EventName = "Checking Timestamp value.."
-                },
-                Data = request.Update.Timestamp
-            });
-            
             var publishMessage = false;
             var alert = await repository.Get<Alert>(request.AlertId);
 
