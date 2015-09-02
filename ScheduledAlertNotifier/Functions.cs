@@ -39,7 +39,7 @@ namespace ScheduledAlertNotifier
 
                 try
                 {
-                    await auditService.LogAuditEventAsync(new AuditEvent
+                    auditService.LogAuditEvent(new AuditEvent
                     {
                         AuditType = AuditType.ScheduledAlertsNotified,
                         Details = "CheckForScheduledAlerts was called"
@@ -49,7 +49,7 @@ namespace ScheduledAlertNotifier
                 }
                 catch (Exception ex)
                 {
-                    await errorLogger.LogErrorAsync(ex);
+                    errorLogger.LogError(ex);
                 }
            });
         }
