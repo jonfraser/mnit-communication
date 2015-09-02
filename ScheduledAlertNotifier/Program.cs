@@ -42,7 +42,7 @@ namespace ScheduledAlertNotifier
             alertService = ServiceLocator.Resolve<IAlertsService>();
 
             var intervalSeconds = 60; //Default
-            int.TryParse(CloudConfigurationManager.GetSetting("ScheduledAlertNotifier.IntervalSeconds"), out intervalSeconds);
+            //int.TryParse(CloudConfigurationManager.GetSetting("ScheduledAlertNotifier.IntervalSeconds"), out intervalSeconds);
             var milliseonds = TimeSpan.FromSeconds(intervalSeconds).TotalMilliseconds;
 
             using (var timer = new Timer(milliseonds))
