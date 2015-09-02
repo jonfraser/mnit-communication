@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using Microsoft.Azure.WebJobs;
@@ -9,6 +10,8 @@ using Microsoft.WindowsAzure;
 using MNIT.ErrorLogging;
 using MNIT_Communication.Domain;
 using MNIT_Communication.Services;
+using MNIT_Communication.Services.Fakes;
+using Timer = System.Timers.Timer;
 
 namespace ScheduledAlertNotifier
 {
@@ -22,14 +25,12 @@ namespace ScheduledAlertNotifier
         {
 
             ServiceLocator.RegisterType<MongoDbRepository>().As<IRepository>();
-
             ServiceLocator.RegisterType<WebJobRuntimeContext>().As<IRuntimeContext>();
             ServiceLocator.RegisterType<ErrorLogger<Guid>>().As<IErrorLogger<Guid>>();
             ServiceLocator.RegisterType<ErrorRepository>().As<IErrorRepository>();
             ServiceLocator.RegisterType<AuditService>().As<IAuditService>();
-
             ServiceLocator.RegisterType<AlertsService>().As<IAlertsService>();
-
+            
             CheckForScheduledAlerts();
 
             Console.ReadLine();
@@ -45,38 +46,52 @@ namespace ScheduledAlertNotifier
 
             var intervalSeconds = 15; //Default
             //int.TryParse(CloudConfigurationManager.GetSetting("ScheduledAlertNotifier.IntervalSeconds"), out intervalSeconds);
-            var milliseconds = TimeSpan.FromSeconds(intervalSeconds).TotalMilliseconds;
+            var interval = TimeSpan.FromSeconds(intervalSeconds);
 
-            var timer = new Timer(milliseconds);
-            timer.Elapsed += DoNotifications;
-            timer.Enabled = true;
-            timer.Start();
-
-            Console.WriteLine("Timer started");
+            Repeat(DoNotifications, interval, new CancellationToken());
+            
+            Console.WriteLine("Repeat started");
         }
 
-        private static void DoNotifications(object sender, ElapsedEventArgs e)
+        private static async Task DoNotifications()
         {
             Console.WriteLine("DoNotifications called");
 
-            Task.Run(async () =>
+            try
             {
+                auditService.LogAuditEvent(new AuditEvent
+                {
+                    AuditType = AuditType.ScheduledAlertsNotified,
+                    Details = "CheckForScheduledAlerts was called"
+                });
+
+                await alertService.NotifyScheduledAlerts();
+                Console.WriteLine("alertService.NotifyScheduledAlerts called");
+            }
+            catch (Exception ex)
+            {
+                errorLogger.LogError(ex);
+                Console.WriteLine(ex);
+            }
+        }
+
+        private static async Task Repeat(Func<Task> action, TimeSpan interval, CancellationToken cancellationToken)
+        {
+            while (true)
+            {
+                await action();
+                Task task = Task.Delay(interval, cancellationToken);
+
                 try
                 {
-                    auditService.LogAuditEvent(new AuditEvent
-                    {
-                        AuditType = AuditType.ScheduledAlertsNotified,
-                        Details = "CheckForScheduledAlerts was called"
-                    });
+                    await task;
+                }
 
-                    await alertService.NotifyScheduledAlerts();
-                    Console.WriteLine("alertService.NotifyScheduledAlerts called");
-                }
-                catch (Exception ex)
+                catch (TaskCanceledException)
                 {
-                    errorLogger.LogError(ex);
+                    return;
                 }
-            });
+            }
         }
     }
 }

@@ -6,9 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using MNIT.ErrorLogging;
+using Newtonsoft.Json;
 
 namespace MNIT_Communication.Services
 {
@@ -23,6 +26,7 @@ namespace MNIT_Communication.Services
 	    private readonly IAuditService auditService;
 
 	    private readonly string serviceBusConnectionString;
+	    private readonly string rootUri;
 
 		public AlertsService(IServiceBus serviceBus, INamespaceManager namespaceManager, IUserService userService, IRepository repository, IOutageHub outageHub, IRuntimeContext runtimeContext, IAuditService auditService)
 		{
@@ -34,14 +38,16 @@ namespace MNIT_Communication.Services
 		    this.outageHub = outageHub;
 		    this.runtimeContext = runtimeContext;
 		    this.auditService = auditService;
+            this.rootUri = CloudConfigurationManager.GetSetting("RootUri");
 		}
 
-        public AlertsService(IRepository repository)
+        public AlertsService(IRepository repository, IRuntimeContext runtimeContext)
         {
             this.repository = repository;
+            this.runtimeContext = runtimeContext;
         }
 
-		public async Task<Guid> SubscribeToAlerts(Guid userId, IEnumerable<Guid> alertables)
+        public async Task<Guid> SubscribeToAlerts(Guid userId, IEnumerable<Guid> alertables)
 		{
 		    var userProfile = await userService.RetrieveUserProfile(userId);
 		    userProfile.AlertSubscriptions = alertables.ToList();
@@ -220,7 +226,14 @@ namespace MNIT_Communication.Services
 	                    }
 	                };
 
-	                await UpdateAlert(request);
+	                //await UpdateAlert(request);
+
+	                var uri = new Uri(rootUri + "/api/Alerts/Update");
+                    using (var client = new HttpClient())
+	                {
+                        var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
+                        var responseMessage = await client.PostAsync(uri, content);
+                    }
 	            }
 	        }
 	    }

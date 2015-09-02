@@ -351,19 +351,18 @@
                     outageHub.client.notifyChange = function(outageDetail) {
                         var status = outageDetail.LastUpdate.Status.Name;
 
-                        if (status === alertStatus.Raised || (futureAlertsLoaded && status === alertStatus.Scheduled)) { //outage is new
+                        var existing = $filter('getById')($scope.outages, outageDetail.Id);
+                        
+                        if (existing != null) {
+                            existing.LastUpdate = outageDetail.LastUpdate;
+                            existing.History = outageDetail.History;
+                            existing.UpdateDate = outageDetail.UpdateDate;
+                            existing.IsCurrent = outageDetail.IsCurrent;
+                            existing.IsPast = outageDetail.IsPast;
+                            existing.IsFuture = outageDetail.IsFuture;
+                        } else {
                             outageDetail.UserSubscribed = currentProfile.AlertSubscriptions.indexOf(outageDetail.Service.Id) > -1;
                             $scope.outages.push(outageDetail);
-                        } else { //updating an existing outage
-                            var existing = $filter('getById')($scope.outages, outageDetail.Id);
-                            if (existing != null) {
-                                existing.LastUpdate = outageDetail.LastUpdate;
-                                existing.History = outageDetail.History;
-                                existing.UpdateDate = outageDetail.UpdateDate;
-                                existing.IsCurrent = outageDetail.IsCurrent;
-                                existing.IsPast = outageDetail.IsPast;
-                                existing.IsFuture = outageDetail.IsFuture;
-                            }
                         }
 
                         $scope.$apply();
