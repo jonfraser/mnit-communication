@@ -48,8 +48,6 @@ namespace ScheduledAlertNotifier
             using (var timer = new Timer(milliseonds))
             {
                 timer.Elapsed += DoNotifications;
-
-                timer.Enabled = true;
                 timer.Start();
 
                 Console.WriteLine("Timer started");
