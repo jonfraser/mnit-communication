@@ -31,6 +31,8 @@ namespace ScheduledAlertNotifier
             ServiceLocator.RegisterType<AlertsService>().As<IAlertsService>();
 
             CheckForScheduledAlerts();
+
+            Console.ReadLine();
         }
 
         public static void CheckForScheduledAlerts()
@@ -41,17 +43,16 @@ namespace ScheduledAlertNotifier
             errorLogger = ServiceLocator.Resolve<IErrorLogger<Guid>>();
             alertService = ServiceLocator.Resolve<IAlertsService>();
 
-            var intervalSeconds = 60; //Default
+            var intervalSeconds = 15; //Default
             //int.TryParse(CloudConfigurationManager.GetSetting("ScheduledAlertNotifier.IntervalSeconds"), out intervalSeconds);
             var milliseconds = TimeSpan.FromSeconds(intervalSeconds).TotalMilliseconds;
 
-            using (var timer = new Timer(milliseconds))
-            {
-                timer.Elapsed += DoNotifications;
-                timer.Start();
+            var timer = new Timer(milliseconds);
+            timer.Elapsed += DoNotifications;
+            timer.Enabled = true;
+            timer.Start();
 
-                Console.WriteLine("Timer started");
-            }
+            Console.WriteLine("Timer started");
         }
 
         private static void DoNotifications(object sender, ElapsedEventArgs e)
