@@ -38,8 +38,17 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Azure.WebJobs.ServiceBus">
+    <Reference Include="Microsoft.Azure.WebJobs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.WebJobs.Core.1.0.0\lib\net45\Microsoft.Azure.WebJobs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Azure.WebJobs.Host, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.WebJobs.1.0.0\lib\net45\Microsoft.Azure.WebJobs.Host.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Azure.WebJobs.ServiceBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.WebJobs.ServiceBus.1.0.0\lib\net45\Microsoft.Azure.WebJobs.ServiceBus.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -97,12 +106,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.Azure.WebJobs">
-      <HintPath>..\packages\Microsoft.Azure.WebJobs.Core.1.0.0\lib\net45\Microsoft.Azure.WebJobs.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.WebJobs.Host">
-      <HintPath>..\packages\Microsoft.Azure.WebJobs.1.0.0\lib\net45\Microsoft.Azure.WebJobs.Host.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>

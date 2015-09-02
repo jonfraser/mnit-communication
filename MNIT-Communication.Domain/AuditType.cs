@@ -41,6 +41,12 @@ namespace MNIT_Communication.Domain
             AuditVerbosity = AuditVerbosity.Low
         };
 
+        public static AuditType AlertScheduled = new AuditType
+        {
+            EventName = "AlertScheduled",
+            AuditVerbosity = AuditVerbosity.Low
+        };
+
         public static AuditType AlertCancelled = new AuditType
         {
             EventName = "AlertCancelled",
@@ -75,6 +81,12 @@ namespace MNIT_Communication.Domain
         {
             EventName = "WebJobMessageProcessing",
             AuditVerbosity = AuditVerbosity.High
+        };
+
+        public static AuditType ScheduledAlertsNotified = new AuditType
+        {
+            EventName = "ScheduledAlertsNotified",
+            AuditVerbosity = AuditVerbosity.Outrageous
         };
 
     }

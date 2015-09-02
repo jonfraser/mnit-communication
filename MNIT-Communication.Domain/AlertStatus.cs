@@ -7,18 +7,19 @@ namespace MNIT_Communication.Domain
 {
     public class AlertStatus
     {
+        public static AlertStatus Scheduled = new AlertStatus { Name = "Scheduled", Order = 0};
+        public static AlertStatus Raised = new AlertStatus {Name = "Raised", Order = 1};
+        public static AlertStatus Updated = new AlertStatus {Name = "Updated", Order = 2};
+        public static AlertStatus Resolved = new AlertStatus {Name = "Resolved", Order = 3};
+        public static AlertStatus Cancelled = new AlertStatus {Name = "Cancelled", Order = 4};
+
+        public string Name { get; set; }
+        public int Order { get; private set; }
+
         protected bool Equals(AlertStatus other)
         {
             return string.Equals(Name, other.Name);
         }
-
-        public static AlertStatus Raised = new AlertStatus {Name = "Raised"};
-        public static AlertStatus Updated = new AlertStatus {Name = "Updated"};
-        public static AlertStatus Cancelled = new AlertStatus {Name = "Cancelled"};
-        public static AlertStatus Resolved = new AlertStatus {Name = "Resolved"};
-
-        public string Name { get; set; }
-
         public override bool Equals(object obj)
         {
             var compareTo = obj as AlertStatus;

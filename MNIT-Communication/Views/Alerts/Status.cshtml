@@ -14,61 +14,61 @@
     <p>
         <div class="btn-group">
             <label class="btn">Show</label>
-            <label class="btn btn-info" ng-model="filter" btn-radio="filterType.Subscribed">Subscribed</label>
-            <label class="btn btn-info" ng-model="filter" btn-radio="filterType.All">All</label>
-            @*<label class="btn">Or</label>
-            <label class="btn btn-success" ng-model="filter" btn-radio="filterType.Current">Current</label>
-            <label class="btn btn-success" ng-model="filter" btn-radio="filterType.Scheduled">Scheduled</label>
-            <label class="btn btn-success" ng-model="filter" btn-radio="filterType.Past">Past</label>*@
+            <button class="btn btn-info" ng-model="filter" btn-radio="filterType.Subscribed">Subscribed Only</button>
+            <button class="btn btn-info" ng-model="filter" btn-radio="filterType.All">All Current</button>
+            <label class="btn">Or</label>
+            <button class="btn btn-success" ng-model="filter" btn-radio="filterType.Past" ng-click="getPastAlerts()">Past</button>
+            <button class="btn btn-success" ng-model="filter" btn-radio="filterType.Scheduled" ng-click="getFutureAlerts()">Scheduled</button>
             <label class="btn">and Order By</label>
-            <label class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Service">Service</label>
-            <label class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Start">Onset Date</label>
-            <label class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Update">Last Update</label>
+            <button class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Status">Status</button>
+            <button class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Service">Service</button>
+            <button class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Start">Onset Date</button>
+            <button class="btn btn-warning" ng-model="orderBy" btn-radio="orderType.Update">Last Update</button>
         </div>
     </p>
 
     <div class="row" ng-show="outages.length > 0">
-            <div class="col-md-12">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>Service</th>
-                            <th>Outage Start</th>
-                            <th>Raised By</th>
-                            <th>Description</th>
-                            <th>Current Status</th>
-                            <th>Last Updated</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="outage in outages | filter: filter | orderBy: orderBy">
-                            <td>{{outage.Service.Name}}</td>
-                            <td>
-                                <span am-time-ago="outage.Start" title="{{outage.Start | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
-                            </td>
-                            <td>{{outage.RaisedBy.Name}}</td>
-                            <td>{{outage.Summary}}</td>
-                            <td>{{outage.LastUpdate.Display}}</td>
-                            <td>
-                                <span am-time-ago="outage.UpdateDate" title="{{outage.UpdateDate | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
-                            </td>
-                            <td>
-                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#detailsModal" ng-click="selectOutage(outage)">
-                                    <i class="fa fa-eye"></i> View
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="col-md-12">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>Outage Start</th>
+                        <th>Raised By</th>
+                        <th>Description</th>
+                        <th>Current Status</th>
+                        <th>Last Updated</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="outage in outages | filter: filter | orderBy: orderBy">
+                        <td>{{outage.Service.Name}}</td>
+                        <td>
+                            <span am-time-ago="outage.Start" title="{{outage.Start | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
+                        </td>
+                        <td>{{outage.RaisedBy.Name}}</td>
+                        <td>{{outage.Summary}}</td>
+                        <td>{{outage.LastUpdate.Display}}</td>
+                        <td>
+                            <span am-time-ago="outage.UpdateDate" title="{{outage.UpdateDate | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}}"></span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#detailsModal" ng-click="selectOutage(outage)">
+                                <i class="fa fa-eye"></i> View
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+    </div>
 </form>
 
 <script type="text/ng-template" id="outageDetails.html">
     <div class="modal-header">
         <h3 class="modal-title">
-            <button type="button" class="btn btn-{{historyButtonConfig().btn}} btn-sm" ng-model="addHistory" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false" title="{{historyButtonConfig().text}}">
+            <button type="button" class="btn btn-{{historyButtonConfig().btn}} btn-sm" ng-model="addHistory" ng-disabled="!canAddHistory()" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false" title="{{historyButtonConfig().text}}">
                 <i class="fa fa-{{historyButtonConfig().icon}}"></i>
             </button>
             {{ outage.Service.Name }} ({{outage.Start | amDateFormat:'dddd, MMMM Do YYYY, h:mm:ss a'}})
@@ -92,7 +92,7 @@
                 <div class="form-group">
                     <label for="Status" class="col-sm-3 control-label">Status</label>
                     <div class="col-sm-4">
-                        <select ng-model="historyUpdate.Status" class="form-control" ng-options="status.Name for status in statuses track by status.Name"></select>
+                        <select ng-model="historyUpdate.Status" class="form-control" ng-options="status.Name for status in getStatuses() track by status.Name"></select>
                     </div>
                     <div class="col-sm-4">
                         <i class="fa fa-{{historyUpdate.Status.Icon}}"></i> 
@@ -176,6 +176,7 @@
         var currentProfile = @Html.Raw(JsonConvert.SerializeObject(Model.CurrentProfile));
 
         var alertStatus = {
+            Scheduled: 'Scheduled',
             Raised: 'Raised',
             Updated: 'Updated',
             Cancelled: 'Cancelled',
@@ -236,15 +237,15 @@
                     $scope.outages = [];
 
                     $scope.filterType = {
-                        All: {},
+                        All: { IsCurrent: true },
                         Subscribed: { UserSubscribed: true },
-                        Current: { IsCurrent: true },
-                        Scheduled: 'scheduledAlertFilter',
-                        Past: 'pastAlertFilter'
+                        Scheduled: { IsFuture: true },
+                        Past: { IsPast: true }
                     }
 
                     $scope.orderType = {
                         Service: 'Service.Name',
+                        Status: 'LastUpdate.Status.Order',
                         Start: '-Start',
                         Update: '-UpdateDate'
                     }
@@ -293,6 +294,45 @@
                         });
                     }
 
+                    var pastAlertsLoaded = false;
+                    $scope.getPastAlerts = function() {
+                        if(pastAlertsLoaded)
+                            return;
+                        
+                        $http.get('@Url.HttpRouteUrl("DefaultApi", new {action = "GetPast", controller = "Alerts"})').
+                        success(function(data) {
+                            data = data || [];
+                            $scope.outages = $scope.outages.concat(data);
+                                pastAlertsLoaded = true;
+                            }).
+                        error(function() {
+
+                        })
+                        .finally(function() {
+                            //no-op
+                        });
+                    }
+                    
+                    var futureAlertsLoaded = false;
+                    $scope.getFutureAlerts = function() {
+                        if(futureAlertsLoaded)
+                            return;
+                        
+                        $http.get('@Url.HttpRouteUrl("DefaultApi", new {action = "GetFuture", controller = "Alerts"})').
+                        success(function(data) {
+                            data = data || [];
+                            $scope.outages = $scope.outages.concat(data);
+                            futureAlertsLoaded = true;
+                        }).
+                        error(function() {
+
+                        })
+                        .finally(function() {
+                            //no-op
+                        });
+                    }
+
+                    //Perform initial load of Current Alerts
                     $http.get('@Url.HttpRouteUrl("DefaultApi", new {action = "Get", controller = "Alerts"})').
                         success(function(data) {
                             $scope.outages = data || [];
@@ -304,11 +344,14 @@
                             //no-op
                         });
 
+
+
+
                     var outageHub = $.connection.outageHub;
                     outageHub.client.notifyChange = function(outageDetail) {
                         var status = outageDetail.LastUpdate.Status.Name;
 
-                        if (status === alertStatus.Raised) { //outage is new
+                        if (status === alertStatus.Raised || (futureAlertsLoaded && status === alertStatus.Scheduled)) { //outage is new
                             outageDetail.UserSubscribed = currentProfile.AlertSubscriptions.indexOf(outageDetail.Service.Id) > -1;
                             $scope.outages.push(outageDetail);
                         } else { //updating an existing outage
@@ -317,6 +360,9 @@
                                 existing.LastUpdate = outageDetail.LastUpdate;
                                 existing.History = outageDetail.History;
                                 existing.UpdateDate = outageDetail.UpdateDate;
+                                existing.IsCurrent = outageDetail.IsCurrent;
+                                existing.IsPast = outageDetail.IsPast;
+                                existing.IsFuture = outageDetail.IsFuture;
                             }
                         }
 
@@ -337,7 +383,25 @@
                     { Name: 'Resolved', Description: 'This outage is now resolved', Icon: 'smile-o' }
                 ];
 
+                $scope.getStatuses = function() {
+                    if (outage.IsFuture) {
+                        return [$scope.statuses[1]]; //Cancelled
+                    } else {
+                        return $scope.statuses;
+                    }
+                }
+
                 $scope.addHistory = false;
+
+                $scope.canAddHistory = function() {
+                    if (!$scope.currentProfile.IsAdmin)
+                        return false;
+                    
+                    if (outage.IsPast)
+                        return false;
+
+                    return true;
+                };
 
                 $scope.historyUpdate = {
                     Timestamp: moment().format(dateTimeFormat),

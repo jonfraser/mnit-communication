@@ -17,7 +17,7 @@
             <ul class="list-unstyled list-inline">
                 @*TODO - Bootstrap Toggle breaks the Angular handler*@
                 @*on-finish-render="toggelize()"*@
-                <li ng-repeat="alertable in group.Alertables | orderBy:'Name'" ng-click="toggleAlertable(alertable, $event)" class="col-md-4" style="margin-bottom:10px;">
+                <li ng-repeat="alertable in group.Alertables | orderBy:'Name'" ng-click="toggleAlertable(alertable, $event)" class="col-md-4" style="margin-bottom: 10px;">
                     <label class="checkbox-inline">
                         <input type="checkbox" />
                         {{alertable.Name}}
@@ -26,7 +26,7 @@
             </ul>
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-2">
             <label for="shortInfo">Short Info:</label>
@@ -44,13 +44,45 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-md-2">
+            <label>Start/End:</label>
+        </div>
+        <div class="col-xs-1">
+            <input type="checkbox" ng-model="scheduled" title="Scheduled?" />
+        </div>
+        <div class="col-xs-3">
+            <input type="text" date-time-picker class="form-control" ng-model="start" ng-disabled="!scheduled" placeholder="STARTS NOW!!"/>
+        </div>
+        <div class="col-xs-3">
+            <input type="text" date-time-picker class="form-control" ng-model="expectedFinish" placeholder="Hopefully Finished by.." />
+        </div>
+    </div>
+    
+    <div class="row">
         <div class="col-md-10">
-            <button type="submit" class="btn btn-primary btn-lg">Raise the alarm!</button>
+            <button type="submit" class="btn btn-primary btn-lg" ng-disabled="!isValid()">
+                <i class="fa {{saving ? 'fa-spinner fa-pulse' : 'fa-bullhorn'}} "></i>
+                Raise the alarm!
+            </button>
         </div>
     </div>
 </form>
 
+@section styles {
+    @Styles.Render("~/Content/jquery.datetimepicker")
+    <style>
+        div.row {
+            margin-bottom: 2px;
+        }
+
+    </style>
+}
+
 @section scripts {
+    @Scripts.Render("~/bundles/moment")
+    @Scripts.Render("~/bundles/ui-bootstrap")
+    @Scripts.Render("~/bundles/jquery.datetimepicker")
+    
     <script type="text/javascript">
         var currentProfile = @Html.Raw(JsonConvert.SerializeObject(Model.CurrentProfile));
 
@@ -65,60 +97,118 @@
                     }
                 }
             })
+            .directive('dateTimePicker', function() {
+                function link(scope, element, attrs) {
+                    element.datetimepicker({
+                        format: 'YYYY-MM-DD HH:mm',
+                        step: 5
+                    });
+                }
+
+                return {
+                    link: link
+                };
+            })
           .controller('AlertsController', ['$scope', '$http', function ($scope, $http) {
 
-              $scope.toggelize = function () {
-                  $('li label input').bootstrapToggle({
-                      on: 'Yes',
-                      off: 'No'
-                  });
-              };
+            var dateTimeFormat = 'YYYY-MM-DD HH:mm';
 
-              $scope.selectedAlertables = [];
+            $scope.toggelize = function () {
+                $('li label input').bootstrapToggle({
+                    on: 'Yes',
+                    off: 'No'
+                });
+            };
 
-              $scope.isSelected = function(alertable) {
-                  return $scope.selectedAlertables.indexOf(alertable) > -1;
-              }
+            $scope.start = null;
+            $scope.$watch('scheduled', function(newValue, oldValue){
+                if (newValue === false) {
+                    $scope.start = null;
+                } else if(newValue === true) {
+                    $scope.start = moment().format(dateTimeFormat);
+                }
+            });
 
-              $scope.toggleAlertable = function(alertable, $event) {
-                  var checked = $event.target.checked;
+            $scope.isValid = function() {
+                if($scope.selectedAlertables.length === 0 || !$scope.shortInfo) //Must select at least one ALertable and give a Short Info entry
+                    return false;
 
-                  var index = $scope.selectedAlertables.indexOf(alertable);
+                var now = moment();
 
-                  if (checked == false) { //Remove it, if it exists
-                      if ($scope.isSelected(alertable) ) {
-                          $scope.selectedAlertables.splice(index, 1);
-                      }
-                  } else { //Add it, if it hasn't been already
-                      if (!$scope.isSelected(alertable) ) {
-                          $scope.selectedAlertables.push(alertable);
-                      }
-                  }
+                var start = now;
 
-                  //console.log($scope.selectedAlertables);
-              }
+                if ($scope.scheduled) {
+                    if(!$scope.start) //If marked as schedule, you must provide a Start Date/Time
+                        return false;
+                    
+                    start = moment($scope.start);
+                }
 
-              $scope.raiseAlert = function () {
-                  var alert = {
-                      "AlertInfoShort": $scope.shortInfo,
-                      "AlertDetail": $scope.longInfo,
-                      "Alertables": $scope.selectedAlertables,
-                      "RaisedBy": currentProfile.Summary
-                  };
+                var expectedFinish = $scope.expectedFinish ? moment($scope.expectedFinish) : now;
+                if (!expectedFinish.isAfter(start) && !expectedFinish.isSame(start)) //Expected Finish must always be after Start
+                    return false;
 
-                  $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Raise", controller = "Alerts"})', JSON.stringify(alert))
-                      .success(function (data) {
+
+                return true;
+            };
+
+            $scope.selectedAlertables = [];
+
+            
+
+            $scope.isSelected = function(alertable) {
+                return $scope.selectedAlertables.indexOf(alertable) > -1;
+            }
+
+            $scope.toggleAlertable = function(alertable, $event) {
+                var checked = $event.target.checked;
+
+                var index = $scope.selectedAlertables.indexOf(alertable);
+
+                if (checked == false) { //Remove it, if it exists
+                    if ($scope.isSelected(alertable) ) {
+                        $scope.selectedAlertables.splice(index, 1);
+                    }
+                } else { //Add it, if it hasn't been already
+                    if (!$scope.isSelected(alertable) ) {
+                        $scope.selectedAlertables.push(alertable);
+                    }
+                }
+
+                //console.log($scope.selectedAlertables);
+            }
+
+            $scope.saving = false;
+
+            $scope.raiseAlert = function () {
+                $scope.saving = true;
+                  
+                var alert = {
+                    "AlertInfoShort": $scope.shortInfo,
+                    "AlertDetail": $scope.longInfo,
+                    "Alertables": $scope.selectedAlertables,
+                    "Start": $scope.start,
+                    "ExpectedFinish": $scope.expectedFinish,
+                    "RaisedBy": currentProfile.Summary
+                };
+
+                $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Raise", controller = "Alerts"})', JSON.stringify(alert))
+                    .success(function (data) {
                         window.location = '@Url.Action("Status")';
-                      })
-                      .error(function (data) { alert(data); });
+                        $scope.saving = false;
+                    })
+                    .error(function(data) {
+                        alert(data);
+                        $scope.saving = false;
+                });
 
-              };
+            };
 
-              $http.get('@Url.HttpRouteUrl("DefaultApi", new {action = "Get", controller = "Alertables"})').
-                 success(function (data) {
-                     $scope.groupedAlertables = data;
-                 }).
-                 error(function () { $scope.groupedAlertables = ['No alertables were retrieved from the server']; });
+            $http.get('@Url.HttpRouteUrl("DefaultApi", new {action = "Get", controller = "Alertables"})').
+                success(function (data) {
+                    $scope.groupedAlertables = data;
+                }).
+                error(function () { $scope.groupedAlertables = ['No alertables were retrieved from the server']; });
 
           }]);
 

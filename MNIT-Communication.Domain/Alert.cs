@@ -12,7 +12,13 @@ namespace MNIT_Communication.Domain
 	    public Alertable Service { get; set; }
         public string Summary { get; set; }
 		public DateTime Start { get; set; }
-		public UserProfile RaisedBy { get; set; }
+        public DateTime? ExpectedFinish { get; set; }
+        [BsonIgnore] //Don't persist
+        public DateTime? ActualFinish
+        {
+            get { return IsPast ? LastUpdate.Timestamp : default(DateTime?); }
+        }
+        public UserProfile RaisedBy { get; set; }
 
 	    private IList<AlertHistory> history = new List<AlertHistory>();
 	    public IList<AlertHistory> History
@@ -29,12 +35,27 @@ namespace MNIT_Communication.Domain
         {
             get
             {
-                return !LastUpdate.Status.Equals(AlertStatus.Resolved) &&
-                       !LastUpdate.Status.Equals(AlertStatus.Cancelled);
+                return !IsPast && !IsFuture;
             }
         }
 
-	    [BsonIgnore] //Don't persist 
+        [BsonIgnore] //Don't persist 
+        public bool IsPast
+        {
+            get
+            {
+                return LastUpdate.Status.Equals(AlertStatus.Resolved) ||
+                       LastUpdate.Status.Equals(AlertStatus.Cancelled);
+            }
+        }
+
+        [BsonIgnore] //Don't persist 
+        public bool IsFuture
+        {
+            get { return Start.ToUniversalTime() > DateTime.Now.ToUniversalTime() && !IsPast; }
+        }
+
+        [BsonIgnore] //Don't persist 
         public AlertHistory LastUpdate
         {
             get

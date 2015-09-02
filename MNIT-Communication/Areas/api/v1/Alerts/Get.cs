@@ -16,5 +16,15 @@ namespace MNIT_Communication.Areas.api.v1
         {
 			return await alertsService.GetCurrentAlerts();
         }
+
+        public async Task<IEnumerable<Alert>> GetPast()
+        {
+            return await alertsService.GetPastAlerts();
+        }
+
+        public async Task<IEnumerable<Alert>> GetFuture()
+        {
+            return await alertsService.GetFutureAlerts();
+        }
     }
 }

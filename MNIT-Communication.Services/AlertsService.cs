@@ -68,26 +68,47 @@ namespace MNIT_Communication.Services
 		{
             foreach (var alertable in request.Alertables)
             {
+                //TODO - really bad hack her to get around TimeZone issues - there has to be a better way!
+#if RELEASE
+                if (request.Scheduled)
+                {
+                    request.Start = request.Start.Value.AddHours(-10);
+                }
+                if (request.ExpectedFinish.HasValue)
+                {
+                    request.ExpectedFinish = request.ExpectedFinish.Value.AddHours(-10);
+                }
+#endif
+                
                 var uniqueIdentifier = Guid.NewGuid();
+                var scheduled = request.Scheduled;
 
+                var start = scheduled ? request.Start.Value : DateTime.Now;
+                if (start < DateTime.Now) //If scheduled for the past, then it is actually 'Raised'
+                    scheduled = false;
+
+                var status = scheduled ? AlertStatus.Scheduled : AlertStatus.Raised;
+                var auditType = scheduled ? AuditType.AlertScheduled : AuditType.AlertRaised;
+                
                 var alert = new Alert
                 {
                     Id = uniqueIdentifier,
                     Service = alertable,
                     Summary = request.AlertInfoShort,
-                    Start = DateTime.Now,
+                    Start = start,
+                    ExpectedFinish = request.ExpectedFinish,
                     RaisedBy = request.RaisedBy
                 };
 
-                var raisedEvent = new AlertHistory
+                var createEvent = new AlertHistory
                 {
-                    Status = AlertStatus.Raised,
+                    Status = status,
                     Timestamp = DateTime.Now,
                     Detail = request.AlertDetail,
                     UpdatedBy = alert.RaisedBy
                 };
 
-                alert.History.Add(raisedEvent);
+                alert.History.Add(createEvent);
 
                 await repository.Upsert(alert);
 
@@ -95,7 +116,7 @@ namespace MNIT_Communication.Services
                 {
                     CorrelationId = uniqueIdentifier,
                     AlertableId = alert.Service.Id,
-                    AlertStatus = AlertStatus.Raised,
+                    AlertStatus = status,
                     AlertDetail = alert.LastUpdate.Detail,
                     AlertInfoShort = alert.Summary,
                     AlertRaiser = alert.RaisedBy
@@ -103,8 +124,8 @@ namespace MNIT_Communication.Services
 
                 await auditService.LogAuditEventAsync(new AuditEvent
                 {
-                    AuditType = AuditType.AlertRaised,
-                    Details = "An Alert has been raised for " + alert.Service.Name,
+                    AuditType = auditType,
+                    Details = "An Alert has been scheduled/raised for " + alert.Service.Name,
                     EntityType = typeof (Alert).Name,
                     EntityId = alert.Id
                 });
@@ -140,10 +161,17 @@ namespace MNIT_Communication.Services
 
                 //NOT publishing for History updates..
 	        }
+
             //TODO - really bad hack her to get around TimeZone issues - there has to be a better way!
 #if RELEASE
 	        alert.LastUpdate.Timestamp = alert.LastUpdate.Timestamp.AddHours(-10);
+            if (request.ExpectedFinish.HasValue)
+            {
+                request.ExpectedFinish = request.ExpectedFinish.Value.AddHours(-10);
+            }
 #endif
+	        alert.ExpectedFinish = request.ExpectedFinish;
+
             await repository.Upsert(alert);
 
             if (publishMessage)
@@ -172,7 +200,32 @@ namespace MNIT_Communication.Services
             await outageHub.NotifyChange(alert);
         }
 
-	    private AuditType GetAuditTypeForStatus(AlertStatus status)
+	    public async Task NotifyScheduledAlerts()
+	    {
+	        var scheduled = await GetAlerts(a => a.LastUpdate.Status.Equals(AlertStatus.Scheduled));
+
+	        foreach (var alert in scheduled)
+	        {
+	            if (!alert.IsFuture) //If has passed the Start time
+	            {
+	                var request = new UpdateAlertRequest
+	                {
+	                    AlertId = alert.Id,
+	                    Update = new AlertHistory
+	                    {
+	                        Status = AlertStatus.Raised,
+	                        Detail = "Scheduled Alert begun",
+	                        Timestamp = DateTime.Now,
+	                        UpdatedBy = alert.RaisedBy
+	                    }
+	                };
+
+	                await UpdateAlert(request);
+	            }
+	        }
+	    }
+
+        private AuditType GetAuditTypeForStatus(AlertStatus status)
 	    {
 	        if (status.Equals(AlertStatus.Raised))
 	            return AuditType.AlertRaised;
@@ -191,15 +244,32 @@ namespace MNIT_Communication.Services
 
         public async Task<IEnumerable<Alert>> GetCurrentAlerts()
 		{
+            Func<Alert, bool> predicate = alert => alert.IsCurrent;
+            return await GetAlerts(predicate);
+        }
+
+        public async Task<IEnumerable<Alert>> GetPastAlerts()
+        {
+            Func<Alert, bool> predicate = alert => alert.IsPast;
+            return await GetAlerts(predicate);
+        }
+
+        public async Task<IEnumerable<Alert>> GetFutureAlerts()
+        {
+            Func<Alert, bool> predicate = alert => alert.IsFuture;
+            return await GetAlerts(predicate);
+        }
+        public async Task<IEnumerable<Alert>> GetAlerts(Func<Alert, bool> predicate)
+        {
             //TODO - MongoDB barfs on this query , but pulling back ALL Alerts is not cool. Should I store the latest status in the DB and query that?
             var allAlerts = await repository.Get<Alert>();
-            var currentAlerts = allAlerts.Where(alert => alert.IsCurrent).ToArray();
-            await MarkSubscribed(currentAlerts);
+            var matchingAlerts = allAlerts.Where(predicate).ToArray();
+            await MarkSubscribed(matchingAlerts);
 
-		    return currentAlerts;
-		}
+            return matchingAlerts;
+        }
 
-	    private async Task MarkSubscribed(params Alert[] alerts)
+        private async Task MarkSubscribed(params Alert[] alerts)
 	    {
             //Only attempt if we have a Profile to interrogate
             if (await runtimeContext.HasProfile())

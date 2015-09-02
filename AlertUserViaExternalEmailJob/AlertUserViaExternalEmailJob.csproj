@@ -38,8 +38,17 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Azure.WebJobs.ServiceBus">
+    <Reference Include="Microsoft.Azure.WebJobs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.WebJobs.Core.1.0.0\lib\net45\Microsoft.Azure.WebJobs.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Azure.WebJobs.Host, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Azure.WebJobs.1.0.0\lib\net45\Microsoft.Azure.WebJobs.Host.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Azure.WebJobs.ServiceBus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Azure.WebJobs.ServiceBus.1.0.0\lib\net45\Microsoft.Azure.WebJobs.ServiceBus.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.ServiceBus">
       <HintPath>..\packages\WindowsAzure.ServiceBus.2.6.1\lib\net40-full\Microsoft.ServiceBus.dll</HintPath>
@@ -79,12 +88,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.WebJobs">
-      <HintPath>..\packages\Microsoft.Azure.WebJobs.Core.1.0.0\lib\net45\Microsoft.Azure.WebJobs.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Azure.WebJobs.Host">
-      <HintPath>..\packages\Microsoft.Azure.WebJobs.1.0.0\lib\net45\Microsoft.Azure.WebJobs.Host.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>

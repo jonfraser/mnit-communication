@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MNIT-Communication.Hubs", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{605D9BE5-00D9-42D3-8B91-E27C96D51680}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduledAlertNotifier", "ScheduledAlertNotifier\ScheduledAlertNotifier.csproj", "{F6CA467B-D04D-47B3-B41F-7F8100288854}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,10 @@ Global
 		{276EB873-AFCA-4AAA-B16A-286C5CAE1AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{276EB873-AFCA-4AAA-B16A-286C5CAE1AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{276EB873-AFCA-4AAA-B16A-286C5CAE1AE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6CA467B-D04D-47B3-B41F-7F8100288854}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6CA467B-D04D-47B3-B41F-7F8100288854}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6CA467B-D04D-47B3-B41F-7F8100288854}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6CA467B-D04D-47B3-B41F-7F8100288854}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

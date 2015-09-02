@@ -36,13 +36,39 @@ namespace MNIT_Communication.Services.Fakes
             });
         }
 
+	    public async Task NotifyScheduledAlerts()
+	    {
+            await Task.Run(() =>
+            {
+                Trace.Write("FakeAlertsService.NotifyScheduledAlerts");
+            });
+        } 
+
         public async Task<IEnumerable<Alert>> GetCurrentAlerts()
 		{
 			Trace.Write("FakeAlertsService.GetCurrentAlerts");
 			return await Task.Run(() => new List<Alert>());
 		}
 
-	    public async Task<IEnumerable<UserProfile>> GetSubscribersFor(params Guid[] alertables)
+        public async Task<IEnumerable<Alert>> GetPastAlerts()
+        {
+            Trace.Write("FakeAlertsService.GetPastAlerts");
+            return await Task.Run(() => new List<Alert>());
+        }
+
+        public async Task<IEnumerable<Alert>> GetFutureAlerts()
+        {
+            Trace.Write("FakeAlertsService.GetFutureAlerts");
+            return await Task.Run(() => new List<Alert>());
+        }
+
+        public async Task<IEnumerable<Alert>> GetAlerts(Func<Alert, bool> predicate)
+        {
+            Trace.Write("FakeAlertsService.GetAlerts");
+            return await Task.Run(() => new List<Alert>());
+        }
+
+        public async Task<IEnumerable<UserProfile>> GetSubscribersFor(params Guid[] alertables)
 	    {
             Trace.Write("FakeAlertsService.GetSubscribersFor");
             return await Task.Run(() => new List<UserProfile>());

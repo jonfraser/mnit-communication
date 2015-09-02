@@ -101,6 +101,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Domain\BaseEntityTests.cs" />
+    <Compile Include="Helpers\ServiceLocatorContainer.cs" />
     <Compile Include="Services\Fakes\FakeRepositoryTests.cs" />
     <Compile Include="Services\MongoDbRepositoryTests.cs" />
     <Compile Include="Services\RegistrationServiceTests.cs" />
