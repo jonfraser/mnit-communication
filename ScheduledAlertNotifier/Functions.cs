@@ -14,23 +14,35 @@ namespace ScheduledAlertNotifier
 {
     public class Functions
     {
-        public static void CheckForScheduledAlerts()
+        private static IAuditService auditService;
+        private static IErrorLogger errorLogger;
+        private static IAlertsService alertService;
+
+
+        public async static Task CheckForScheduledAlerts()
         {
             Console.WriteLine("CheckForScheduledAlerts called");
 
+            auditService = ServiceLocator.Resolve<IAuditService>();
+            errorLogger = ServiceLocator.Resolve<IErrorLogger<Guid>>();
+            alertService = ServiceLocator.Resolve<IAlertsService>();
+            
             var intervalSeconds = 60; //Default
             int.TryParse(CloudConfigurationManager.GetSetting("ScheduledAlertNotifier.IntervalSeconds"), out intervalSeconds);
             var milliseonds =TimeSpan.FromSeconds(intervalSeconds).TotalMilliseconds;
 
-            using (var timer = new Timer(milliseonds))
+            await Task.Run(() =>
             {
-                timer.Elapsed += DoNotifications;
+                using (var timer = new Timer(milliseonds))
+                {
+                    timer.Elapsed += DoNotifications;
 
-                timer.Enabled = true;
-                timer.Start();
+                    timer.Enabled = true;
+                    timer.Start();
 
-                Console.WriteLine("Timer started");
-            }
+                    Console.WriteLine("Timer started");
+                }
+            });
         }
 
         private static void DoNotifications(object sender, ElapsedEventArgs e)
@@ -39,10 +51,6 @@ namespace ScheduledAlertNotifier
 
             Task.Run(async () =>
             {
-                var auditService = ServiceLocator.Resolve<IAuditService>();
-                var errorLogger = ServiceLocator.Resolve<IErrorLogger<Guid>>();
-                var alertService = ServiceLocator.Resolve<IAlertsService>();
-
                 try
                 {
                     auditService.LogAuditEvent(new AuditEvent
