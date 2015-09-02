@@ -16,6 +16,8 @@ namespace ScheduledAlertNotifier
     {
         public static void CheckForScheduledAlerts()
         {
+            Console.WriteLine("CheckForScheduledAlerts called");
+
             var intervalSeconds = 60; //Default
             int.TryParse(CloudConfigurationManager.GetSetting("ScheduledAlertNotifier.IntervalSeconds"), out intervalSeconds);
             var milliseonds =TimeSpan.FromSeconds(intervalSeconds).TotalMilliseconds;
@@ -26,11 +28,15 @@ namespace ScheduledAlertNotifier
 
                 timer.Enabled = true;
                 timer.Start();
+
+                Console.WriteLine("Timer started");
             }
         }
 
         private static void DoNotifications(object sender, ElapsedEventArgs e)
         {
+            Console.WriteLine("DoNotifications called");
+
             Task.Run(async () =>
             {
                 var auditService = ServiceLocator.Resolve<IAuditService>();
@@ -46,6 +52,7 @@ namespace ScheduledAlertNotifier
                     });
 
                     await alertService.NotifyScheduledAlerts();
+                    Console.WriteLine("alertService.NotifyScheduledAlerts called");
                 }
                 catch (Exception ex)
                 {
