@@ -45,6 +45,7 @@ namespace MNIT_Communication.Services
         {
             this.repository = repository;
             this.runtimeContext = runtimeContext;
+            this.rootUri = CloudConfigurationManager.GetSetting("RootUri");
         }
 
         public async Task<Guid> SubscribeToAlerts(Guid userId, IEnumerable<Guid> alertables)
