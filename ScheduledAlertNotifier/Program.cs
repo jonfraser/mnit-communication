@@ -43,9 +43,9 @@ namespace ScheduledAlertNotifier
 
             var intervalSeconds = 60; //Default
             //int.TryParse(CloudConfigurationManager.GetSetting("ScheduledAlertNotifier.IntervalSeconds"), out intervalSeconds);
-            var milliseonds = TimeSpan.FromSeconds(intervalSeconds).TotalMilliseconds;
+            var milliseconds = TimeSpan.FromSeconds(intervalSeconds).TotalMilliseconds;
 
-            using (var timer = new Timer(milliseonds))
+            using (var timer = new Timer(milliseconds))
             {
                 timer.Elapsed += DoNotifications;
                 timer.Start();
