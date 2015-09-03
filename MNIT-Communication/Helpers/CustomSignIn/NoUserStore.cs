@@ -37,7 +37,7 @@ namespace MNIT_Communication.Helpers.CustomSignIn
 
 		public void Dispose()
 		{
-			throw new NotImplementedException();
+			//no-op
 		}
 
 		public Task AddLoginAsync(ApplicationUser user, UserLoginInfo login)

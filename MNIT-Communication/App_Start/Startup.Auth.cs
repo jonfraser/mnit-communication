@@ -45,16 +45,22 @@ namespace MNIT_Communication
 					//OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
 					//	validateInterval: TimeSpan.FromMinutes(30),
 					//	regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+
+                    OnException = (context =>
+                    {
+                        throw context.Exception;
+                    })
+
                 }
             });
   
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 #if DEBUG
-             app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            {
-                ClientId = CloudConfigurationManager.GetSetting("GoogleAuthClientID"),
-                ClientSecret = CloudConfigurationManager.GetSetting("GoogleAuthClientSecret")
-            });
+            // app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            //{
+            //    ClientId = CloudConfigurationManager.GetSetting("GoogleAuthClientID"),
+            //    ClientSecret = CloudConfigurationManager.GetSetting("GoogleAuthClientSecret")
+            //});
 
             app.UseDevelopmentAuthentication(new DevelopmentAuthenticationOptions("Development")
             {
