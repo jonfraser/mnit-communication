@@ -32,7 +32,10 @@
                            placeholder="firstname.lastname@health.qld.gov.au"
                            type="text"
                            ng-model="emailAddress"
-                           maxlength="100" />
+                           maxlength="100"
+                           title="You can only enter a valid Queensland Health address here (i.e your.name@@health.qld.gov.au)"
+                           data-toggle="tooltip" 
+                           data-placement="right" />
                 </div>
             </div>
             @*<div class="row">
@@ -49,7 +52,9 @@
                 </div>*@
             <div class="row">
                 <div class="col-md-2 input-group">
-                    <button type="submit" class="btn btn-primary btn-lg">Let's go &raquo;</button>
+                    <button type="submit" class="btn btn-primary btn-lg" ng-disabled="!isValid()">
+                        <i class="fa {{saving ? 'fa-spinner fa-pulse' : 'fa-user-plus'}} "></i>
+                    Let's go &raquo;</button>
                 </div>
             </div>
         </fieldset>
@@ -60,11 +65,22 @@
     <script type="text/javascript">
         angular.module('communicationApp', [])
           .controller('RegisterUserController', ['$scope', '$http', function ($scope, $http) {
+              
+              $scope.saving = false;
 
-              $scope.isSubmitting = false;
+              $scope.isValid = function () {
+                  var healthMailSuffix = '@@health.qld.gov.au';
+                  
+                  if (!$scope.emailAddress)
+                      return false;
 
+                  if ($scope.emailAddress.indexOf(healthMailSuffix) == -1)
+                      return false;
+
+                  return true;
+              };
               $scope.registerUser = function () {
-                  $scope.isSubmitting = true;
+                  $scope.saving = true;
                   var data = {"emailAddress": $scope.emailAddress};
                   $http.post('@Url.HttpRouteUrl("DefaultApi", new { action = "Register", controller = "User"})', 
                       JSON.stringify($scope.emailAddress)).
@@ -72,7 +88,10 @@
                         $scope.emailAddress = '';
                         window.location = "/Account/LinkExternalAccount/" + data;
                     }).
-                    error(function (data) { alert(data); $scope.isSubmitting = false; });
+                    error(function (data) {
+                        alert(data);
+                        $scope.saving = false;
+                    });
                   
               };
 

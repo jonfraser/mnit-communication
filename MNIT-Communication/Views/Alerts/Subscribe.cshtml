@@ -32,7 +32,9 @@
     </div>
     <div class="row">
         <div class="col-md-10">
-            <button type="submit" class="btn btn-primary btn-lg">Ok, got it; these are the alerts I want &raquo;</button>
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fa {{saving ? 'fa-spinner fa-pulse' : 'fa-bell-o'}} "></i>
+                Ok, got it; these are the alerts I want &raquo;</button>
         </div>
     </div>
 </form>
@@ -89,8 +91,10 @@
 
                     //console.log($scope.selectedAlertables);
                 }
-                
+                $scope.saving = false;
+
                 $scope.registerAlerts = function(userId) {
+                    $scope.saving = true;
                     var data = {
                         "userId": userId,
                         "alertables": $scope.selectedAlertables
@@ -103,8 +107,12 @@
                         } else {
                             window.location = "/"; //Home
                         }
+                        $scope.saving = false;
                     }).
-                    error(function(data) { alert(data); });
+                    error(function(data) { 
+                        alert(data); 
+                        $scope.saving = false;
+                    });
             };
 
             $http.get('@Url.HttpRouteUrl("DefaultApi", new {action = "Get", controller = "Alertables"})').
